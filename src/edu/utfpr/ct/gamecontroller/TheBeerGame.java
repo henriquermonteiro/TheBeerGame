@@ -1,6 +1,6 @@
-package controller;
+package edu.utfpr.ct.gamecontroller;
 
-import controller.logger.db.FactoryConnection;
+import edu.utfpr.ct.logmanager.db.FactoryConnection;
 
 
 public class TheBeerGame

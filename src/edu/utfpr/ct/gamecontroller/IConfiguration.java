@@ -1,4 +1,4 @@
-package controller;
+package edu.utfpr.ct.gamecontroller;
 
 public interface IConfiguration
 {

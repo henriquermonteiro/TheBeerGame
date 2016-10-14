@@ -1,8 +1,7 @@
-package org.utfpr.ct.logmanager;
+package edu.utfpr.ct.logmanager;
 
-import controller.logger.*;
-import controller.ILogger;
-import model.Game;
+import edu.utfpr.ct.datamodel.Game;
+import edu.utfpr.ct.gamecontroller.ILogger;
 
 public class Logger implements ILogger
 {

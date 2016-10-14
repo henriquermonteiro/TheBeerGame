@@ -1,6 +1,4 @@
-package org.utfpr.ct.datamodel;
-
-import model.*;
+package edu.utfpr.ct.datamodel;
 
 public class TravellingTime extends INode
 {

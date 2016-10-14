@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.utfpr.ct.logmanager.db;
+package edu.utfpr.ct.logmanager.db;
 
-import controller.logger.db.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 

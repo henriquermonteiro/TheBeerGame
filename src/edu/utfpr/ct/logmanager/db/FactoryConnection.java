@@ -1,6 +1,5 @@
-package org.utfpr.ct.logmanager.db;
+package edu.utfpr.ct.logmanager.db;
 
-import controller.logger.db.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 

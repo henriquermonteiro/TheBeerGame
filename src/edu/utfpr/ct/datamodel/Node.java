@@ -1,6 +1,5 @@
-package org.utfpr.ct.datamodel;
+package edu.utfpr.ct.datamodel;
 
-import model.*;
 import java.util.List;
 
 public class Node extends INode

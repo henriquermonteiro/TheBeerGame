@@ -1,12 +1,9 @@
-package org.utfpr.ct.gamecontroller.config;
+package edu.utfpr.ct.gamecontroller.config;
 
-import controller.configuration.*;
-import controller.IConfiguration;
+import edu.utfpr.ct.datamodel.Game;
+import edu.utfpr.ct.datamodel.INode;
+import edu.utfpr.ct.gamecontroller.IConfiguration;
 import java.util.LinkedList;
-import java.util.List;
-import model.Function;
-import model.Game;
-import model.INode;
 
 public class DefaultConfiguration implements IConfiguration
 {

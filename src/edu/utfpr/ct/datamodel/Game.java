@@ -1,4 +1,4 @@
-package model;
+package edu.utfpr.ct.datamodel;
 
 import java.util.List;
 
@@ -16,5 +16,5 @@ public class Game
 	public boolean informedChainSupply;
 	public int deliveryDelay;
 	public int unitiesOnTravel[];
-	public List<Integer> supplyChain;
+	public List<INode> supplyChain;
 }
