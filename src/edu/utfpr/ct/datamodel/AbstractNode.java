@@ -1,6 +1,6 @@
 package edu.utfpr.ct.datamodel;
 
-public abstract class INode
+public abstract class AbstractNode
 {
 	public int travellingStock;
 	

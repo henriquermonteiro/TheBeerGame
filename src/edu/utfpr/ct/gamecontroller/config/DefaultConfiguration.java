@@ -1,14 +1,14 @@
 package edu.utfpr.ct.gamecontroller.config;
 
 import edu.utfpr.ct.datamodel.Game;
-import edu.utfpr.ct.datamodel.INode;
+import edu.utfpr.ct.datamodel.AbstractNode;
 import edu.utfpr.ct.gamecontroller.IConfiguration;
 import java.util.LinkedList;
 
 public class DefaultConfiguration implements IConfiguration
 {
 	private Game game;
-	private INode node;
+	private AbstractNode node;
 	
 	@Override
 	public void configure()

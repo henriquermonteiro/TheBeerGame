@@ -16,5 +16,5 @@ public class Game
 	public boolean informedChainSupply;
 	public int deliveryDelay;
 	public int unitiesOnTravel[];
-	public List<INode> supplyChain;
+	public List<AbstractNode> supplyChain;
 }
