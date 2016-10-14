@@ -1,0 +1,4 @@
+GUI-FRAME-NAME<>The Beer Game - UTFPR
+GUI-LABEL-AWAIT-START<><html>Please, await game initialization.<br/>It should take only a few seconds.</html>
+GUI-ICON-HOME-TAB<>icon//home.png
+GUI-ICON-PLUS-TAB<>icon//plus.png
