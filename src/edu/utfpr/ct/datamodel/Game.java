@@ -7,9 +7,9 @@ public class Game
 	public int gameID;
 	public String name;
 	public String password;
-	public int missingUnitCost;
-	public int stockUnitCost;
-	public int sellingUnitProfit;
+	public double missingUnitCost;
+	public double stockUnitCost;
+	public double sellingUnitProfit;
 	public int realDuration;
 	public int informedDuration;
 	public int demand[];

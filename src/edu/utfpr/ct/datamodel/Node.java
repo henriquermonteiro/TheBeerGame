@@ -6,12 +6,8 @@ public class Node extends AbstractNode
 {
 	public String activePlayerID;
 	public Function function;
-	public String playerName;
 	public int initialStock;
 	public int currentStock;
-	public int profit;
+	public double profit;
 	public List playerMove;
-	
-	
-	
 }
