@@ -24,7 +24,7 @@ public class MainPanel extends JPanel{
         JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
         
         tabbedPane.addTab("", new ImageIcon(Localize.getTextForKey(LocalizationKeys.HOME_ICON)), new JPanel());
-        tabbedPane.addTab("", new ImageIcon(Localize.getTextForKey(LocalizationKeys.PLUS_ICON)), new JPanel());
+        tabbedPane.addTab("", new ImageIcon(Localize.getTextForKey(LocalizationKeys.PLUS_ICON)), new CreateGamePanel());
         
         this.add(tabbedPane);
     }
