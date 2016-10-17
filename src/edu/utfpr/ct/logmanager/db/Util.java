@@ -41,12 +41,12 @@ public class Util
 	public static Connection getConnection()
 	{
 		Connection connection;
-		String url;
+		String connectionString;
 		
 		try
 		{
-			url = "jdbc:derby:DB;create=true";
-			connection = DriverManager.getConnection(url);
+			connectionString = "jdbc:derby:DB;create=true";
+			connection = DriverManager.getConnection(connectionString);
 			
 			return connection;
 		}
