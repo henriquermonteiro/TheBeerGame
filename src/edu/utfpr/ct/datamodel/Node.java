@@ -9,5 +9,5 @@ public class Node extends AbstractNode
 	public int initialStock;
 	public int currentStock;
 	public double profit;
-	public List playerMove;
+	public List<Integer> playerMove;
 }
