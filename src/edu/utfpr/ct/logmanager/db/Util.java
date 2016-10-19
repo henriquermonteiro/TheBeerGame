@@ -9,11 +9,11 @@ import java.sql.SQLException;
 public class Util
 {
 	private static Connection connection;
-	
+
 	public static Connection getConnection()
 	{
 		String connectionString;
-		
+
 		try
 		{
 			if(connection == null)
@@ -21,34 +21,55 @@ public class Util
 				connectionString = "jdbc:derby:DB;create=true";
 				connection = DriverManager.getConnection(connectionString);
 			}
-			
+
 			return connection;
 		}
 		catch(Exception e)
 		{
-			System.out.println("public static Connection getConnection(): " + e.getMessage());
+			System.out.println("Util::getConnection(): " + e.getMessage());
 			return null;
 		}
 	}
-	
-	protected static boolean tableExists(Connection con, String table)
+
+	protected static boolean tableExists(Connection connection, String table)
 	{
 		int numRows = 0;
-		
+		ResultSet rs;
+
 		try
 		{
-			DatabaseMetaData dbmd = con.getMetaData();
-			ResultSet rs = dbmd.getTables(null, "APP", table.toUpperCase(), null);
+			rs = connection.getMetaData().getTables(null, "APP", table.toUpperCase(), null);
 			while(rs.next())
 				++numRows;
 		}
 		catch(SQLException e)
 		{
-			String theError = e.getSQLState();
-			System.out.println("Can't query DB metadata: " + theError);
-			System.exit(1);
+			System.out.println("Util::tableExists(Connection connection, String table): " + e.getMessage());
 		}
-		
+
 		return numRows > 0;
+	}
+
+	public static void DBInfo()
+	{
+		ResultSet rs;
+
+		try
+		{
+			connection = getConnection();
+			DatabaseMetaData dbmd = connection.getMetaData();
+
+			System.out.println("Driver name: " + dbmd.getDriverName());
+			System.out.println("Driver version: " + dbmd.getDriverVersion());
+			System.out.println("Schemas: ");
+			
+			rs = dbmd.getSchemas();
+			while(rs.next())
+				System.out.println(rs.getString(1));
+		}
+		catch(SQLException e)
+		{
+			System.out.println("Util::DBInfo(): " + e.getMessage());
+		}
 	}
 }

@@ -12,9 +12,11 @@ public class Game
 	public double sellingUnitProfit;
 	public int realDuration;
 	public int informedDuration;
-	public int demand[];
 	public boolean informedChainSupply;
+	public int[] demand;
 	public int deliveryDelay;
-	public int unitiesOnTravel[];
+	public int unitiesOnTravel2;
+	public int[] unitiesOnTravel;
+	public Demand demand2;
 	public List<AbstractNode> supplyChain;
 }

@@ -7,76 +7,70 @@ import java.sql.Statement;
 /*https://wpollock.com/AJava/DerbyDemo.htm*/
 public class Create
 {
-	private final String test = "create table test( "
-								+ "test int not null, "
-								+ "primary key (test) "
+	private final String game = "CREATE TABLE game( "
+								+ "game_id               INT NOT NULL, "
+								+ "name                  VARCHAR(128) NOT NULL, "
+								+ "password              VARCHAR(32), "
+								+ "missing_unit_cost     DOUBLE NOT NULL CHECK(missing_unit_cost >= 0), "
+								+ "stock_unit_cost       DOUBLE NOT NULL CHECK(stock_unit_cost >= 0), "
+								+ "selling_unit_profit   DOUBLE NOT NULL CHECK(selling_unit_profit >= 0), "
+								+ "real_duration         INT NOT NULL CHECK(real_duration >= 1), "
+								+ "informed_duration     INT NOT NULL CHECK(informed_duration >= 1), "
+								+ "informed_chain_suplly BOOLEAN NOT NULL DEFAULT FALSE, "
+								+ "delivery_delay        INT NOT NULL DEFAULT 2, "
+								+ "PRIMARY KEY(game_id) "
 								+ ")";
 
-	private final String game = "create table game( "
-								+ "gameID int not null, "
-								+ "name varchar(128) not null, "
-								+ "password varchar(32), "
-								+ "missingUnitCost double not null check (missingUnitCost >= 0), "
-								+ "stockUnitCost double not null check (stockUnitCost >= 0), "
-								+ "sellingUnitProfit double not null check(sellingUnitProfit >= 0), "
-								+ "realDuration int not null check (realDuration >= 1), "
-								+ "informedDuration int not null check (informedDuration >= 1), "
-								+ "isInformedChainSuplly boolean default false, "
-								+ "deliveryDelay int default 2, "
-								+ "primary key (gameID) "
-								+ ")";
-
-	private final String demand = "create table demand( "
-								  + "demand_type int primary key, "
-								  + "name varchar(64) not null "
+	private final String demand = "CREATE TABLE demand( "
+								  + "demand_type INT, "
+								  + "name        VARCHAR(64) NOT NULL, "
+								  + "PRIMARY KEY(demand_type) "
 								  + ")";
 
-	private final String demandProfile = "create table demand_profile( "
-										 + "demand_type int, "
-										 + "week int not null check (week >= 0), "
-										 + "value int not null check (value >= 0), "
-										 + "primary key (demand_type, week), "
-										 + "foreign key (demand_type) references demand(demand_type) "
+	private final String demandProfile = "CREATE TABLE demand_profile( "
+										 + "demand_type INT NOT NULL, "
+										 + "week        INT NOT NULL CHECK(week >= 0), "
+										 + "value       INT NOT NULL CHECK(value >= 0), "
+										 + "PRIMARY KEY(demand_type, week), "
+										 + "FOREIGN KEY(demand_type) REFERENCES demand(demand_type) "
 										 + ")";
 
-	private final String demandGame = "create table demand_game( "
-									  + "gameID int not null, "
-									  + "demand_type int not null, "
-									  + "primary key (gameID, demand_type), "
-									  + "foreign key (gameID) references game(gameID), "
-									  + "foreign key (demand_type) references demand(demand_type) "
+	private final String demandGame = "CREATE TABLE demand_game( "
+									  + "game_id     INT NOT NULL, "
+									  + "demand_type INT NOT NULL, "
+									  + "PRIMARY KEY(game_id, demand_type), "
+									  + "FOREIGN KEY(game_id) REFERENCES game(game_id), "
+									  + "FOREIGN KEY(demand_type) REFERENCES demand(demand_type) "
 									  + ")";
 
-	private final String supplyChain = "create table supply_chain( "
-									   + "gameID int, "
-									   + "nodePosition int check (nodePosition > 0), "
-									   + "playerID varchar(128) not null, "
-									   + "playerName varchar(128) not null, "
-									   + "initialStock int not null check (initialStock >= 0), "
-									   + "primary key (gameID, nodePosition), "
-									   + "foreign key (gameID) references game(gameID) "
+	private final String supplyChain = "CREATE TABLE supply_chain( "
+									   + "game_id       INT NOT NULL, "
+									   + "node_position INT NOT NULL CHECK(node_position > 0), "
+									   + "player_name   VARCHAR(128) NOT NULL, "
+									   + "initial_stock INT NOT NULL CHECK(initial_stock >= 0), "
+									   + "PRIMARY KEY(game_id, node_position), "
+									   + "FOREIGN KEY(game_id) REFERENCES game(game_id) "
 									   + ")";
 
-	private final String moves = "create table moves( "
-								 + "gameID int, "
-								 + "nodePosition int, "
-								 + "week int not null check (week > 0), "
-								 + "playerName varchar(128) not null, "
-								 + "order_placed int not null check (order_placed >= 0), "
-								 + "primary key (gameID, nodePosition, week), "
-								 + "foreign key (gameID, nodePosition) references supply_chain(gameID, nodePosition) "
+	private final String moves = "CREATE TABLE moves( "
+								 + "game_id       INT NOT NULL, "
+								 + "node_position INT NOT NULL, "
+								 + "week          INT NOT NULL CHECK (week > 0), "
+								 + "player_name   VARCHAR(128) NOT NULL, "
+								 + "order_placed  INT NOT NULL CHECK (order_placed >= 0), "
+								 + "PRIMARY KEY(game_id, node_position, week), "
+								 + "FOREIGN KEY(game_id, node_position) REFERENCES supply_chain(game_id, node_position) "
 								 + ")";
 
 	public void createTables()
 	{
 		Connection connection = Util.getConnection();
 
-		createTable(connection, "test", test);
 		createTable(connection, "game", game);
 		createTable(connection, "demand", demand);
 		createTable(connection, "demand_profile", demandProfile);
-		createTable(connection, "demandGame", demandGame);
-		createTable(connection, "supplyChain", supplyChain);
+		createTable(connection, "demand_game", demandGame);
+		createTable(connection, "supply_chain", supplyChain);
 		createTable(connection, "moves", moves);
 	}
 

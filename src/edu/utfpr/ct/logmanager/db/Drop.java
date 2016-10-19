@@ -13,6 +13,7 @@ public class Drop
 	private final String demandGame = "DROP TABLE demand_game";
 	private final String supplyChain = "DROP TABLE supply_chain";
 	private final String moves = "DROP TABLE moves";
+	private final String schema = "DROP SCHEMA APP RESTRICT";
 
 	public void dropTables()
 	{
@@ -25,6 +26,7 @@ public class Drop
 		dropTable(connection, "demand", demand);
 		dropTable(connection, "game", game);
 		dropTable(connection, "test", test);
+		//dropSchema(connection, "DB", schema);
 	}
 
 	private void dropTable(Connection connection, String tableName, String query)
@@ -46,5 +48,24 @@ public class Drop
 				System.out.println("Can't drop table: " + e.getSQLState());
 			}
 		}
+	}
+	
+	private void dropSchema(Connection connection, String schemaName, String query)
+	{
+		Statement stmnt;
+
+			System.out.println("Dropping schema " + schemaName);
+
+			try
+			{
+				stmnt = connection.createStatement();
+				stmnt.execute(query);
+				stmnt.close();
+			}
+			catch(SQLException e)
+			{
+				System.out.println("Can't drop schema: " + e.getSQLState());
+			}
+
 	}
 }

@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Node extends AbstractNode
 {
-	public String activePlayerID;
+	public String playerName;
 	public Function function;
 	public int initialStock;
 	public int currentStock;

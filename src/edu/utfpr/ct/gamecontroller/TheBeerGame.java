@@ -8,6 +8,6 @@ public class TheBeerGame
 	public static void main(String[] args)
 	{
 		new Create().createTables();
-		new Drop().dropTables();
+		//new Drop().dropTables();
 	}
 }

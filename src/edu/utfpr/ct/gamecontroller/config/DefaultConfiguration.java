@@ -47,7 +47,7 @@ public class DefaultConfiguration implements IConfiguration
 		
 		node = new Node();
 		node.travellingStock = 0;
-		node.activePlayerID = "";
+		node.playerName = "";
 		node.function = Function.RETAILER;
 		node.initialStock = 12;
 		node.currentStock = 12;
@@ -65,7 +65,7 @@ public class DefaultConfiguration implements IConfiguration
 		
 		node = new Node();
 		node.travellingStock = 0;
-		node.activePlayerID = "";
+		node.playerName = "";
 		node.function = Function.WHOLESALER;
 		node.initialStock = 12;
 		node.currentStock = 12;
@@ -83,7 +83,7 @@ public class DefaultConfiguration implements IConfiguration
 		
 		node = new Node();
 		node.travellingStock = 0;
-		node.activePlayerID = "";
+		node.playerName = "";
 		node.function = Function.DISTRIBUTOR;
 		node.initialStock = 12;
 		node.currentStock = 12;
@@ -101,7 +101,7 @@ public class DefaultConfiguration implements IConfiguration
 		
 		node = new Node();
 		node.travellingStock = 0;
-		node.activePlayerID = "";
+		node.playerName = "";
 		node.function = Function.PRODUCER;
 		node.initialStock = 12;
 		node.currentStock = 12;
