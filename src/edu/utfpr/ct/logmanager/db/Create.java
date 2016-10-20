@@ -8,8 +8,8 @@ import java.sql.Statement;
 public class Create
 {
 	private final String game = "CREATE TABLE game( "
-								+ "game_id               INT NOT NULL, "
-								+ "name                  VARCHAR(128) NOT NULL, "
+								+ "game_id               INT NOT NULL, " /*UNIQUE*/
+								+ "name                  VARCHAR(128) NOT NULL, " /*UNIQUE*/
 								+ "password              VARCHAR(32), "
 								+ "missing_unit_cost     DOUBLE NOT NULL CHECK(missing_unit_cost >= 0), "
 								+ "stock_unit_cost       DOUBLE NOT NULL CHECK(stock_unit_cost >= 0), "

@@ -8,7 +8,7 @@ public enum Function
 	PRODUCER(4);
 
 	private final int position;
-
+	
 	Function(int numVal)
 	{
 		this.position = numVal;

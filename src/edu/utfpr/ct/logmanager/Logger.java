@@ -173,4 +173,9 @@ public class Logger implements ILogger
 			System.out.println("Logger::deleteGame(Game game): " + e.getMessage());
 		}
 	}
+
+	public void RetrieveUnfinishedGames()
+	{
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
 }
