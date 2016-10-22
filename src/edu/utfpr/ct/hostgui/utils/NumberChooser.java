@@ -34,7 +34,6 @@ public class NumberChooser extends JPanel {
     private JSlider slider;
     private JTextField field;
 
-    private Integer lastValidNumber;
     private Boolean changingFlag;
     
     private MyIntFilter filter;
@@ -50,7 +49,6 @@ public class NumberChooser extends JPanel {
         
         filter = new MyIntFilter(minValue, maxValue);
 
-        lastValidNumber = slider.getValue();
         changingFlag = false;
 
         slider.addChangeListener(new ChangeListener() {
@@ -92,7 +90,6 @@ public class NumberChooser extends JPanel {
 
                         slider.setValue(val);
 
-                        lastValidNumber = slider.getValue();
                     } catch (NumberFormatException nEx) {
 
                     }

@@ -21,7 +21,7 @@ public class Frame extends JFrame{
         
         this.add(new StartingPanel());
         
-        this.setSize(640, 480);
+        this.setSize(800, 600);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
     }
