@@ -20,59 +20,53 @@ public class ControllerGame
 		this.games = new HashMap<>();
 		this.logger = new Logger();
 	}
-
-	public void putGame(Game game)
-	{
-		games.put(game.gameID, game);
-	}
-
+	
 	/**
 	 * Makes all the orders placed go from one Node to the other.
-	 *
+	 * 
 	 * @param gameID
 	 * @param function
 	 * @param order
 	 */
 	public void makeOrder(int gameID, Function function, int order)
 	{
-		int posCurrentNode;
+		int posCurrentNode, posNextNode;
 		Game game;
 		Node node;
-		
+		TravellingTime travellingTime;
+		AbstractNode previous = null;
+
 		game = games.get(gameID);
 		posCurrentNode = (function.getPosition() - 1) * game.deliveryDelay + (function.getPosition() - 1);
-		node = (Node) games.get(gameID).supplyChain[posCurrentNode];
-		
-		logger.logPlayerMove(order, node);
-		node.currentStock += makeOrderRecursion(game.supplyChain, posCurrentNode + 1, order);
-	}
-	
-	private int makeOrderRecursion(AbstractNode[] an, int posCurrentNode, int order)
-	{
-		int travellingStock;
-		Node node;
-		
-		if(posCurrentNode == an.length)
-			return order;
-		
-		if(an[posCurrentNode] instanceof TravellingTime)
+		posNextNode = posCurrentNode + game.deliveryDelay + 1;
+
+		logger.logPlayerMove(order, (Node) game.supplyChain[posCurrentNode]);
+		node = (Node) game.supplyChain[posCurrentNode];
+
+		/* A ideia aqui é só passar todos as cervejas para frente, apenas as que estão em viagem, não o último nó pq ele pode não existir */
+		for(int i = posCurrentNode; i < (posCurrentNode + game.deliveryDelay); i++)
 		{
-			travellingStock = an[posCurrentNode].travellingStock;
-			an[posCurrentNode].travellingStock = makeOrderRecursion(an, posCurrentNode + 1, order);
-			
-			return travellingStock;
+			if(previous == null)
+				previous = game.supplyChain[i];
+
+			previous.travellingStock = game.supplyChain[i].travellingStock;
 		}
-		
-		if(an[posCurrentNode] instanceof Node)
+
+		/* Manda de currentStock o pedido que chegou */
+		node.currentStock += node.travellingStock;
+		node.travellingStock = 0;
+
+		/* É o último elo da cadeia, tem tratamento especial, a ordem é colocada no último caminhão invés de no próximo não-existente nó */
+		if(function.getPosition() == Function.values().length)
 		{
-			node = (Node) an[posCurrentNode];
-			travellingStock = node.travellingStock;
-			node.travellingStock = node.currentStock >= order ? order : node.currentStock;
+			travellingTime = (TravellingTime) game.supplyChain[posNextNode - 1];
+			travellingTime.travellingStock = order;
+		}
+		else
+		{
+			node = (Node) game.supplyChain[posNextNode];
+			node.travellingStock = node.currentStock >= order ? node.currentStock - order : order;
 			node.currentStock = node.currentStock >= order ? node.currentStock - order : 0;
-			
-			return travellingStock;
 		}
-		
-		return -1;
 	}
 }

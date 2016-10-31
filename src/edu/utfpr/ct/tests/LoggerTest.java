@@ -1,10 +1,13 @@
 package edu.utfpr.ct.tests;
 
 import edu.utfpr.ct.datamodel.AbstractNode;
+import edu.utfpr.ct.datamodel.Function;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.datamodel.Node;
 import edu.utfpr.ct.datamodel.TravellingTime;
+import edu.utfpr.ct.gamecontroller.GameBuilder;
 import edu.utfpr.ct.logmanager.Logger;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class LoggerTest
@@ -17,23 +20,80 @@ public class LoggerTest
 		int qtd;
 		Logger logger = new Logger();
 		Comparator comparator = new Comparator();
+		Game[] unfinishedGamesID;
 
-		reference = new GameBuilderTest().test();
+		configureGame();
 		logger.logGameStart(reference);
 		fillPLayerMoves(logger);
-
-		retrieved = logger.retrieveGameData(logger.getUnfinishedGamesID()[0].gameID);
+		unfinishedGamesID = logger.getUnfinishedGamesID();
+		retrieved = logger.retrieveGameData(unfinishedGamesID[0].gameID);
 		comparator.compareAll(reference, retrieved);
+		logger.purgeGame(unfinishedGamesID[0].gameID);
 
-		logger.purgeGame(retrieved.gameID);
 		qtd = logger.getUnfinishedGamesID().length;
 		System.out.println("Qtd de jogos depois do purge: " + qtd);
+	}
+
+	private void configureGame()
+	{
+		GameBuilder gb = new GameBuilder();
+		reference = new Game();
+
+		reference.name = "Test";
+		reference.password = "Test";
+		reference.missingUnitCost = 0.5;
+		reference.stockUnitCost = 1.0;
+		reference.sellingUnitProfit = 1.0;
+		reference.realDuration = 36;
+		reference.informedDuration = 50;
+		reference.deliveryDelay = 2;
+		reference.unitiesOnTravel = 4;
+		reference.initialStock = 16;
+		reference.informedChainSupply = true;
+		reference.demand = new int[36];
+
+		for(int i = 0; i < reference.demand.length; i++)
+		{
+			if(i < 4)
+				reference.demand[i] = 4;
+			else
+				reference.demand[i] = 8;
+		}
+
+		gb.buildGame(reference);
+		fillSupplyChain();
+	}
+
+	private void fillSupplyChain()
+	{
+		int position;
+		Node node;
+		TravellingTime travellingTime;
+		position = 0;
+		for(Function value : Function.values())
+		{
+			node = new Node();
+			node.playerName = "Test " + position;
+			node.travellingStock = 0;
+			node.currentStock = reference.initialStock;
+			node.function = value;
+			node.profit = Math.random() * 100;
+			node.playerMove = new ArrayList<>();
+			reference.supplyChain[position] = node;
+			position++;
+
+			for(int i = 0; i < reference.deliveryDelay; i++, position++)
+			{
+				travellingTime = new TravellingTime();
+				travellingTime.travellingStock = reference.unitiesOnTravel;
+				reference.supplyChain[position] = travellingTime;
+			}
+		}
 	}
 
 	private void fillPLayerMoves(Logger logger)
 	{
 		Node node;
-		Random random = new Random();
 
 		for(AbstractNode abstractNode : reference.supplyChain)
 		{
@@ -41,11 +101,10 @@ public class LoggerTest
 				continue;
 
 			node = (Node) abstractNode;
-			node.playerMove.clear();
 
-			for(int i = 0; i < reference.realDuration; i++)
+			for(int i = 0; i < node.playerMove.size(); i++)
 			{
-				node.playerMove.add(Math.abs(random.nextInt()));
+				node.playerMove.add(new Random().nextInt());
 				logger.logPlayerMove(reference.gameID, node);
 			}
 		}
