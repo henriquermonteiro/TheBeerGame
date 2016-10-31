@@ -60,6 +60,13 @@ public interface IControllerHost {
     public Game getGameReport(String gameName);
     
     /**
+     * Retorna a lista de jogos não encerrados.
+     * A lista possui apenas o ID e o nome do jogo.
+     * @return Lista de jogos não encerrados.
+     */
+    public Game[] getUnfinishedGamesID();
+    
+    /**
      * Retorna a lista de jogos finalizados com o devido relatório disponível.
      * @return lista de relatórios disponíveis.
      */
