@@ -9,9 +9,9 @@ public enum Function
 
 	private final int position;
 	
-	Function(int numVal)
+	Function(int position)
 	{
-		this.position = numVal;
+		this.position = position;
 	}
 
 	public int getPosition()
