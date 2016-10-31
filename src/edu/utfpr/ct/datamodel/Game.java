@@ -1,10 +1,9 @@
 package edu.utfpr.ct.datamodel;
 
-import java.util.List;
-
 public class Game
 {
 	public int gameID;
+	public long timestamp;
 	public String name;
 	public String password;
 	public double missingUnitCost;
@@ -12,11 +11,10 @@ public class Game
 	public double sellingUnitProfit;
 	public int realDuration;
 	public int informedDuration;
+	public int deliveryDelay;
+	public int unitiesOnTravel;
+	public int initialStock;
 	public boolean informedChainSupply;
 	public int[] demand;
-	public int deliveryDelay;
-	public int unitiesOnTravel2;
-	public int[] unitiesOnTravel;
-	public Demand demand2;
-	public List<AbstractNode> supplyChain;
+	public AbstractNode[] supplyChain;
 }
