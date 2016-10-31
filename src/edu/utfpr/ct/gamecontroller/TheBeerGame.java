@@ -1,13 +1,11 @@
 package edu.utfpr.ct.gamecontroller;
 
-import edu.utfpr.ct.logmanager.db.Create;
-import edu.utfpr.ct.logmanager.db.Drop;
+import edu.utfpr.ct.tests.LoggerTest;
 
 public class TheBeerGame
 {
 	public static void main(String[] args)
 	{
-		new Create().createTables();
-		//new Drop().dropTables();
+		new LoggerTest().test();
 	}
 }
