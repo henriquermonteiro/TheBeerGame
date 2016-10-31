@@ -114,6 +114,10 @@ public class NumberChooser extends JPanel {
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.setVisible(true);
     }
+
+    public int getValue() {
+        return slider.getValue();
+    }
 }
 
 class MyIntFilter extends DocumentFilter {

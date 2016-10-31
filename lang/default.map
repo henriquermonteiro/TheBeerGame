@@ -3,7 +3,7 @@ GUI-LABEL-AWAIT-START<><html>Please, await game initialization.<br/>It should ta
 GUI-ICON-HOME-TAB<>icon//home.png
 GUI-ICON-PLUS-TAB<>icon//plus.png
 DEFAULT-GAME-NAME<>Untitled Game
-GUI-LABEL-CREATEGAME-NAME<>Game Name:
+GUI-LABEL-CREATEGAME-NAME<>Game Name
 GUI-LABEL-CREATEGAME-PASSWORD-FIELD<>Password:
 GUI-LABEL-CREATEGAME-PASSWORD-CHECK<>Use Password?
 GUI-LABEL-CREATEGAME-MISSING-UNIT-COST<>Missing Unit Cost:
@@ -20,3 +20,7 @@ GUI-TITLE-CREATEGAME-DEMAND-BORDER<>Demand
 GUI-TITLE-CREATEGAME-COSTS-BORDER<>Cost/Proffit
 GUI-TITLE-CREATEGAME-DURATION-BORDER<>Duration
 GUI-TITLE-CREATEGAME-SUPPLYCHAIN-BORDER<>Supply Chain Topology
+GUI-WARNING-CREATEGAME-FAILED<>It was not possible to create a new game. \n We apologize for the inconvenience. \n If the problem persists, contact the developers.
+GUI-WARNING-CREATEGAME-FAILED-TITLE<>Error while creating a new game
+GUI-ICON-RELOAD-BUTTON<>icon//reload_icon.png
+GUI-ICON-DELETE-BUTTON<>icon//trash_icon.png

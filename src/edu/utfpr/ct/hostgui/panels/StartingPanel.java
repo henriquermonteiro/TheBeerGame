@@ -5,13 +5,13 @@
  */
 package edu.utfpr.ct.hostgui.panels;
 
+import edu.utfpr.ct.hostgui.Frame;
 import edu.utfpr.ct.localization.LocalizationKeys;
 import edu.utfpr.ct.localization.Localize;
 import java.awt.BorderLayout;
-import java.awt.Container;
+import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -30,12 +30,17 @@ public class StartingPanel extends JPanel{
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent me) {
-                Container parent = ((JComponent)me.getSource()).getParent();
-                parent.remove((JComponent)me.getSource());
-                parent.add(new MainPanel());
+                Component c = me.getComponent();
                 
-                parent.revalidate();
-                parent.repaint();
+                while(c != null){
+                    if(c.getParent() instanceof Frame){
+                        ((Frame)c.getParent()).initializationReady();
+                        
+                        break;
+                    }
+                    
+                    c = c.getParent();
+                }
             }
         });
         

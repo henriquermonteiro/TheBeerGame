@@ -5,7 +5,8 @@
  */
 package edu.utfpr.ct.hostgui.panels;
 
-import edu.utfpr.ct.datamodel.Demand;
+import edu.utfpr.ct.datamodel.Game;
+import edu.utfpr.ct.datamodel.DemandTypes;
 import edu.utfpr.ct.hostgui.utils.NumberChooser;
 import edu.utfpr.ct.localization.LocalizationKeys;
 import edu.utfpr.ct.localization.Localize;
@@ -16,6 +17,8 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -39,14 +42,17 @@ public class CreateGamePanel extends JPanel{
     private NumberChooser sellingUnitProffitChooser;
     private NumberChooser realDurationChooser;
     private NumberChooser informedDurationChooser;
-    private JComboBox<Demand> demandComboBox;
+    private JComboBox<DemandTypes> demandComboBox;
     private JCheckBox informedSupplyChainCheckBox;
     private NumberChooser initialStockChooser;
     private NumberChooser deliveryDelayChooser;
     
+    private MainPanel mainPanel;
 
-    public CreateGamePanel() {
+    public CreateGamePanel(MainPanel mainPanel) {
         super(new BorderLayout());
+        
+        this.mainPanel = mainPanel;
         
         nameField = new JTextField(Localize.getTextForKey(LocalizationKeys.DEFAULT_GAME_NAME));
         JLabel nameLabel = new JLabel(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_NAME));
@@ -421,6 +427,31 @@ public class CreateGamePanel extends JPanel{
         
         lower.add(cancel);
         lower.add(confirm);
+        
+        confirm.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent me) {
+                Game game = new Game();
+                
+                game.name = nameField.getText();
+                
+                if(passwordCheckBox.isSelected()){
+                    game.password = passwordField.getText();
+                }
+                
+                game.missingUnitCost = missingUnitCostChooser.getValue();
+                
+                game.stockUnitCost = stockUnitCostChooser.getValue();
+                
+                game.sellingUnitProfit = sellingUnitProffitChooser.getValue();
+                
+                game.realDuration = realDurationChooser.getValue();
+                
+                game.informedDuration = informedDurationChooser.getValue();
+                
+                mainPanel.createGame(game);
+            }
+        });
         
         this.add(lower, BorderLayout.SOUTH);
     }

@@ -32,9 +32,13 @@ public class LocalizationKeys {
     public static String TITLE_CREATEGAME_DURATION_BORDER = "GUI-TITLE-CREATEGAME-DURATION-BORDER";
     public static String TITLE_CREATEGAME_SUPPLYCHAIN_BORDER = "GUI-TITLE-CREATEGAME-SUPPLYCHAIN-BORDER";
     
+    public static String MESSAGE_CREATEGAME_WARN_TITLE = "GUI-WARNING-CREATEGAME-FAILED";
+    public static String MESSAGE_CREATEGAME_WARN_FAIL = "GUI-WARNING-CREATEGAME-FAILED-TITLE";
     
     public static String HOME_ICON = "GUI-ICON-HOME-TAB";
     public static String PLUS_ICON = "GUI-ICON-PLUS-TAB";
+    public static String RELOAD_ICON = "GUI-ICON-RELOAD-BUTTON";
+    public static String TRASH_ICON = "GUI-ICON-DELETE-BUTTON";
     
     public static String DEFAULT_GAME_NAME = "DEFAULT-GAME-NAME";
 }
