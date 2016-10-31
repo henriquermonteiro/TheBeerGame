@@ -21,6 +21,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.TextAlignment;
 
 /**
  *
@@ -70,34 +71,69 @@ public class CreateGamePane  extends BorderPane{
         grid1.add(usePassword, 0, 2);
         grid1.add(password, 0, 3);
         
-        NumberChooserFX missingUnitCost = new NumberChooserFX(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_MISSINGUC), 0.0, 100.0, 0.0);
+        GridPane grid2 = new GridPane();
         
-        grid1.add(missingUnitCost, 1, 1);
+        Label l = new Label(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_MISSINGUC));
+        l.setTextAlignment(TextAlignment.RIGHT);
         
-        NumberChooserFX stockUnitCost = new NumberChooserFX(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_STOCKUC), 0.0, 100.0, 0.0);
+        grid2.add(l, 0, 0);
         
-        grid1.add(stockUnitCost, 1, 2);
+        NumberChooserFX missingUnitCost = new NumberChooserFX("", 0.0, 100.0, 0.0);
         
-        NumberChooserFX sellingUnitProffit = new NumberChooserFX(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_SELLINGP), 0.0, 100.0, 0.0);
+        grid2.add(missingUnitCost, 1, 0);
         
-        grid1.add(sellingUnitProffit, 1, 3);
+        l = new Label(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_STOCKUC));
         
-        NumberChooserFX realDuration = new NumberChooserFX(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_REAL_DURATION), 0.0, 100.0, 0.0);
+        grid2.add(l, 0, 1);
         
-        grid1.add(realDuration, 1, 4);
+        NumberChooserFX stockUnitCost = new NumberChooserFX("", 0.0, 100.0, 0.0);
         
-        NumberChooserFX informedDuration = new NumberChooserFX(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_INF_DURATION), 0.0, 100.0, 0.0);
+        grid2.add(stockUnitCost, 1, 1);
         
-        grid1.add(informedDuration, 1, 5);
+        l = new Label(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_SELLINGP));
         
-        NumberChooserFX deliveryDelay = new NumberChooserFX(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_DELIVERY_DELAY), 0.0, 100.0, 0.0);
+        grid2.add(l, 0, 2);
         
-        grid1.add(deliveryDelay, 1, 6);
+        NumberChooserFX sellingUnitProffit = new NumberChooserFX("", 0.0, 100.0, 0.0);
         
-        NumberChooserFX initialStock = new NumberChooserFX(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_INITIAL_STOCK), 0.0, 100.0, 0.0);
+        grid2.add(sellingUnitProffit, 1, 2);
         
-        grid1.add(initialStock, 1, 7);
+        l = new Label(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_REAL_DURATION));
         
-        this.setCenter(grid1);
+        grid2.add(l, 0, 3);
+        
+        NumberChooserFX realDuration = new NumberChooserFX("", 0.0, 100.0, 0.0);
+        
+        grid2.add(realDuration, 1, 3);
+        
+        l = new Label(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_INF_DURATION));
+        
+        grid2.add(l, 0, 4);
+        
+        NumberChooserFX informedDuration = new NumberChooserFX("", 0.0, 100.0, 0.0);
+        
+        grid2.add(informedDuration, 1, 4);
+        
+        l = new Label(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_DELIVERY_DELAY));
+        
+        grid2.add(l, 0, 5);
+        
+        NumberChooserFX deliveryDelay = new NumberChooserFX("", 0.0, 100.0, 0.0);
+        
+        grid2.add(deliveryDelay, 1, 5);
+        
+        l = new Label(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_INITIAL_STOCK));
+        
+        grid2.add(l, 0, 6);
+        
+        NumberChooserFX initialStock = new NumberChooserFX("", 0.0, 100.0, 0.0);
+        
+        grid2.add(initialStock, 1, 6);
+        
+        GridPane grid3 = new GridPane();
+        
+        this.setLeft(grid1);
+        this.setCenter(grid2);
+        this.setRight(grid3);
     }
 }
