@@ -22,6 +22,7 @@ public class MainScene extends BorderPane{
     private TabPane tabPane;
     
     private static final Image homeIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.HOME_ICON)).toURI().toString());
+    private static final Image addIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.PLUS_ICON)).toURI().toString());
     
     public MainScene() {
         
@@ -31,10 +32,13 @@ public class MainScene extends BorderPane{
         homeTab.setGraphic(iView);
         homeTab.setClosable(false);
         
-        Tab testTab = new Tab();
-        testTab.setContent(new CreateGamePane());
+        Tab addGameTab = new Tab();
         
-        tabPane = new TabPane(homeTab, testTab);
+        addGameTab.setClosable(false);
+        addGameTab.setGraphic(new ImageView(addIcon));
+        addGameTab.setContent(new CreateGamePane());
+        
+        tabPane = new TabPane(homeTab, addGameTab);
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.SELECTED_TAB);
         tabPane.getStyleClass().add(TabPane.STYLE_CLASS_FLOATING);
         

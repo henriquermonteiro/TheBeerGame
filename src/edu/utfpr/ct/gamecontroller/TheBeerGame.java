@@ -8,8 +8,8 @@ public class TheBeerGame
 {
 	public static void main(String[] args)
 	{
-		new LoggerTest().test();
+		//new LoggerTest().test();
 		//new ReportTest().test();
-		//new PlaceOrderTest().test();
+		new PlaceOrderTest().test();
 	}
 }

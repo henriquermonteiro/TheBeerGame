@@ -20,7 +20,7 @@ public class StartFrame extends Application {
     
     @Override
     public void start(Stage primaryStage) {
-        Scene s = new Scene(mainScene, 600, 400);
+        Scene s = new Scene(mainScene, 680, 460);
         s.getStylesheets().add(StartFrame.class.getResource("/edu/utfpr/ct/hostgui2/utils/default.css").toExternalForm());
         primaryStage.setTitle(Localize.getTextForKey(LocalizationKeys.FRAME_NAME));
         primaryStage.setScene(s);

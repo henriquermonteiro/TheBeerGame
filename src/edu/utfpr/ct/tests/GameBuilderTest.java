@@ -22,13 +22,13 @@ public class GameBuilderTest
 		game = new Game();
 		game.name = "Test";
 		game.password = "Test";
-		game.missingUnitCost = 0.5;
-		game.stockUnitCost = 1.0;
-		game.sellingUnitProfit = 1.0;
+		game.missingUnitCost = 1.0;
+		game.stockUnitCost = 2.0;
+		game.sellingUnitProfit = 3.0;
 		game.realDuration = 36;
 		game.informedDuration = 50;
 		game.deliveryDelay = 2;
-		game.unitiesOnTravel = 4;
+		game.unitiesOnTravel = 16;//4;
 		game.initialStock = 16;
 		game.informedChainSupply = true;
 
@@ -62,7 +62,7 @@ public class GameBuilderTest
 
 			node = (Node) abstractNode;
 			node.playerName = "Test " + position;
-			node.profit = Math.random() * 100;
+			node.profit = 0;//Math.random() * 100;
 			node.playerMove = new ArrayList<>();
 			position++;
 

@@ -40,5 +40,22 @@ public class LocalizationKeys {
     public static String RELOAD_ICON = "GUI-ICON-RELOAD-BUTTON";
     public static String TRASH_ICON = "GUI-ICON-DELETE-BUTTON";
     
+    public static String CONFIRM_ICON = "GUI-ICON-CONFIRM-BUTTON";
+    public static String CANCEL_ICON = "GUI-ICON-CANCEL-BUTTON";
+    
+    public static String RETAILER_ICON = "GUI-ICON-RETAILER";
+    public static String WHOLESALER_ICON = "GUI-ICON-WHOLESALER";
+    public static String DISTRIBUTOR_ICON = "GUI-ICON-DISTRIBUTOR";
+    public static String PRODUCER_ICON = "GUI-ICON-PRODUCER";
+    
+    public static String DEMAND_PARAMETER_SINGLESTEP_INIVAL = "DEMAND-PARAM-SINGLESTEP-INITIAL-VALUE";
+    public static String DEMAND_PARAMETER_SINGLESTEP_FINVAL = "DEMAND-PARAM-SINGLESTEP-FINAL-VALUE";
+    public static String DEMAND_PARAMETER_SINGLESTEP_STEPWEEK = "DEMAND-PARAM-SINGLESTEP-STEP-CHANGE-WEEK";
+    public static String DEMAND_PARAMETER_SINGLESTEP_FINWEEK = "DEMAND-PARAM-SINGLESTEP-FINAL-WEEK";
+    
+    public static String DEMAND_TYPE_SINGLESTEP = "DEMAND-TYPE-SINGLESTEP";
+    
+    public static String SUPPLYCHAIN_TYPE_CLASSIC = "SUPPLYCHAIN-TYPE-CLASSIC";
+    
     public static String DEFAULT_GAME_NAME = "DEFAULT-GAME-NAME";
 }

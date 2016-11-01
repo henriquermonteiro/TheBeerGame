@@ -24,3 +24,15 @@ GUI-WARNING-CREATEGAME-FAILED<>It was not possible to create a new game. \n We a
 GUI-WARNING-CREATEGAME-FAILED-TITLE<>Error while creating a new game
 GUI-ICON-RELOAD-BUTTON<>icon//reload_icon.png
 GUI-ICON-DELETE-BUTTON<>icon//trash_icon.png
+GUI-ICON-CONFIRM-BUTTON<>icon//whitecheckmark.png
+GUI-ICON-CANCEL-BUTTON<>icon//white-close-70.png
+DEMAND-PARAM-SINGLESTEP-INITIAL-VALUE<>Starting demand value:
+DEMAND-PARAM-SINGLESTEP-FINAL-VALUE<>Final demand value:
+DEMAND-PARAM-SINGLESTEP-STEP-CHANGE-WEEK<>Week of change:
+DEMAND-PARAM-SINGLESTEP-FINAL-WEEK<>Duration:
+DEMAND-TYPE-SINGLESTEP<>Single Step
+SUPPLYCHAIN-TYPE-CLASSIC<>Classic Supply-Chain
+GUI-ICON-RETAILER<>icon//retailer.png
+GUI-ICON-WHOLESALER<>icon//wholesaler.png
+GUI-ICON-DISTRIBUTOR<>icon//distributor.png
+GUI-ICON-PRODUCER<>icon//Industry.png

@@ -27,7 +27,7 @@ public class ControllerGame
 	}
 
 	/**
-	 * Makes all the orders placed go from one Node to the other.
+	 * Makes all the order placed go from one Node to the other.
 	 *
 	 * @param gameID
 	 * @param function
@@ -38,41 +38,59 @@ public class ControllerGame
 		int posCurrentNode;
 		Game game;
 		Node node;
-		
+
 		game = games.get(gameID);
-		posCurrentNode = (function.getPosition() - 1) * game.deliveryDelay + (function.getPosition() - 1);
-		node = (Node) games.get(gameID).supplyChain[posCurrentNode];
-		
-		logger.logPlayerMove(order, node);
-		node.currentStock += makeOrderRecursion(game.supplyChain, posCurrentNode + 1, order);
+
+		if(function == null)
+			makeOrderRecursion(gameID, game.supplyChain, 0, order);
+		else
+		{
+			posCurrentNode = (function.getPosition() - 1) * game.deliveryDelay + (function.getPosition() - 1);
+			node = (Node) games.get(gameID).supplyChain[posCurrentNode];
+
+			logger.logPlayerMove(order, node);
+			node.currentStock += makeOrderRecursion(gameID, game.supplyChain, posCurrentNode + 1, order);
+		}
 	}
-	
-	private int makeOrderRecursion(AbstractNode[] an, int posCurrentNode, int order)
+
+	private int makeOrderRecursion(int gameID, AbstractNode[] an, int posCurrentNode, int order)
 	{
 		int travellingStock;
 		Node node;
-		
+
 		if(posCurrentNode == an.length)
 			return order;
-		
+
 		if(an[posCurrentNode] instanceof TravellingTime)
 		{
 			travellingStock = an[posCurrentNode].travellingStock;
-			an[posCurrentNode].travellingStock = makeOrderRecursion(an, posCurrentNode + 1, order);
-			
+			an[posCurrentNode].travellingStock = makeOrderRecursion(gameID, an, posCurrentNode + 1, order);
+
 			return travellingStock;
 		}
-		
+
 		if(an[posCurrentNode] instanceof Node)
 		{
 			node = (Node) an[posCurrentNode];
-			travellingStock = node.travellingStock;
+			calculateProfit(gameID, node, order);
 			node.travellingStock = node.currentStock >= order ? order : node.currentStock;
 			node.currentStock = node.currentStock >= order ? node.currentStock - order : 0;
-			
-			return travellingStock;
+
+			return node.travellingStock;
 		}
-		
+
 		return -1;
+	}
+
+	public void calculateProfit(int gameID, Node node, int order)
+	{
+		Game game = games.get(gameID);
+
+		/* Profit from selling order */
+		node.profit += node.currentStock >= order ? order * game.sellingUnitProfit : node.currentStock * game.sellingUnitProfit;
+		/* Cost from missing unit */
+		node.profit -= node.currentStock >= order ? 0 : (order - node.currentStock) * game.missingUnitCost;
+		/* Cost from the remaining stock after selling */
+		node.profit -= node.currentStock >= order ? (node.currentStock - order) * game.stockUnitCost : 0;
 	}
 }

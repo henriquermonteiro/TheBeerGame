@@ -35,9 +35,9 @@ public class GamePane extends BorderPane{
         
         grid1.add(nameField, 0, 0);
         
-        NumberChooserFX sellingProffit = new NumberChooserFX(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_SELLINGP), 0.0, 100.0, 0.0);
-        
-        grid1.add(sellingProffit, 1, 1);
+//        NumberChooserFX sellingProffit = new NumberChooserFX(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_SELLINGP), 0.0, 100.0, 0.0);
+//        
+//        grid1.add(sellingProffit, 1, 1);
         
         this.setCenter(grid1);
     }
