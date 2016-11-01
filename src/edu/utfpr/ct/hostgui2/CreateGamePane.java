@@ -221,8 +221,12 @@ public class CreateGamePane extends BorderPane {
                         initH + 2 + aUnitH,
                         initH + 2 + aUnitH,}, 7);
                 }
+                
+                context.setGlobalAlpha(0.5);
 
                 context.drawImage(pHolder, (w / 2) - (imgL / 2), 5 + (k * imgL) + (k * (imgL / 2)), imgL, imgL);
+                
+                context.setGlobalAlpha(1.0);
 
                 k++;
             }
@@ -329,8 +333,12 @@ public class CreateGamePane extends BorderPane {
                     }
                 }
 
+                context.setGlobalAlpha(0.5);
+                
                 context.drawImage(pHolder, 5 + (mult * (imgL * 1.5)), 5 + (Math.floor(k / elemRow) * (imgL * 1.5)), imgL, imgL);
 
+                context.setGlobalAlpha(1.0);
+                
                 k++;
             }
         }
