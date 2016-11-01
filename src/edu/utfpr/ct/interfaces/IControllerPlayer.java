@@ -17,10 +17,10 @@ public interface IControllerPlayer
 	 * Realiza uma jogada de um jogador.
 	 * Retorna o montante do pedido atendido. -1 se a jogada for inválida.
 	 *
-	 * @param gameID     ID do jogo onde a jogada será realizada.
-	 * @param nodeID     ID do Node onde a jogada será realizada.
+	 * @param gameID ID do jogo onde a jogada será realizada.
+	 * @param nodeID ID do Node onde a jogada será realizada.
 	 * @param playerName Nome do jogador que realizou a jogada.
-	 * @param move       Jogada realizada.
+	 * @param move Jogada realizada.
 	 * @return Montante do pedido atendido. -1 se a jogada for inválida.
 	 */
 	public Integer postMove(Integer gameID, Integer nodeID, String playerName, Integer move);
@@ -42,7 +42,7 @@ public interface IControllerPlayer
 	 * Ao entrar em um jogo em andamento, o jogador fica na sala de espera,
 	 * o Host da partida pode alocar os jogadores nas posições desejadas.
 	 *
-	 * @param gameID     ID do jogo em que se deseja entrar.
+	 * @param gameID ID do jogo em que se deseja entrar.
 	 * @param playerName Nome do jogador fazendo a requisição.
 	 * @return true se a entrada foi autorizada. false se a entrada foi negada.
 	 */
@@ -52,8 +52,8 @@ public interface IControllerPlayer
 	 * Permite ao jogador selecionar uma posição disponível se a seleção for automática.
 	 * Atenção com condição de corrida na implementação!
 	 *
-	 * @param gameID     ID do jogo que se está selecionando a posição.
-	 * @param nodeID     ID do Node selecionado.
+	 * @param gameID ID do jogo que se está selecionando a posição.
+	 * @param nodeID ID do Node selecionado.
 	 * @param playerName Nome do jogador selecionando a posição.
 	 * @return true se o jogador obteve a posição escolhida. false do contrário.
 	 */

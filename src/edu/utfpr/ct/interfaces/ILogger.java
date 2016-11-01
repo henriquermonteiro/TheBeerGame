@@ -15,11 +15,11 @@ public interface ILogger
 	/**
 	 * Método que registra um movimento de um jogador.
 	 *
-	 * @param gameID     ID do jogo em que a jogada ocorreu.
-	 * @param nodeID     ID do nodo em que a jogada ocorreu.
+	 * @param gameID ID do jogo em que a jogada ocorreu.
+	 * @param nodeID ID do nodo em que a jogada ocorreu.
 	 * @param playerName nome do jogador que executou a jogada.
-	 * @param week       Semana/turno em que a jogada ocorreu
-	 * @param move       Pedido/jogada realizada.
+	 * @param week Semana/turno em que a jogada ocorreu
+	 * @param move Pedido/jogada realizada.
 	 */
 	public void logPlayerMove(Integer gameID, Integer nodeID, String playerName, Integer week, Integer move);
 

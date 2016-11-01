@@ -8,7 +8,7 @@ public enum Function
 	PRODUCER(4);
 
 	private final int position;
-	
+
 	Function(int position)
 	{
 		this.position = position;
@@ -17,5 +17,25 @@ public enum Function
 	public int getPosition()
 	{
 		return position;
+	}
+
+	public Function previous(Function function)
+	{
+		int position;
+
+		position = Math.abs(function.getPosition() - 1);
+		position = position % Function.values().length;
+
+		return Function.values()[position];
+	}
+
+	public Function next(Function function)
+	{
+		int position;
+
+		position = (function.getPosition() + 1);
+		position = position % Function.values().length;
+
+		return Function.values()[position];
 	}
 }
