@@ -90,5 +90,15 @@ public class ControllerMock implements IControllerHost{
     public Game[] getUnfinishedGamesID() {
         return log.getUnfinishedGamesID();
     }
+
+    @Override
+    public String[] getPoolForGame(Integer gameID) {
+        return new String[]{"Alfonso", "Brás", "Carlos", "Denilson", "Edimar"};
+    }
+
+    @Override
+    public int getGameState(Integer gameID) {
+        return 1 << (gameID % 4);
+    }
     
 }
