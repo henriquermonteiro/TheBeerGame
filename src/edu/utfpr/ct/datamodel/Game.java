@@ -1,6 +1,8 @@
 package edu.utfpr.ct.datamodel;
 
-public class Game
+import java.io.Serializable;
+
+public class Game implements Serializable
 {
 	public int gameID;
 	public long timestamp;

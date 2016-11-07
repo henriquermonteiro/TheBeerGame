@@ -1,6 +1,8 @@
 package edu.utfpr.ct.datamodel;
 
-public abstract class AbstractNode
+import java.io.Serializable;
+
+public abstract class AbstractNode implements Serializable
 {
 	public int travellingStock;
 }

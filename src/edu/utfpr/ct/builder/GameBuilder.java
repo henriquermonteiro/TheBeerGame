@@ -1,10 +1,11 @@
-package edu.utfpr.ct.gamecontroller;
+package edu.utfpr.ct.builder;
 
 import edu.utfpr.ct.datamodel.AbstractNode;
 import edu.utfpr.ct.datamodel.Function;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.datamodel.Node;
 import edu.utfpr.ct.datamodel.TravellingTime;
+import edu.utfpr.ct.logmanager.Logger;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -14,8 +15,9 @@ public class GameBuilder
 	public Game buildGame(Game game)
 	{
 		Calendar calendar = new GregorianCalendar();
+		Logger logger = new Logger();
 
-		game.gameID = 0;
+		game.gameID = 0; //logger.getNextGameID();
 		game.timestamp = calendar.getTimeInMillis();
 		buildDemand(game);
 		buildSupplyChain(game);

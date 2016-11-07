@@ -4,7 +4,7 @@ import edu.utfpr.ct.datamodel.AbstractNode;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.datamodel.Node;
 import edu.utfpr.ct.datamodel.TravellingTime;
-import edu.utfpr.ct.gamecontroller.GameBuilder;
+import edu.utfpr.ct.builder.GameBuilder;
 import java.util.ArrayList;
 
 public class GameBuilderTest

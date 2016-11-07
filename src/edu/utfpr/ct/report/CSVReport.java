@@ -1,20 +1,20 @@
-package edu.utfpr.ct.gamecontroller;
+package edu.utfpr.ct.report;
 
 import edu.utfpr.ct.datamodel.AbstractNode;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.datamodel.Node;
 import edu.utfpr.ct.datamodel.TravellingTime;
-import edu.utfpr.ct.interfaces.IReport;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
-public class CSVReport implements IReport
+class CSVReport extends AbstractReport
 {
+	public CSVReport()
+	{
+		super(".csv");
+	}
+
 	@Override
 	public boolean generateReport(Game game)
 	{
@@ -22,7 +22,7 @@ public class CSVReport implements IReport
 
 		try
 		{
-			bw = createFile(game);
+			bw = new BufferedWriter(new FileWriter(createFile(getFileName(game))));
 			writeGameConfig(bw, game);
 			writePlayerMoves(bw, game);
 			bw.close();
@@ -35,18 +35,10 @@ public class CSVReport implements IReport
 		}
 	}
 
-	private BufferedWriter createFile(Game game) throws IOException
+	@Override
+	public Game[] loadReport()
 	{
-		DateFormat dateFormat;
-		String fileName;
-		BufferedWriter bw;
-
-		dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		fileName = dateFormat.format(new Date(game.timestamp));
-		fileName = "Relatório " + fileName + " - " + game.name + ".txt";
-		bw = new BufferedWriter(new FileWriter(new File(fileName)));
-
-		return bw;
+		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
 	private void writeGameConfig(BufferedWriter bw, Game game) throws IOException
@@ -106,7 +98,7 @@ public class CSVReport implements IReport
 
 			node = (Node) abstractNode;
 			bw.newLine();
-			bw.write(node.function.name() + ", ");
+			bw.write(node.function.getName() + ", ");
 			bw.write(node.playerName + ", ");
 			bw.write(node.currentStock + ", ");
 			bw.write(Double.toString(node.profit));

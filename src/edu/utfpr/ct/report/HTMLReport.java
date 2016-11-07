@@ -1,20 +1,20 @@
-package edu.utfpr.ct.gamecontroller;
+package edu.utfpr.ct.report;
 
 import edu.utfpr.ct.datamodel.AbstractNode;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.datamodel.Node;
 import edu.utfpr.ct.datamodel.TravellingTime;
-import edu.utfpr.ct.interfaces.IReport;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
-public class HTMLReport implements IReport
+class HTMLReport extends AbstractReport
 {
+	public HTMLReport()
+	{
+		super(".html");
+	}
+
 	@Override
 	public boolean generateReport(Game game)
 	{
@@ -22,7 +22,7 @@ public class HTMLReport implements IReport
 
 		try
 		{
-			bw = createFile(game);
+			bw = new BufferedWriter(new FileWriter(createFile(getFileName(game))));
 			writeHeader(bw);
 			writeGameConfig(bw, game);
 			writePlayerMoves(bw, game);
@@ -35,6 +35,12 @@ public class HTMLReport implements IReport
 			System.out.println("HTMLReport::generateReport(Game game): " + e.getMessage());
 			return false;
 		}
+	}
+
+	@Override
+	public Game[] loadReport()
+	{
+		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
 	private void writeHeader(BufferedWriter bw) throws IOException
@@ -72,20 +78,6 @@ public class HTMLReport implements IReport
 
 		bw.write(foot);
 		bw.newLine();
-	}
-
-	private BufferedWriter createFile(Game game) throws IOException
-	{
-		DateFormat dateFormat;
-		String fileName;
-		BufferedWriter bw;
-
-		dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		fileName = dateFormat.format(new Date(game.timestamp));
-		fileName = "Relatório " + fileName + " - " + game.name + ".html";
-		bw = new BufferedWriter(new FileWriter(new File(fileName)));
-
-		return bw;
 	}
 
 	private void writeGameConfig(BufferedWriter bw, Game game) throws IOException
@@ -145,7 +137,7 @@ public class HTMLReport implements IReport
 			node = (Node) abstractNode;
 			bw.newLine();
 			bw.write("<tr>");
-			bw.write("<td>" + node.function.name() + "</td>");
+			bw.write("<td>" + node.function.getName() + "</td>");
 			bw.write("<td>" + node.playerName + "</td>");
 			bw.write("<td>" + node.currentStock + "</td>");
 			bw.write("<td>" + node.profit + "</td>");

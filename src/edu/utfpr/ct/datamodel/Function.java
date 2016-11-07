@@ -1,6 +1,8 @@
 package edu.utfpr.ct.datamodel;
 
-public enum Function
+import edu.utfpr.ct.interfaces.IFunction;
+
+public enum Function implements IFunction
 {
 	RETAILER(1),
 	WHOLESALER(2),
@@ -14,28 +16,42 @@ public enum Function
 		this.position = position;
 	}
 
+	@Override
+	public String getName()
+	{
+		return this.name();
+	}
+
+	@Override
 	public int getPosition()
 	{
 		return position;
 	}
 
-	public Function previous(Function function)
+	@Override
+	public IFunction[] getValues()
 	{
-		int position;
-
-		position = Math.abs(function.getPosition() - 1);
-		position = position % Function.values().length;
-
-		return Function.values()[position];
+		return Function.values();
 	}
 
-	public Function next(Function function)
+	@Override
+	public boolean isLast()
 	{
-		int position;
+		return (position == Function.values().length);
+	}
 
-		position = (function.getPosition() + 1);
-		position = position % Function.values().length;
+	@Override
+	public IFunction first()
+	{
+		return Function.values()[0];
+	}
 
-		return Function.values()[position];
+	@Override
+	public IFunction next()
+	{
+		if((this.position + 1) > Function.values().length)
+			return null;
+		else
+			return Function.values()[this.position + 1];
 	}
 }

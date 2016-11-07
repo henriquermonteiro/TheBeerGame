@@ -50,4 +50,10 @@ public interface ILogger
 	 * @return Dados do jogo.
 	 */
 	public Game retrieveGameData(Integer gameID);
+	
+	/**
+	 * PEGA TUTO CHESUS!
+	 * @return 
+	 */
+	public Game[] getUnfinishedGames();
 }

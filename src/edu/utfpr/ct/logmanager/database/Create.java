@@ -8,7 +8,8 @@ import java.sql.Statement;
 public class Create
 {
 	private final String game = "CREATE TABLE game( "
-								+ "game_id               INT NOT NULL, "
+								//+ "game_id               INT NOT NULL, "
+								+ "game_id               INT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 0, INCREMENT BY 1), "
 								+ "timestamp             BIGINT NOT NULL, "
 								+ "name                  VARCHAR(128) NOT NULL, "
 								+ "password              VARCHAR(32), "
@@ -76,7 +77,8 @@ public class Create
 			}
 			catch(SQLException e)
 			{
-				System.out.println("Can't create table: " + e.getSQLState());
+				System.out.println("Create::createTable(Connection connection, String tableName, String query): " + e.getSQLState());
+				System.out.println("Create::createTable(Connection connection, String tableName, String query): " + e.getMessage());
 			}
 		}
 	}

@@ -142,5 +142,11 @@ public class LoggerMock implements ILogger{
     public void logPlayerMove(int gameID, Node node) {
         System.out.println("Beeep! \n Ação salva.");
     }
+
+	@Override
+	public Game[] getUnfinishedGames()
+	{
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
     
 }
