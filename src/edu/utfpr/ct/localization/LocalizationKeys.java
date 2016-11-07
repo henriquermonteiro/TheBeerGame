@@ -38,7 +38,12 @@ public class LocalizationKeys {
     public static String HOME_ICON = "GUI-ICON-HOME-TAB";
     public static String PLUS_ICON = "GUI-ICON-PLUS-TAB";
     public static String RELOAD_ICON = "GUI-ICON-RELOAD-BUTTON";
-    public static String TRASH_ICON = "GUI-ICON-DELETE-BUTTON";
+    public static String TRASH_ICON = "GUI-ICON-TRASH-BUTTON";
+    public static String DELETE_ICON = "GUI-ICON-DELETE-BUTTON";
+    public static String VIEW_ICON = "GUI-ICON-VIEW-BUTTON";
+    public static String LOAD_ICON = "GUI-ICON-RELOAD-BUTTON";
+    public static String LOCKED_ICON = "GUI-ICON-LOCKED-BUTTON";
+    public static String UNLOCKED_ICON = "GUI-ICON-UNLOCKED-BUTTON";
     
     public static String CONFIRM_ICON = "GUI-ICON-CONFIRM-BUTTON";
     public static String CANCEL_ICON = "GUI-ICON-CANCEL-BUTTON";

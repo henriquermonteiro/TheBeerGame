@@ -5,6 +5,7 @@
  */
 package edu.utfpr.ct.hostgui2;
 
+import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.hostgui2.utils.NumberChooserFX;
 import edu.utfpr.ct.localization.LocalizationKeys;
 import edu.utfpr.ct.localization.Localize;
@@ -21,9 +22,12 @@ import javafx.scene.layout.VBox;
  * @author henrique
  */
 public class GamePane extends BorderPane{
-
-    public GamePane() {
+    private Game game;
+    
+    public GamePane(Game game) {
         super();
+        this.game = game;
+        
         createContent();
     }
     

@@ -23,9 +23,14 @@ GUI-TITLE-CREATEGAME-SUPPLYCHAIN-BORDER<>Supply Chain Topology
 GUI-WARNING-CREATEGAME-FAILED<>It was not possible to create a new game. \n We apologize for the inconvenience. \n If the problem persists, contact the developers.
 GUI-WARNING-CREATEGAME-FAILED-TITLE<>Error while creating a new game
 GUI-ICON-RELOAD-BUTTON<>icon//reload_icon.png
-GUI-ICON-DELETE-BUTTON<>icon//trash_icon.png
+GUI-ICON-TRASH-BUTTON<>icon//trash_icon.png
 GUI-ICON-CONFIRM-BUTTON<>icon//whitecheckmark.png
 GUI-ICON-CANCEL-BUTTON<>icon//white-close-70.png
+GUI-ICON-DELETE-BUTTON<>icon//trash_icon.png
+GUI-ICON-VIEW-BUTTON<>icon//view-file-20.png
+GUI-ICON-RELOAD-BUTTON<>icon//reload_icon.png
+GUI-ICON-LOCKED-BUTTON<>icon//close-lock-20.png
+GUI-ICON-UNLOCKED-BUTTON<>icon//open-lock-20.png
 DEMAND-PARAM-SINGLESTEP-INITIAL-VALUE<>Starting demand value:
 DEMAND-PARAM-SINGLESTEP-FINAL-VALUE<>Final demand value:
 DEMAND-PARAM-SINGLESTEP-STEP-CHANGE-WEEK<>Week of change:

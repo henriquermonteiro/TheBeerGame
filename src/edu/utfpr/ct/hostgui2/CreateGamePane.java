@@ -19,6 +19,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
@@ -39,14 +40,17 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -69,33 +73,68 @@ public class CreateGamePane extends BorderPane {
     private static final Image checkIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.CONFIRM_ICON)).toURI().toString());
     private static final Image cancelIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.CANCEL_ICON)).toURI().toString());
 
+    private TextField nameField;
+    private CheckBox informedSupplyChain;
     private CheckBox usePassword;
     private TextField password;
     private ScrollPane parameterBox;
     private LineChart demandChart;
     private ComboBox<DemandTypes> demandTypeSelect;
     private Node[] parametersElements;
-
+    private NumberChooserFX missingUnitCost;
+    private NumberChooserFX stockUnitCost;
+    private NumberChooserFX sellingUnitProffit;
     private NumberChooserFX realDuration;
-
+    private NumberChooserFX informedDuration;
+    private NumberChooserFX deliveryDelay;
+    private NumberChooserFX initialStock;
     private ComboBox<SupplyChainTypes> supplyChainTypeSelect;
     private Canvas chainCanvas;
+    
+    private TextField simpleName;
+    private CheckBox simpleInformedSupplyChain;
+    private CheckBox simpleUsePassword;
+    private TextField simplePassword;
+    private LineChart simpleDemandChart;
+    private Canvas simpleChainCanvas;
+    
+    private BorderPane advancedPane;
+    private BorderPane simplePane;
 
     public CreateGamePane() {
         super();
-        createContent();
+        
+        createAdvancedContent();
         updateChart();
+        
+        createSimpleContent();
+        
+        this.setCenter(simplePane);
+    }
+    
+    private void changePane(boolean toAdvanced){
+        if(toAdvanced){
+            this.setCenter(advancedPane);
+        }else{
+            this.setCenter(simplePane);
+        }
     }
 
     private Parent getDemandParametersBox(Object[] parameterDef) {
         if (parameterDef.length % 3 == 0) {
-            VBox ret = new VBox(1.0);
+            FlowPane ret = new FlowPane();
+            ret.setAlignment(Pos.CENTER);
+            ret.setHgap(15.0);
+            ret.setVgap(8.0);
+            ret.setPadding(new Insets(15));
 
             parametersElements = new Node[parameterDef.length / 3];
 
             for (int k = 0; k < parameterDef.length; k += 3) {
+                VBox v = new VBox(3.0);
+                
                 Label l = new Label(Localize.getTextForKey((String) parameterDef[k]));
-                ret.getChildren().add(l);
+                v.getChildren().add(l);
 
                 if (parameterDef[k + 1] == Integer.class) {
                     Spinner spin = new Spinner();
@@ -108,9 +147,11 @@ public class CreateGamePane extends BorderPane {
                         }
                     });
 
-                    ret.getChildren().add(spin);
+                    v.getChildren().add(spin);
                     parametersElements[k / 3] = spin;
                 }
+                
+                ret.getChildren().add(v);
             }
 
             return ret;
@@ -156,15 +197,11 @@ public class CreateGamePane extends BorderPane {
         parameterBox.setContent(getDemandParametersBox(demandTypeSelect.getValue().getParamametersType()));
     }
 
-    private void updateCanvas() {
-//        System.out.println(chainCanvas.getHeight());
-
+    private void updateCanvas(Canvas chainCanvas) {
         GraphicsContext context = chainCanvas.getGraphicsContext2D();
 
         context.clearRect(0, 0, chainCanvas.getWidth(), chainCanvas.getHeight());
-
-//        context.setFill(new LinearGradient(0.0, 0.0, 0.0, 1.0, true, CycleMethod.REPEAT, new Stop(0.0, Color.rgb(0, 0, 0, 1.0)), new Stop(1.0, Color.rgb(255, 255, 255, 1.0))));
-//        context.fillRect(0, 0, chainCanvas.getWidth(), chainCanvas.getHeight());
+        
         double w = chainCanvas.getWidth();
         double h = chainCanvas.getHeight();
 
@@ -234,7 +271,7 @@ public class CreateGamePane extends BorderPane {
         } else {
             int elemRow = (int) Math.ceil(Math.sqrt(nodes.length));
 
-            imgL = (w - 10) / (elemRow + ((elemRow - 1) * 0.5));
+            imgL = (Math.min(w, h) - 10) / (elemRow + ((elemRow - 1) * 0.5));
 
             int k = 0;
             for (edu.utfpr.ct.datamodel.Node n : nodes) {
@@ -260,7 +297,8 @@ public class CreateGamePane extends BorderPane {
                 if (k > 0) {
                     if (k % elemRow == 0) {
                         double arrowW = imgL / 5;
-                        double arrowInitX = (k % (elemRow * 2) == 0 ? (5 + (imgL / 2)) : (w - (imgL / 2) - 5)) - (arrowW / 2);
+//                        double arrowInitX = (k % (elemRow * 2) == 0 ? (5 + (imgL / 2)) : (w - (imgL / 2) - 5)) - (arrowW / 2);
+                        double arrowInitX = (k % (elemRow * 2) == 0 ? (5 + (imgL / 2)) : ((elemRow * imgL) + ((elemRow-1) * (imgL/2) ) + 5 - (imgL / 2))) - (arrowW / 2);
                         double arrowXUnit = arrowW / 4;
 
                         double initH = (Math.round(k / elemRow) * imgL) + 5;
@@ -348,17 +386,137 @@ public class CreateGamePane extends BorderPane {
 
     }
 
-    private void createContent() {
+    private void createSimpleContent() {
+        simpleName = new TextField();
+        simpleInformedSupplyChain = new CheckBox(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_INFORMED_SC));
+        simpleUsePassword = new CheckBox(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_PASSWORD_CHECK));
+        simplePassword = new TextField();
+        simpleDemandChart = new LineChart(new NumberAxis(), new NumberAxis());
+        simpleChainCanvas = new Canvas() {
+            @Override
+            public boolean isResizable() {
+                return true;
+            }
+        };
+        
+        simpleName.setPromptText(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_NAME));
+        simplePassword.setPromptText(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_PASSWORD_FIELD));
+        simplePassword.setDisable(true);
+        
+        simpleUsePassword.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (simpleUsePassword.isSelected()) {
+                    simplePassword.setDisable(false);
+                } else {
+                    simplePassword.setText(null);
+                    simplePassword.setDisable(true);
+                }
+            }
+        });
+        
+        simpleDemandChart.setPrefSize(600, 300);
+        simpleDemandChart.legendVisibleProperty().setValue(Boolean.FALSE);
+        simpleDemandChart.setCreateSymbols(false);
+        
+        int[] demand = demandTypeSelect.getValue().getDemandForParameter(getParameters());
+
+        XYChart.Series serie = new XYChart.Series();
+        int k = 1;
+        for (int i : demand) {
+            serie.getData().add(new XYChart.Data<>(k++, i));
+        }
+
+        ((NumberAxis) simpleDemandChart.getXAxis()).setAutoRanging(false);
+        ((NumberAxis) simpleDemandChart.getXAxis()).setLowerBound(1.0);
+        ((NumberAxis) simpleDemandChart.getXAxis()).setUpperBound(demand.length);
+        ((NumberAxis) simpleDemandChart.getXAxis()).setMinorTickCount(1);
+        simpleDemandChart.getData().add(serie);
+        
+        HBox b = new HBox();
+        b.setMinSize(0, 0);
+        
+        simpleChainCanvas.widthProperty().bind(b.widthProperty());
+        simpleChainCanvas.heightProperty().bind(b.heightProperty());
+
+        simpleChainCanvas.widthProperty().addListener(observable -> updateCanvas(simpleChainCanvas));
+        simpleChainCanvas.heightProperty().addListener(observable -> updateCanvas(simpleChainCanvas));
+
+        b.getChildren().add(simpleChainCanvas);
+        b.fillHeightProperty().setValue(Boolean.TRUE);
+        
+        BorderPane bP = new BorderPane(b);
+        
+        GridPane grid1 = new GridPane();
+        
+        GridPane.setConstraints(simpleName, 0, 0);
+        GridPane.setConstraints(simpleInformedSupplyChain, 0, 1);
+        GridPane.setConstraints(simpleUsePassword, 0, 2);
+        GridPane.setConstraints(simplePassword, 0, 3);
+        GridPane.setConstraints(simpleDemandChart, 0, 4);
+        
+        RowConstraints r15 = new RowConstraints();
+//        r15.setPercentHeight(15);
+        
+        RowConstraints r40 = new RowConstraints();
+//        r40.setPercentHeight(40);
+        r40.setVgrow(Priority.ALWAYS);
+        
+        grid1.getRowConstraints().addAll(r15, r15, r15, r15, r40);
+        
+        grid1.getChildren().addAll(simpleName, simpleInformedSupplyChain, simpleUsePassword, simplePassword, simpleDemandChart);
+        
+        GridPane grid2 = new GridPane();
+        
+        RowConstraints rC = new RowConstraints();
+        rC.setPercentHeight(100);
+        
+        ColumnConstraints cC = new ColumnConstraints();
+        cC.setPercentWidth(50);
+        
+        grid2.getColumnConstraints().addAll(cC, cC);
+        grid2.getRowConstraints().addAll(rC);
+        
+        grid2.setPadding(new Insets(20));
+        
+        grid2.add(grid1, 0, 0);
+        grid2.add(bP, 1, 0);
+        
+        FlowPane fP = new FlowPane(Orientation.HORIZONTAL);
+        fP.setAlignment(Pos.CENTER);
+        
+        Button createButton = new Button();
+        createButton.setGraphic(new ImageView(checkIcon));
+        
+        Button cancelButton = new Button();
+        cancelButton.setGraphic(new ImageView(cancelIcon));
+        
+        Button advButton = new Button();
+        advButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                changePane(true);
+            }
+        });
+        
+        fP.getChildren().addAll(createButton, cancelButton, advButton);
+        
+        simplePane = new BorderPane();
+        simplePane.setCenter(grid2);
+        simplePane.setBottom(fP);
+    }
+    
+    private void createAdvancedContent() {
         GridPane grid1 = new GridPane();
         grid1.setPadding(new Insets(5.0));
         grid1.setVgap(10.0);
 
-        TextField nameField = new TextField();
+        nameField = new TextField();
         nameField.setPromptText(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_NAME));
-
+        
         grid1.add(nameField, 0, 0);
 
-        CheckBox informedSupplyChain = new CheckBox(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_INFORMED_SC));
+        informedSupplyChain = new CheckBox(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_INFORMED_SC));
 
         grid1.add(informedSupplyChain, 0, 1);
 
@@ -390,13 +548,18 @@ public class CreateGamePane extends BorderPane {
         grid1.add(demandTypeSelect, 0, 4);
 
         demandChart = new LineChart(new NumberAxis(), new NumberAxis());
-        demandChart.setPrefSize(100, 80);
+        demandChart.setPrefSize(600, 300);
+        demandChart.legendVisibleProperty().setValue(Boolean.FALSE);
         demandChart.setCreateSymbols(false);
 
         grid1.add(demandChart, 0, 5);
 
         parameterBox = new ScrollPane();
         grid1.add(parameterBox, 0, 6);
+        
+        ColumnConstraints cConsG1 = new ColumnConstraints();
+        cConsG1.setFillWidth(true);
+        grid1.getColumnConstraints().add(cConsG1);
 
         updateParameterBox();
 
@@ -408,7 +571,7 @@ public class CreateGamePane extends BorderPane {
         GridPane.setConstraints(l, 0, 0, 1, 1, HPos.RIGHT, VPos.CENTER);
         grid2.add(l, 0, 0);
 
-        NumberChooserFX missingUnitCost = new NumberChooserFX("", 0.0, 100.0, 1.0, 0.01);
+        missingUnitCost = new NumberChooserFX("", 0.0, 100.0, 1.0, 0.01);
 
         grid2.add(missingUnitCost, 1, 0);
 
@@ -417,7 +580,7 @@ public class CreateGamePane extends BorderPane {
         GridPane.setConstraints(l, 0, 1, 1, 1, HPos.RIGHT, VPos.CENTER);
         grid2.add(l, 0, 1);
 
-        NumberChooserFX stockUnitCost = new NumberChooserFX("", 0.0, 100.0, 0.5, 0.01);
+        stockUnitCost = new NumberChooserFX("", 0.0, 100.0, 0.5, 0.01);
 
         grid2.add(stockUnitCost, 1, 1);
 
@@ -426,7 +589,7 @@ public class CreateGamePane extends BorderPane {
         GridPane.setConstraints(l, 0, 2, 1, 1, HPos.RIGHT, VPos.CENTER);
         grid2.add(l, 0, 2);
 
-        NumberChooserFX sellingUnitProffit = new NumberChooserFX("", 0.0, 100.0, 0.0, 0.01);
+        sellingUnitProffit = new NumberChooserFX("", 0.0, 100.0, 0.0, 0.01);
 
         grid2.add(sellingUnitProffit, 1, 2);
 
@@ -450,7 +613,7 @@ public class CreateGamePane extends BorderPane {
         GridPane.setConstraints(l, 0, 4, 1, 1, HPos.RIGHT, VPos.CENTER);
         grid2.add(l, 0, 4);
 
-        NumberChooserFX informedDuration = new NumberChooserFX("", 0.0, 100.0, 60.0, 1.0);
+        informedDuration = new NumberChooserFX("", 0.0, 100.0, 60.0, 1.0);
 
         grid2.add(informedDuration, 1, 4);
 
@@ -459,7 +622,7 @@ public class CreateGamePane extends BorderPane {
         GridPane.setConstraints(l, 0, 5, 1, 1, HPos.RIGHT, VPos.CENTER);
         grid2.add(l, 0, 5);
 
-        NumberChooserFX deliveryDelay = new NumberChooserFX("", 0.0, 100.0, 2.0, 1.0);
+        deliveryDelay = new NumberChooserFX("", 0.0, 100.0, 2.0, 1.0);
 
         grid2.add(deliveryDelay, 1, 5);
 
@@ -468,19 +631,17 @@ public class CreateGamePane extends BorderPane {
         GridPane.setConstraints(l, 0, 6, 1, 1, HPos.RIGHT, VPos.CENTER);
         grid2.add(l, 0, 6);
 
-        NumberChooserFX initialStock = new NumberChooserFX("", 0.0, 100.0, 10.0, 1.0);
+        initialStock = new NumberChooserFX("", 0.0, 100.0, 10.0, 1.0);
 
         grid2.add(initialStock, 1, 6);
 
         BorderPane grid3 = new BorderPane();
 
-//        GridPane grid3 = new GridPane();
-//        grid3.setPadding(new Insets(2.0));
         supplyChainTypeSelect = new ComboBox<>();
         supplyChainTypeSelect.getItems().addAll(SupplyChainTypes.values());
         supplyChainTypeSelect.setValue(SupplyChainTypes.CLASSIC_CHAIN);
+        supplyChainTypeSelect.setDisable(true);
 
-//        grid3.add(supplyChainTypeSelect, 0, 0);
         grid3.setTop(supplyChainTypeSelect);
 
         HBox b = new HBox();
@@ -496,19 +657,15 @@ public class CreateGamePane extends BorderPane {
         chainCanvas.widthProperty().bind(b.widthProperty());
         chainCanvas.heightProperty().bind(b.heightProperty());
 
-        chainCanvas.widthProperty().addListener(observable -> updateCanvas());
-        chainCanvas.heightProperty().addListener(observable -> updateCanvas());
+        chainCanvas.widthProperty().addListener(observable -> updateCanvas(chainCanvas));
+        chainCanvas.heightProperty().addListener(observable -> updateCanvas(chainCanvas));
 
         b.getChildren().add(chainCanvas);
         b.fillHeightProperty().setValue(Boolean.TRUE);
 
-//        BorderPane canvasBox = new BorderPane(chainCanvas);
-//        
-//        GridPane.setConstraints(canvasBox, 0, 1, 1, 3, HPos.LEFT, VPos.BASELINE, Priority.ALWAYS, Priority.ALWAYS);
-//        grid3.add(canvasBox, 0, 1);
         grid3.setCenter(b);
 
-        updateCanvas();
+        updateCanvas(chainCanvas);
 
         HBox buttonsBox = new HBox(10);
         buttonsBox.setAlignment(Pos.BASELINE_RIGHT);
@@ -525,30 +682,44 @@ public class CreateGamePane extends BorderPane {
         iV.setFitWidth(60);
         Button confirmButton = new Button("", iV);
         confirmButton.setStyle("-fx-base: #00FF00");
+        
+        cancelButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                changePane(false);
+            }
+        });
 
         buttonsBox.getChildren().addAll(confirmButton, cancelButton);
 
         GridPane gP = new GridPane();
 
         ColumnConstraints cCons = new ColumnConstraints();
-        cCons.setPercentWidth(30);
+        cCons.setPercentWidth(35);
 
         ColumnConstraints cCons2 = new ColumnConstraints();
-        cCons2.setPercentWidth(40);
+        cCons2.setPercentWidth(30);
 
         gP.getColumnConstraints().add(cCons);
         gP.getColumnConstraints().add(cCons2);
         gP.getColumnConstraints().add(cCons);
+        
+        RowConstraints rCons = new RowConstraints();
+        rCons.setPercentHeight(100);
 
+        gP.getRowConstraints().add(rCons);
+        
+        grid1.setAlignment(Pos.CENTER);
+        grid2.setAlignment(Pos.CENTER);
+        
         gP.add(grid1, 0, 0);
         gP.add(grid2, 1, 0);
         gP.add(grid3, 2, 0);
+        
+        gP.setGridLinesVisible(true);
 
-//        this.setLeft(grid1);
-//        this.setCenter(grid2);
-//        this.setRight(grid3);
-        this.setCenter(gP);
-
-        this.setBottom(buttonsBox);
+        advancedPane = new BorderPane();
+        advancedPane.setCenter(gP);
+        advancedPane.setBottom(buttonsBox);
     }
 }

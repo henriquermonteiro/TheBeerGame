@@ -5,6 +5,8 @@
  */
 package edu.utfpr.ct.hostgui2;
 
+import edu.utfpr.ct.datamodel.Game;
+import edu.utfpr.ct.interfaces.IControllerHost;
 import edu.utfpr.ct.localization.LocalizationKeys;
 import edu.utfpr.ct.localization.Localize;
 import java.io.File;
@@ -24,13 +26,17 @@ public class MainScene extends BorderPane{
     private static final Image homeIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.HOME_ICON)).toURI().toString());
     private static final Image addIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.PLUS_ICON)).toURI().toString());
     
-    public MainScene() {
+    private IControllerHost control;
+    
+    public MainScene(IControllerHost control) {
+        this.control = control;
         
         Tab homeTab = new Tab();
         
         ImageView iView = new ImageView(homeIcon);
         homeTab.setGraphic(iView);
         homeTab.setClosable(false);
+        homeTab.setContent(new LoaderPane(this));
         
         Tab addGameTab = new Tab();
         
@@ -42,8 +48,37 @@ public class MainScene extends BorderPane{
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.SELECTED_TAB);
         tabPane.getStyleClass().add(TabPane.STYLE_CLASS_FLOATING);
         
-        
         this.setCenter(tabPane);
+        
+        Game g  = new Game();
+        g.gameID = 1;
+        
+        createGame(g);
     }
     
+    public void makeGameTab(Game game){
+        Tab gameTab = new Tab(game.name, new PlayGamePane(this, game));
+        
+        this.tabPane.getTabs().add(tabPane.getTabs().size() - 1, gameTab);
+    }
+    
+    public Game[] gameAvailableGames(){
+        return control.getUnfinishedGamesID();
+    }
+    
+    public String[] gameAvailableReports(){
+        return control.getAvailableReports();
+    }
+    
+    public void createGame(Game game){
+        if(control.createGame(game)){
+            makeGameTab(control.getGameRoomData(game.gameID));
+        }else{
+            // TODO : warn error
+        }
+    }
+
+    void changeGameState() {
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
