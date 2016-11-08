@@ -118,4 +118,8 @@ public interface IControllerHost
 	 * @return Dados do jogo.
 	 */
 	public Game getGameRoomData(Integer gameID);
+        
+        public String[] getPoolForGame(Integer gameID);
+        
+        public int getGameState(Integer gameID);
 }
