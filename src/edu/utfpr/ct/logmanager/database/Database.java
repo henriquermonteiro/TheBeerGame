@@ -10,12 +10,12 @@ import java.sql.SQLException;
 public class Database
 {
 	private static Connection connection;
-	
+
 	public void dropDB()
 	{
 		deleteDir(new File("DB"));
 	}
-	
+
 	public void initializeDB()
 	{
 		new Create().createTables();
@@ -31,7 +31,7 @@ public class Database
 
 		file.delete();
 	}
-	
+
 	public static Connection getConnection()
 	{
 		String connectionString;

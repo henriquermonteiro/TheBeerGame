@@ -1,7 +1,6 @@
 package edu.utfpr.ct.gamecontroller;
 
 import edu.utfpr.ct.datamodel.AbstractNode;
-import edu.utfpr.ct.datamodel.Function;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.datamodel.Node;
 import edu.utfpr.ct.datamodel.TravellingTime;
@@ -11,7 +10,7 @@ import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Wrapper
+public class Engine
 {
 	public static final int SETUP = 1;
 	public static final int RUNNING = 2;
@@ -25,10 +24,9 @@ public class Wrapper
 	private int weeks;
 	private int state;
 
-	public Wrapper(IFunction function)
+	public Engine()
 	{
 		this.players = new HashSet<>();
-		resetConfigs();
 	}
 
 	public Game getGame()
@@ -36,10 +34,11 @@ public class Wrapper
 		return game;
 	}
 
-	public void setGame(Game game)
+	public void setGame(Game game, IFunction function)
 	{
-		resetConfigs();
 		this.game = game;
+		this.turn = function;
+		resetConfigs();
 	}
 
 	public boolean isClientTurn()
@@ -117,11 +116,12 @@ public class Wrapper
 		if(state != SETUP)
 			return;
 
-		chainSize = Function.values().length;
+		chainSize = turn.getValues().length;
 		chainSize = chainSize + chainSize * game.deliveryDelay;
 
-		game.gameID = 0;
-		game.timestamp = new GregorianCalendar().getTimeInMillis();
+		if(game.timestamp == 0)
+			game.timestamp = new GregorianCalendar().getTimeInMillis();
+
 		game.demand = new int[game.realDuration];
 		game.supplyChain = new AbstractNode[chainSize];
 
@@ -163,6 +163,10 @@ public class Wrapper
 			while(!clientTurn)
 			{
 				node = getNodeByFunction(turn);
+
+				if(i == node.playerMove.size())
+					return;
+
 				makeOrder(node.playerMove.get(i));
 				nextTurn();
 			}
@@ -273,7 +277,6 @@ public class Wrapper
 	private void resetConfigs()
 	{
 		players.clear();
-		game = null;
 		clientTurn = true;
 		turn = turn.first();
 		weeks = 0;

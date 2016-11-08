@@ -1,11 +1,12 @@
 package edu.utfpr.ct.gamecontroller;
 
+import edu.utfpr.ct.interfaces.IControllerHost2;
 import edu.utfpr.ct.datamodel.Function;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.interfaces.IFunction;
-import edu.utfpr.ct.interfaces.ILogger;
+import edu.utfpr.ct.interfaces.ILogger2;
 import edu.utfpr.ct.interfaces.IReport;
-import edu.utfpr.ct.logmanager.Logger;
+import edu.utfpr.ct.logmanager.Logger2;
 import edu.utfpr.ct.report.ReportManager;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,150 +16,186 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class ControllerHost
+public class ControllerHost implements IControllerHost2
 {
-	private final Map<String, Wrapper> wrappers;
-	//private final Map<String, Game> reports;
+	private final Map<String, Engine> engines;
 	private final Set<Game> reports;
 	private final IReport reportManager;
-	private final ILogger logger;
+	private final ILogger2 logger;
 
 	public ControllerHost()
 	{
-		this.wrappers = new HashMap<>();
-		//this.reports = new HashMap<>();
+		this.engines = new HashMap<>();
 		this.reports = new HashSet<>();
 		this.reportManager = new ReportManager();
-		this.logger = Logger.getLogger();
-	}
+		this.logger = Logger2.getLogger();
 
-	public boolean createGame(Game game) throws IllegalArgumentException
-	{
-		Wrapper wrapper = new Wrapper(Function.RETAILER);
-
-		if(!wrapper.validateParameters(game))
-			throw new IllegalArgumentException("Invalid parameters");
-		if(wrappers.containsKey(game.name))
-			throw new IllegalArgumentException("Invalid parameter: name not unique");
-
-		wrapper.setGame(game);
-		wrapper.buildGame();
-		logger.logGameStart(game);
-		wrappers.put(game.name, wrapper);
-
-		return true;
+		loadResources();
 	}
 
 	private void loadResources()
 	{
-		Wrapper wrapper;
+		Engine engine;
 
-		for(Game game : logger.getUnfinishedGames())
+		for(Game game : logger.getGames())
 		{
-			wrapper = new Wrapper(Function.RETAILER);
-			wrapper.setGame(game);
-			wrapper.rebuildOrders();
+			engine = new Engine();
+			engine.setGame(game, Function.RETAILER);
+			engine.rebuildOrders();
 
-			if(wrapper.getState() == Wrapper.FINISHED)
-				reportManager.generateReport(game);
+			if(engine.getState() == Engine.FINISHED)
+				reportManager.createReport(game);
 			else
-				wrappers.put(game.name, wrapper);
+				engines.put(game.name, engine);
 		}
 
-		reports.addAll(Arrays.asList(reportManager.loadReports()));
+		reports.addAll(Arrays.asList(reportManager.getReports()));
 	}
 
-	public boolean restoreGame(Integer gameID)
+	@Override
+	public boolean createGame(Game game) throws IllegalArgumentException
 	{
-		Wrapper wrapper = new Wrapper(Function.RETAILER);
-		Game game = logger.retrieveGameData(gameID);
+		Engine engine = new Engine();
 
-		wrapper.setGame(game);
-		wrapper.rebuildOrders();
-		wrappers.put(game.name, wrapper);
+		if(!engine.validateParameters(game))
+			throw new IllegalArgumentException("Invalid parameters");
+		if(engines.containsKey(game.name))
+			throw new IllegalArgumentException("Invalid parameter: name not unique");
+
+		engine.setGame(game, Function.RETAILER);
+		engine.buildGame();
+		logger.logGameStart(game);
+		engines.put(game.name, engine);
 
 		return true;
 	}
 
-	public boolean startGame(String gameName)
+	@Override
+	public Game[] getGames()
 	{
-		return wrappers.get(gameName).setState(Wrapper.RUNNING);
+		List<Game> unfinishedGames = new ArrayList<>();
+
+		engines.entrySet().stream().forEach(
+			(entry) -> { unfinishedGames.add(entry.getValue().getGame()); });
+
+		return unfinishedGames.toArray(new Game[0]);
 	}
 
-	public boolean stopGame(String gameName)
+	@Override
+	public Game[] getReports()
 	{
-		return wrappers.get(gameName).setState(Wrapper.PAUSED);
+		return reports.toArray(new Game[0]);
 	}
 
+	@Override
+	public String[] getPlayersOnGame(String gameName)
+	{
+		return engines.get(gameName).getPlayers();
+	}
+
+	@Override
+	public Game getGame(String gameName)
+	{
+		return engines.get(gameName).getGame();
+	}
+
+	@Override
+	public Game getReport(String gameName)
+	{
+		for(Game game : reports)
+			if(game.name == gameName)
+				return game;
+
+		return null;
+	}
+
+	@Override
 	public boolean purgeGame(String gameName)
 	{
-		Wrapper wrapper = wrappers.remove(gameName);
-		reportManager.purgeReport(wrapper.getGame());
-		logger.purgeGame(wrapper.getGame().gameID);
+		Engine engine = engines.remove(gameName);
+		reportManager.purgeReport(engine.getGame());
+		logger.purgeGame(engine.getGame().gameID);
 
 		return true;
 	}
 
-	public Game getGameReport(String gameName)
-	{
-		return wrappers.get(gameName).getGame();
-	}
-
-	public Game[] getUnfinishedGames()
-	{
-		return logger.getUnfinishedGamesID();
-	}
-
-	public String[] getAvailableReports()
-	{
-		Wrapper wrapper;
-		List<String> names = new ArrayList<>();
-
-		for(Game report : reportManager.loadReports())
-		{
-			wrapper = new Wrapper(Function.RETAILER);
-			wrapper.setGame(report);
-			wrapper.setState(Wrapper.FINISHED);
-			names.add(wrapper.getGame().name);
-		}
-
-		return names.toArray(new String[0]);
-	}
-
+	@Override
 	public boolean purgeReport(String gameName)
 	{
-		throw new UnsupportedOperationException("Not supported yet.");
+		for(Game report : reports)
+			if(report.name == gameName)
+			{
+				reportManager.purgeReport(report);
+				reports.remove(report);
+				break;
+			}
+
+		return true;
 	}
 
+	@Override
+	public boolean startGame(String gameName)
+	{
+		return engines.get(gameName).setState(Engine.RUNNING);
+	}
+
+	@Override
+	public boolean pauseGame(String gameName)
+	{
+		return engines.get(gameName).setState(Engine.PAUSED);
+	}
+
+	@Override
+	public boolean addPlayerOnGame(String gameName, String playerName)
+	{
+		return engines.get(gameName).addPlayer(playerName);
+	}
+
+	@Override
+	public boolean purgePlayerOnGame(String gameName, String playerName)
+	{
+		return engines.get(gameName).removePlayer(playerName);
+	}
+
+	@Override
 	public boolean changePlayerForNode(String gameName, IFunction function, String playerName)
 	{
-		return wrappers.get(gameName).changePlayerForNode(function, playerName);
+		return engines.get(gameName).changePlayerForNode(function, playerName);
 	}
 
+	@Override
 	public boolean removePlayerFromNode(String gameName, IFunction function)
 	{
-		return changePlayerForNode(gameName, function, "");
+		return engines.get(gameName).changePlayerForNode(function, "");
 	}
 
-	public Integer postMoveForNode(String gameName, Integer order) throws IllegalStateException
+	@Override
+	public int postMoveForNode(String gameName, int order) throws IllegalStateException, IllegalArgumentException
 	{
-		Wrapper wrapper;
+		Engine engine;
+		int qty;
 
+		if(!engines.containsKey(gameName))
+			throw new IllegalStateException("Game not found");
 		if(order < 0)
-			return -1;
+			throw new IllegalArgumentException("Invalid order");
 
-		wrapper = wrappers.get(gameName);
-		if(wrapper.getState() == Wrapper.FINISHED)
-			throw new IllegalStateException("Game is finished");
+		engine = engines.get(gameName);
+		if(!engine.isClientTurn())
+		{
+			engine.getNodeOfTurn().playerMove.add(order);
+			logger.logPlayerMove(engine.getGame().gameID, engine.getNodeOfTurn());
+		}
+		qty = engine.makeOrder(order);
 
-		if(!wrapper.isClientTurn())
-			logger.logPlayerMove(wrapper.getGame().gameID, wrapper.getNodeOfTurn());
+		if(engine.getState() == Engine.FINISHED)
+		{
+			engines.remove(gameName);
+			logger.purgeGame(order);
+			reportManager.createReport(engine.getGame());
+			reports.add(engine.getGame());
+		}
 
-		return wrapper.makeOrder(order);
-	}
-
-	public Game getGameRoomData(String gameName)
-	{
-		return wrappers.get(gameName).getGame();
+		return qty;
 	}
 }

@@ -20,7 +20,7 @@ class BinaryReport extends AbstractReport
 	{
 		super(".bin");
 	}
-	
+
 	@Override
 	public boolean generateReport(Game game)
 	{
@@ -41,7 +41,7 @@ class BinaryReport extends AbstractReport
 
 		return games.toArray(new Game[0]);
 	}
-	
+
 	private byte[] readFile(String fileName)
 	{
 		byte[] buffer;

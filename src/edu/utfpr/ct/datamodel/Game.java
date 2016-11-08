@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 public class Game implements Serializable
 {
+	private static final long serialVersionUID = 7260793296346224236L;
+
 	public int gameID;
 	public long timestamp;
 	public String name;

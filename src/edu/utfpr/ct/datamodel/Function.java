@@ -37,7 +37,8 @@ public enum Function implements IFunction
 	@Override
 	public boolean isLast()
 	{
-		return (position == Function.values().length);
+		//return (this.position == Function.values()[Function.values().length - 1].getPosition());
+		return (this.position == Function.values().length);
 	}
 
 	@Override
@@ -49,9 +50,9 @@ public enum Function implements IFunction
 	@Override
 	public IFunction next()
 	{
-		if((this.position + 1) > Function.values().length)
+		if((this.position - 1) >= Function.values().length)
 			return null;
 		else
-			return Function.values()[this.position + 1];
+			return Function.values()[this.position];
 	}
 }

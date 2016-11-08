@@ -2,7 +2,7 @@ package edu.utfpr.ct.tests;
 
 import edu.utfpr.ct.datamodel.Function;
 import edu.utfpr.ct.datamodel.Game;
-import edu.utfpr.ct.gamecontroller.Wrapper;
+import edu.utfpr.ct.gamecontroller.Engine;
 import edu.utfpr.ct.report.ReportManager;
 import java.util.Date;
 
@@ -32,12 +32,12 @@ public class ReportTest
 		game.initialStock = 16;
 		game.informedChainSupply = true;
 
-		Wrapper wrapper = new Wrapper(Function.RETAILER);
-		wrapper.setGame(game);
-		wrapper.buildGame();
+		Engine engine = new Engine();
+		engine.setGame(game, Function.RETAILER);
+		engine.buildGame();
 
-		reportManager.generateReport(game);
-		games = reportManager.loadReports();
+		reportManager.createReport(game);
+		games = reportManager.getReports();
 		comparator.compareAll(game, games[games.length - 1]);
 		//reportManager.purgeReport(game);
 	}

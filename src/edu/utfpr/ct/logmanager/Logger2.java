@@ -1,12 +1,12 @@
 package edu.utfpr.ct.logmanager;
 
+import edu.utfpr.ct.interfaces.ILogger2;
 import edu.utfpr.ct.datamodel.AbstractNode;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.datamodel.Node;
 import edu.utfpr.ct.datamodel.TravellingTime;
 import edu.utfpr.ct.datamodel.Function;
 import edu.utfpr.ct.gamecontroller.Engine;
-import edu.utfpr.ct.interfaces.ILogger;
 import edu.utfpr.ct.logmanager.database.Database;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,20 +15,20 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Logger implements ILogger
+public class Logger2 implements ILogger2
 {
-	private static Logger logger;
+	private static Logger2 logger;
 
-	public Logger()
+	private Logger2()
 	{
 		new Database().dropDB();
 		new Database().initializeDB();
 	}
 
-	public static Logger getLogger()
+	public static Logger2 getLogger()
 	{
 		if(logger == null)
-			logger = new Logger();
+			logger = new Logger2();
 
 		return logger;
 	}
@@ -101,11 +101,6 @@ public class Logger implements ILogger
 	}
 
 	@Override
-	public void logPlayerMove(Integer gameID, Integer nodeID, String playerName, Integer week, Integer move)
-	{
-	}
-
-	@Override
 	public void logPlayerMove(int gameID, Node node)
 	{
 		String query;
@@ -163,107 +158,7 @@ public class Logger implements ILogger
 	}
 
 	@Override
-	public Game[] getUnfinishedGamesID()
-	{
-		String query;
-		ResultSet rs;
-		Game game;
-		List<Game> list = new ArrayList<>();
-
-		try
-		{
-			query = "SELECT game_id, timestamp, name FROM game";
-			rs = Database.getConnection().prepareStatement(query).executeQuery();
-
-			while(rs.next())
-			{
-				game = new Game();
-				game.gameID = rs.getInt(1);
-				game.timestamp = rs.getLong(2);
-				game.name = rs.getString(3);
-
-				list.add(game);
-			}
-		}
-		catch(SQLException e)
-		{
-			System.out.println("Logger::getUnfinishedGamesID(): " + e.getSQLState());
-			System.out.println("Logger::getUnfinishedGamesID(): " + e.getMessage());
-		}
-
-		return list.toArray(new Game[0]);
-	}
-
-	@Override
-	public Game retrieveGameData(Integer gameID)
-	{
-		Engine engine;
-		String query;
-		ResultSet rs1, rs2;
-		Game game;
-		Node node;
-
-		try
-		{
-			engine = new Engine();
-			query = "SELECT * FROM game where game_id = " + gameID;
-			rs1 = Database.getConnection().prepareStatement(query).executeQuery();
-			rs1.next();
-
-			game = new Game();
-			game.gameID = rs1.getInt(1);
-			game.timestamp = rs1.getLong(2);
-			game.name = rs1.getString(3);
-			game.password = rs1.getString(4);
-			game.missingUnitCost = rs1.getDouble(5);
-			game.stockUnitCost = rs1.getDouble(6);
-			game.sellingUnitProfit = rs1.getDouble(7);
-			game.realDuration = rs1.getInt(8);
-			game.informedDuration = rs1.getInt(9);
-			game.deliveryDelay = rs1.getInt(10);
-			game.unitiesOnTravel = rs1.getInt(11);
-			game.initialStock = rs1.getInt(12);
-			game.informedChainSupply = rs1.getBoolean(13);
-
-			query = "SELECT * FROM demand where game_id = " + gameID + " ORDER BY week";
-			rs1 = Database.getConnection().prepareStatement(query).executeQuery();
-			engine.setGame(game, Function.RETAILER);
-			engine.buildGame();
-
-			while(rs1.next())
-				game.demand[rs1.getInt(2)] = rs1.getInt(3);
-
-			query = "SELECT * FROM supply_chain where game_id = " + gameID + " ORDER BY node_position";
-			rs1 = Database.getConnection().prepareStatement(query).executeQuery();
-
-			for(AbstractNode supplyChain : game.supplyChain)
-			{
-				if(supplyChain instanceof TravellingTime)
-					continue;
-
-				rs1.next();
-				node = (Node) supplyChain;
-				node.playerName = rs1.getString(3);
-
-				query = "SELECT order_placed FROM moves where game_id = " + game.gameID + " and node_position = " + node.function.getPosition() + " ORDER BY week";
-				rs2 = Database.getConnection().prepareStatement(query).executeQuery();
-
-				while(rs2.next())
-					node.playerMove.add(rs2.getInt(1));
-			}
-
-			return game;
-		}
-		catch(SQLException e)
-		{
-			System.out.println("Logger::retrieveGameData(Integer gameID): " + e.getSQLState());
-			System.out.println("Logger::retrieveGameData(Integer gameID): " + e.getMessage());
-			return null;
-		}
-	}
-
-	@Override
-	public Game[] getUnfinishedGames()
+	public Game[] getGames()
 	{
 		Engine engine = new Engine();
 		List<Game> games = new ArrayList<>();

@@ -9,7 +9,7 @@ public class Create
 {
 	private final String game = "CREATE TABLE game( "
 								//+ "game_id               INT NOT NULL, "
-								+ "game_id               INT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 0, INCREMENT BY 1), "
+								+ "game_id               INT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), "
 								+ "timestamp             BIGINT NOT NULL, "
 								+ "name                  VARCHAR(128) NOT NULL, "
 								+ "password              VARCHAR(32), "

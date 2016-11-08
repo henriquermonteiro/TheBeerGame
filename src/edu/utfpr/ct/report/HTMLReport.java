@@ -48,6 +48,7 @@ class HTMLReport extends AbstractReport
 		String header = "<!DOCTYPE html> \n"
 						+ "<html> \n"
 						+ "<head> \n"
+						+ "<meta charset=\"UTF-8\"> \n"
 						+ "<style> \n"
 						+ "table \n"
 						+ "{ \n"

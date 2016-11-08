@@ -5,6 +5,8 @@ import java.util.List;
 
 public class Node extends AbstractNode
 {
+	private static final long serialVersionUID = -8635726000488404463L;
+
 	public String playerName;
 	public IFunction function;
 	public int currentStock;

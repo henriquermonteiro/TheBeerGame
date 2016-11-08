@@ -3,10 +3,6 @@ package edu.utfpr.ct.datamodel;
 import edu.utfpr.ct.localization.LocalizationKeys;
 import edu.utfpr.ct.localization.Localize;
 
-/**
- *
- * @author henrique
- */
 public enum SupplyChainTypes {
     CLASSIC_CHAIN(1);
 

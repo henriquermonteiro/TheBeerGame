@@ -11,8 +11,8 @@ public interface IFunction extends Serializable
 	public boolean isLast();
 
 	public IFunction next();
-	
+
 	public IFunction[] getValues();
-	
+
 	public String getName();
 }

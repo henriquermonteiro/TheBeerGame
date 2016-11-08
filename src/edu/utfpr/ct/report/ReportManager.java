@@ -6,7 +6,7 @@ import edu.utfpr.ct.interfaces.IReport;
 public class ReportManager implements IReport
 {
 	@Override
-	public boolean generateReport(Game game)
+	public boolean createReport(Game game)
 	{
 		AbstractReport report;
 
@@ -23,9 +23,25 @@ public class ReportManager implements IReport
 	}
 
 	@Override
-	//public Game[] getGameReport(String gameName)
-	//public Game[] getAvailableReports()
-	public Game[] loadReports()
+	public boolean purgeReport(Game game)
+	{
+		AbstractReport report;
+		boolean status;
+
+		report = new CSVReport();
+		status = report.deleteFile(report.getFileName(game));
+
+		report = new HTMLReport();
+		status &= report.deleteFile(report.getFileName(game));
+
+		report = new BinaryReport();
+		status &= report.deleteFile(report.getFileName(game));
+
+		return status;
+	}
+
+	@Override
+	public Game[] getReports()
 	{
 		AbstractReport report;
 		Game[] game;
@@ -34,14 +50,5 @@ public class ReportManager implements IReport
 		game = report.loadReport();
 
 		return game;
-	}
-
-	@Override
-	public boolean purgeReport(Game game)
-	{
-		AbstractReport report;
-
-		report = new BinaryReport();
-		return report.deleteFile(report.getFileName(game));
 	}
 }
