@@ -4,33 +4,35 @@ import edu.utfpr.ct.datamodel.Game;
 
 public interface IControllerHost2
 {
-	boolean createGame(Game game) throws IllegalArgumentException;
+	public boolean createGame(Game game) throws IllegalArgumentException;
 
-	Game[] getGames();
+	public Game[] getGames();
 
-	Game[] getReports();
+	public Game[] getReports();
 
-	String[] getPlayersOnGame(String gameName);
+	public String[] getPlayersOnGame(String gameName);
 
-	Game getGame(String gameName);
+	public Game getGame(String gameName);
+	
+	public int getGameState(String gameName);
 
-	Game getReport(String gameName);
+	public Game getReport(String gameName);
 
-	boolean purgeGame(String gameName);
+	public boolean purgeGame(String gameName);
 
-	boolean purgeReport(String gameName);
+	public boolean purgeReport(String gameName);
 
-	boolean startGame(String gameName);
+	public boolean startGame(String gameName);
 
-	boolean pauseGame(String gameName);
+	public boolean pauseGame(String gameName);
 
-	boolean addPlayerOnGame(String gameName, String playerName);
+	public boolean addPlayerOnGame(String gameName, String playerName);
 
-	boolean purgePlayerOnGame(String gameName, String playerName);
+	public boolean purgePlayerOnGame(String gameName, String playerName);
 
-	boolean changePlayerForNode(String gameName, IFunction function, String playerName);
+	public boolean changePlayerForNode(String gameName, IFunction function, String playerName);
 
-	boolean removePlayerFromNode(String gameName, IFunction function);
+	public boolean removePlayerFromNode(String gameName, IFunction function);
 
-	int postMoveForNode(String gameName, int order) throws IllegalStateException, IllegalArgumentException;
+	public int postMoveForNode(String gameName, int order) throws IllegalStateException, IllegalArgumentException;
 }

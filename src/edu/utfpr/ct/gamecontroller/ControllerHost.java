@@ -76,7 +76,10 @@ public class ControllerHost implements IControllerHost2
 		List<Game> unfinishedGames = new ArrayList<>();
 
 		engines.entrySet().stream().forEach(
-			(entry) -> { unfinishedGames.add(entry.getValue().getGame()); });
+			(entry) -> 
+				{
+					unfinishedGames.add(entry.getValue().getGame());
+			});
 
 		return unfinishedGames.toArray(new Game[0]);
 	}
@@ -97,6 +100,12 @@ public class ControllerHost implements IControllerHost2
 	public Game getGame(String gameName)
 	{
 		return engines.get(gameName).getGame();
+	}
+
+	@Override
+	public int getGameState(String gameName)
+	{
+		return engines.get(gameName).getState();
 	}
 
 	@Override
