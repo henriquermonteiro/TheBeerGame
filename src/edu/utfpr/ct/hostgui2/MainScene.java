@@ -7,9 +7,13 @@ package edu.utfpr.ct.hostgui2;
 
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.interfaces.IControllerHost;
+import edu.utfpr.ct.interfaces.IControllerHost2;
+import edu.utfpr.ct.interfaces.IFunction;
 import edu.utfpr.ct.localization.LocalizationKeys;
 import edu.utfpr.ct.localization.Localize;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
@@ -20,65 +24,125 @@ import javafx.scene.layout.BorderPane;
  *
  * @author henrique
  */
-public class MainScene extends BorderPane{
+public class MainScene extends BorderPane {
+
     private TabPane tabPane;
-    
+
     private static final Image homeIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.HOME_ICON)).toURI().toString());
     private static final Image addIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.PLUS_ICON)).toURI().toString());
+
+    private IControllerHost2 control;
     
-    private IControllerHost control;
-    
-    public MainScene(IControllerHost control) {
+    private LoaderPane loaderPane;
+    private HashMap<String, GamePane> games;
+
+    public MainScene(IControllerHost2 control) {
         this.control = control;
         
-        Tab homeTab = new Tab();
+        games = new HashMap<>();
+
+        loaderPane = new LoaderPane(this);
         
+        Tab homeTab = new Tab();
+
         ImageView iView = new ImageView(homeIcon);
         homeTab.setGraphic(iView);
         homeTab.setClosable(false);
-        homeTab.setContent(new LoaderPane(this));
-        
+        homeTab.setContent(loaderPane);
+
         Tab addGameTab = new Tab();
-        
+
         addGameTab.setClosable(false);
         addGameTab.setGraphic(new ImageView(addIcon));
-        addGameTab.setContent(new CreateGamePane());
-        
+        addGameTab.setContent(new CreateGamePane(this));
+
         tabPane = new TabPane(homeTab, addGameTab);
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.SELECTED_TAB);
         tabPane.getStyleClass().add(TabPane.STYLE_CLASS_FLOATING);
-        
+
         this.setCenter(tabPane);
-        
-        Game g  = new Game();
-        g.gameID = 1;
-        
-        createGame(g);
+
+//        Game g = new Game();
+//        g.gameID = 1;
+//
+//        createGame(g);
+//        restoreReport("yak");
     }
-    
-    public void makeGameTab(Game game){
-        Tab gameTab = new Tab(game.name, new PlayGamePane(this, game));
-        
+
+    public void makeGameTab(Game game) {
+        games.put(game.name, new GamePane(game, control.getGameState(game.name), control.getPlayersOnGame(game.name), this));
+        Tab gameTab = new Tab(game.name, games.get(game.name));
+
         this.tabPane.getTabs().add(tabPane.getTabs().size() - 1, gameTab);
     }
-    
-    public Game[] gameAvailableGames(){
-        return control.getUnfinishedGamesID();
+
+    public Game[] gameAvailableGames() {
+        return control.getGames();
     }
-    
-    public String[] gameAvailableReports(){
-        return control.getAvailableReports();
+
+    public Game[] gameAvailableReports() {
+        return control.getReports();
     }
-    
-    public void createGame(Game game){
-        if(control.createGame(game)){
-            makeGameTab(control.getGameRoomData(game.gameID));
-        }else{
+
+    public void createGame(Game game) {
+        if (control.createGame(game)) {
+            makeGameTab(control.getGame(game.name));
+            loaderPane.update();
+        } else {
             // TODO : warn error
         }
     }
+    
+    public void changePlayerInNode(Game game, String newPlayer, IFunction node){
+        if(control.changePlayerForNode(game.name, node, newPlayer));
+        
+        updateGame(game.name);
+    }
+    
+    public void updateGame(String gameName){
+        GamePane p = games.get(gameName);
+        
+        if(p != null){
+            p.updateGame(control.getGame(gameName), control.getGameState(gameName), control.getPlayersOnGame(gameName));
+        }
+    }
 
-    void changeGameState() {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void changeGameState(Game game, boolean isStart) {
+        if (isStart) {
+            control.startGame(game.name);
+        } else {
+            control.pauseGame(game.name);
+        }
+    }
+    
+    public void restoreReport(String gameName){
+        Game g = control.getReport(gameName);
+        
+        if(g != null){
+            makeGameTab(g);
+        }else{
+            // TODO warn user
+        }
+    }
+    
+    public void restoreGame(String gameName){
+        Game g = control.getGame(gameName);
+        if(g != null){
+            makeGameTab(g);
+        }else{
+            // TODO warn user
+        }
+    }
+    
+    public void purgeGame(String gameName){
+        if(control.purgeGame(gameName)){
+            loaderPane.update();
+        }
+    }
+    
+    public void purgeReport(String gameName){
+        if(control.purgeReport(gameName)){
+            loaderPane.update();
+        }
     }
 }

@@ -5,7 +5,10 @@
  */
 package edu.utfpr.ct.hostgui2;
 
+import edu.utfpr.ct.gamecontroller.ControllerHost;
 import edu.utfpr.ct.interfaces.IControllerHost;
+import edu.utfpr.ct.interfaces.IControllerHost2;
+import edu.utfpr.ct.interfaces.IGUI;
 import edu.utfpr.ct.localization.LocalizationKeys;
 import edu.utfpr.ct.localization.Localize;
 import javafx.application.Application;
@@ -17,13 +20,21 @@ import test.mock.ControllerMock;
  *
  * @author henrique
  */
-public class StartFrame extends Application {
+public class StartFrame extends Application implements IGUI{
     private MainScene mainScene;
+    private IControllerHost2 controller;
+
+    public StartFrame() {
+        controller = new ControllerHost();
+    }
+
+    public StartFrame(IControllerHost2 controller) {
+        this.controller = controller;
+    }
     
     @Override
     public void start(Stage primaryStage) {
-        IControllerHost control = new ControllerMock();
-        mainScene = new MainScene(control);
+        mainScene = new MainScene(controller);
         
         primaryStage.setMinWidth(680);
         primaryStage.setMinHeight(460);
@@ -39,7 +50,12 @@ public class StartFrame extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        launch(args);
+        launch();
+    }
+
+    @Override
+    public void pushGameRoomUpdate(String gameName) {
+        mainScene.updateGame(gameName);
     }
     
 }

@@ -7,6 +7,7 @@ package edu.utfpr.ct.hostgui2;
 
 import edu.utfpr.ct.datamodel.DemandTypes;
 import edu.utfpr.ct.datamodel.Function;
+import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.datamodel.SupplyChainTypes;
 import edu.utfpr.ct.hostgui2.utils.BorderedTitledPane;
 import edu.utfpr.ct.hostgui2.utils.NumberChooserFX;
@@ -72,6 +73,7 @@ public class CreateGamePane extends BorderPane {
 
     private static final Image checkIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.CONFIRM_ICON)).toURI().toString());
     private static final Image cancelIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.CANCEL_ICON)).toURI().toString());
+    private static final Image advancedIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.ADVANCED_ICON)).toURI().toString());
 
     private TextField nameField;
     private CheckBox informedSupplyChain;
@@ -100,9 +102,12 @@ public class CreateGamePane extends BorderPane {
     
     private BorderPane advancedPane;
     private BorderPane simplePane;
+    
+    private MainScene mainScene;
 
-    public CreateGamePane() {
+    public CreateGamePane(MainScene mainScene) {
         super();
+        this.mainScene = mainScene;
         
         createAdvancedContent();
         updateChart();
@@ -386,6 +391,42 @@ public class CreateGamePane extends BorderPane {
 
     }
 
+    private void callCreation(Boolean isSimple){
+        Game game = new Game();
+        
+        if(isSimple){
+            game.name = simpleName.getText();
+            game.password = (simpleUsePassword.isSelected() ? simplePassword.getText() : "");
+            game.supplyChain = supplyChainTypeSelect.getSelectionModel().getSelectedItem().getSupplyChain(2);
+            game.deliveryDelay = 2;
+            game.informedChainSupply = simpleInformedSupplyChain.isSelected();
+            game.informedDuration = 50;
+            game.realDuration = 40;
+            game.initialStock = 10;
+            game.missingUnitCost = 1.0;
+            game.stockUnitCost = 0.5;
+            game.sellingUnitProfit = 0.0;
+            game.unitiesOnTravel = 5;
+            game.demand = DemandTypes.SINGLE_STEP.getDemandForParameter(new int[]{5, 10, 10, 40});
+        }else{
+            game.name = nameField.getText();
+            game.password = (usePassword.isSelected() ? password.getText() : "");
+            game.informedChainSupply = informedSupplyChain.isSelected();
+            game.demand = demandTypeSelect.getSelectionModel().getSelectedItem().getDemandForParameter(getParameters());
+            game.sellingUnitProfit = sellingUnitProffit.getValue();
+            game.missingUnitCost = missingUnitCost.getValue();
+            game.stockUnitCost = stockUnitCost.getValue();
+            game.realDuration = (int) realDuration.getValue();
+            game.informedDuration = (int) informedDuration.getValue();
+            game.deliveryDelay = (int) deliveryDelay.getValue();
+            game.initialStock = (int) initialStock.getValue();
+            game.supplyChain = supplyChainTypeSelect.getSelectionModel().getSelectedItem().getSupplyChain(game.deliveryDelay);
+            game.unitiesOnTravel = game.demand[0];
+        }
+        
+        mainScene.createGame(game);
+    }
+    
     private void createSimpleContent() {
         simpleName = new TextField();
         simpleInformedSupplyChain = new CheckBox(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_INFORMED_SC));
@@ -486,12 +527,22 @@ public class CreateGamePane extends BorderPane {
         fP.setAlignment(Pos.CENTER);
         
         Button createButton = new Button();
+        createButton.setStyle("-fx-base: #00FF00");
         createButton.setGraphic(new ImageView(checkIcon));
+        createButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                callCreation(Boolean.TRUE);
+            }
+        });
         
         Button cancelButton = new Button();
         cancelButton.setGraphic(new ImageView(cancelIcon));
+        cancelButton.setStyle("-fx-base: #FF0000");
         
         Button advButton = new Button();
+        advButton.setStyle("-fx-base: #934500");
+        advButton.setGraphic(new ImageView(advancedIcon));
         advButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -687,6 +738,13 @@ public class CreateGamePane extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
                 changePane(false);
+            }
+        });
+        
+        confirmButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                callCreation(Boolean.FALSE);
             }
         });
 

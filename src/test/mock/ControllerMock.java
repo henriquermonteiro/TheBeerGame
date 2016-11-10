@@ -47,7 +47,10 @@ public class ControllerMock implements IControllerHost{
 
     @Override
     public Game getGameReport(String gameName) {
-        return log.retrieveGameData(1);
+        Game g = log.retrieveGameData(1);
+        g.gameID = 3;
+        
+        return g;
     }
 
     @Override

@@ -7,8 +7,10 @@ package edu.utfpr.ct.hostgui2;
 
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.hostgui2.utils.GameComponent;
+import edu.utfpr.ct.hostgui2.utils.ParameterEventHandler;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -19,7 +21,6 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.VBox;
 
 /**
  *
@@ -37,13 +38,53 @@ public class LoaderPane extends BorderPane {
         westPane.getChildren().clear();
 
         for (Game g : mainScene.gameAvailableGames()) {
-            westPane.getChildren().add(new GameComponent(g.name, GameComponent.LOAD));
+            GameComponent gC = new GameComponent(g.name, GameComponent.LOAD);
+            gC.setConfirmButtonAction(new ParameterEventHandler<ActionEvent>(g.name) {
+                
+                @Override
+                public void handle(ActionEvent event) {
+                    if((params[0] instanceof String)){
+                        mainScene.restoreGame((String)params[0]);
+                    }
+                }
+            });
+            
+            gC.setDeleteButtonAction(new ParameterEventHandler<ActionEvent>(g.name) {
+                @Override
+                public void handle(ActionEvent event) {
+                    if((params[0] instanceof String)){
+                        mainScene.purgeGame((String)params[0]);
+                    }
+                }
+            });
+            
+            westPane.getChildren().add(gC);
         }
         
         eastPane.getChildren().clear();
         
-        for(String s : mainScene.gameAvailableReports()){
-            eastPane.getChildren().add(new GameComponent(s, GameComponent.VIEW));
+        for(Game g : mainScene.gameAvailableReports()){
+            GameComponent gC = new GameComponent(g.name, GameComponent.VIEW);
+            gC.setConfirmButtonAction(new ParameterEventHandler<ActionEvent>(g.name) {
+                
+                @Override
+                public void handle(ActionEvent event) {
+                    if((params[0] instanceof String)){
+                        mainScene.restoreReport((String)params[0]);
+                    }
+                }
+            });
+            
+            gC.setDeleteButtonAction(new ParameterEventHandler<ActionEvent>(g.name) {
+                @Override
+                public void handle(ActionEvent event) {
+                    if((params[0] instanceof String)){
+                        mainScene.purgeReport((String)params[0]);
+                    }
+                }
+            });
+            
+            eastPane.getChildren().add(gC);
         }
     }
 
@@ -112,6 +153,10 @@ public class LoaderPane extends BorderPane {
 //        this.setTop(new ScrollPane(topPane));
         this.setCenter(gridP);
         
+        updateAvailable();
+    }
+
+    public void update() {
         updateAvailable();
     }
 

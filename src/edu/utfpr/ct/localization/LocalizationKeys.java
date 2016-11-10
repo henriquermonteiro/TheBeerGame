@@ -38,6 +38,10 @@ public class LocalizationKeys {
     
     public static String CONFIRM_ICON = "GUI-ICON-CONFIRM-BUTTON";
     public static String CANCEL_ICON = "GUI-ICON-CANCEL-BUTTON";
+    public static String ADVANCED_ICON = "GUI-ICON-ADVANCED-BUTTON";
+    public static String PLAY_ICON = "GUI-ICON-PLAY-BUTTON";
+    public static String PAUSE_ICON = "GUI-ICON-PAUSE-BUTTON";
+    public static String WEB_ICON = "GUI-ICON-WEBREPORT-BUTTON";
     
     public static String RETAILER_ICON = "GUI-ICON-RETAILER";
     public static String WHOLESALER_ICON = "GUI-ICON-WHOLESALER";
@@ -54,4 +58,10 @@ public class LocalizationKeys {
     public static String SUPPLYCHAIN_TYPE_CLASSIC = "SUPPLYCHAIN-TYPE-CLASSIC";
     
     public static String DEFAULT_GAME_NAME = "DEFAULT-GAME-NAME";
+    
+    public static String TITLE_REPORT_GENERAL = "TITLE-REPORT-GENERAL-TAB";
+    public static String TITLE_REPORT_RETAILER = "TITLE-REPORT-RETAILER-TAB";
+    public static String TITLE_REPORT_WHOLESALER = "TITLE-REPORT-WHOLESALER-TAB";
+    public static String TITLE_REPORT_DISTRIBUTOR = "TITLE-REPORT-DISTRIBUTOR-TAB";
+    public static String TITLE_REPORT_PRODUCER = "TITLE-REPORT-PRODUCER-TAB";
 }

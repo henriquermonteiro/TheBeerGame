@@ -21,7 +21,7 @@ public class Logger2 implements ILogger2
 
 	private Logger2()
 	{
-		new Database().dropDB();
+//		new Database().dropDB();
 		new Database().initializeDB();
 	}
 

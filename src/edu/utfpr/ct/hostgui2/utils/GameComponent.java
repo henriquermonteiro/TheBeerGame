@@ -8,6 +8,8 @@ package edu.utfpr.ct.hostgui2.utils;
 import edu.utfpr.ct.localization.LocalizationKeys;
 import edu.utfpr.ct.localization.Localize;
 import java.io.File;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
@@ -103,5 +105,13 @@ public class GameComponent extends GridPane{
         this.setPadding(Insets.EMPTY);
         
         this.setBackground(new Background(new BackgroundFill(Color.AZURE, CornerRadii.EMPTY, Insets.EMPTY)));
+    }
+    
+    public void setConfirmButtonAction(EventHandler<ActionEvent> ev){
+        loadButton.setOnAction(ev);
+    }
+    
+    public void setDeleteButtonAction(EventHandler<ActionEvent> ev){
+        removeButton.setOnAction(ev);
     }
 }

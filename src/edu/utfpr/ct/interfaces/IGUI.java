@@ -5,7 +5,7 @@ public interface IGUI
 	/**
 	 * Informa a interface que um jogo teve atualizações.
 	 *
-	 * @param gameID ID do jogo que teve atualizações.
+	 * @param gameName Nome/ID do jogo que teve atualizações.
 	 */
-	public void pushGameRoomUpdate(Integer gameID);
+	public void pushGameRoomUpdate(String gameName);
 }

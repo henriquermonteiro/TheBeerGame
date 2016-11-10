@@ -6,44 +6,46 @@
 package edu.utfpr.ct.hostgui2;
 
 import edu.utfpr.ct.datamodel.Game;
-import edu.utfpr.ct.hostgui2.utils.NumberChooserFX;
-import edu.utfpr.ct.localization.LocalizationKeys;
-import edu.utfpr.ct.localization.Localize;
-import javafx.scene.Parent;
-import javafx.scene.control.Label;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 
 /**
  *
  * @author henrique
  */
-public class GamePane extends BorderPane{
+public class GamePane extends BorderPane {
+
     private Game game;
-    
-    public GamePane(Game game) {
+    private MainScene mainScene;
+    private Boolean isGame;
+    private BorderPane center;
+
+    public GamePane(Game game, Integer state, String[] pool, MainScene mainScene) {
         super();
         this.game = game;
-        
-        createContent();
+        this.mainScene = mainScene;
+
+        isGame = (state <= 4);
+
+        if (isGame) {
+            center = new PlayGamePane(mainScene, game, state == 2, pool);
+            this.setCenter(center);
+        } else {
+            center = new ReportGamePane(game, state == 8);
+            this.setCenter(center);
+        }
     }
-    
-    private void createContent(){
-        GridPane grid1 = new GridPane();
-        
-        TextField nameField = new TextField();
-        nameField.setPromptText(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_NAME));
-        
-        grid1.add(nameField, 0, 0);
-        
-//        NumberChooserFX sellingProffit = new NumberChooserFX(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_SELLINGP), 0.0, 100.0, 0.0);
-//        
-//        grid1.add(sellingProffit, 1, 1);
-        
-        this.setCenter(grid1);
+
+    public void updateGame(Game game, Integer state, String[] pool) {
+        if (state <= 4) {
+            ((PlayGamePane) center).updateGame(game, state == 2, pool);
+
+        } else if (isGame) {
+            center = new ReportGamePane(game, state == 8);
+            this.setCenter(center);
+            isGame = false;
+        } else {
+            ((ReportGamePane) center).updateReport(game, state == 8);
+        }
     }
-    
+
 }

@@ -18,7 +18,8 @@ import test.mock.ControllerMock;
  *
  * @author henrique
  */
-public class Frame extends JFrame implements IGUI{
+//public class Frame extends JFrame implements IGUI{
+public class Frame extends JFrame{
     private IControllerHost host;
     private MainPanel mainPanel;
     
@@ -35,10 +36,10 @@ public class Frame extends JFrame implements IGUI{
         this.setVisible(true);
     }
 
-    @Override
-    public void pushGameRoomUpdate(Integer gameID) {
-        mainPanel.pushGameRoomUpdate(host.getGameRoomData(gameID));
-    }
+//    @Override
+//    public void pushGameRoomUpdate(String gameID) {
+//        mainPanel.pushGameRoomUpdate(host.getGameRoomData(gameID));
+//    }
     
     public void initializationReady(){
         this.getContentPane().removeAll();

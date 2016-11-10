@@ -31,6 +31,10 @@ GUI-ICON-VIEW-BUTTON<>icon//view-file-20.png
 GUI-ICON-RELOAD-BUTTON<>icon//reload_icon.png
 GUI-ICON-LOCKED-BUTTON<>icon//close-lock-20.png
 GUI-ICON-UNLOCKED-BUTTON<>icon//open-lock-20.png
+GUI-ICON-ADVANCED-BUTTON<>icon//adv-icon.png
+GUI-ICON-PLAY-BUTTON<>icon//play-icon.png
+GUI-ICON-PAUSE-BUTTON<>icon//pause-icon.png
+GUI-ICON-WEBREPORT-BUTTON<>icon//web-icon.png
 DEMAND-PARAM-SINGLESTEP-INITIAL-VALUE<>Starting demand value:
 DEMAND-PARAM-SINGLESTEP-FINAL-VALUE<>Final demand value:
 DEMAND-PARAM-SINGLESTEP-STEP-CHANGE-WEEK<>Week of change:
@@ -41,3 +45,8 @@ GUI-ICON-RETAILER<>icon//retailer.png
 GUI-ICON-WHOLESALER<>icon//wholesaler.png
 GUI-ICON-DISTRIBUTOR<>icon//distributor.png
 GUI-ICON-PRODUCER<>icon//Industry.png
+TITLE-REPORT-GENERAL-TAB<>General
+TITLE-REPORT-RETAILER-TAB<>Retailer
+TITLE-REPORT-WHOLESALER-TAB<>Wholesaler
+TITLE-REPORT-DISTRIBUTOR-TAB<>Distributor
+TITLE-REPORT-PRODUCER-TAB<>Producer
