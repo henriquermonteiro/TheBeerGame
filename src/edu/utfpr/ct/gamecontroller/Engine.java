@@ -10,276 +10,256 @@ import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Engine
-{
-	public static final int SETUP = 1;
-	public static final int RUNNING = 2;
-	public static final int PAUSED = 4;
-	public static final int FINISHED = 8;
+public class Engine {
 
-	private final Set<String> players;
-	private Game game;
-	private boolean clientTurn;
-	private IFunction turn;
-	private int weeks;
-	private int state;
+    public static final int SETUP = 1;
+    public static final int RUNNING = 2;
+    public static final int PAUSED = 4;
+    public static final int FINISHED = 8;
 
-	public Engine()
-	{
-		this.players = new HashSet<>();
-	}
+    private final Set<String> players;
+    private Game game;
+    private boolean clientTurn;
+    private IFunction turn;
+    private int weeks;
+    private int state;
 
-	public Game getGame()
-	{
-		return game;
-	}
+    public Engine() {
+        this.players = new HashSet<>();
+    }
 
-	public void setGame(Game game, IFunction function)
-	{
-		this.game = game;
-		this.turn = function;
-		resetConfigs();
-	}
+    public Game getGame() {
+        return game;
+    }
 
-	public boolean isClientTurn()
-	{
-		return clientTurn;
-	}
+    public void setGame(Game game, IFunction function) {
+        this.game = game;
+        this.turn = function;
+        resetConfigs();
+    }
 
-	public IFunction getTurn()
-	{
-		return turn;
-	}
+    public boolean isClientTurn() {
+        return clientTurn;
+    }
 
-	public int getState()
-	{
-		return state;
-	}
+    public IFunction getTurn() {
+        return turn;
+    }
 
-	public boolean setState(int state)
-	{
-		if((this.state == SETUP && state == RUNNING)
-		   || (this.state == RUNNING && state == PAUSED)
-		   || (this.state == PAUSED && state == RUNNING)
-		   || state == FINISHED)
-			this.state = state;
+    public int getState() {
+        return state;
+    }
 
-		return (this.state == state);
-	}
+    public boolean setState(int state) {
+        if ((this.state == SETUP && state == RUNNING)
+                || (this.state == RUNNING && state == PAUSED)
+                || (this.state == PAUSED && state == RUNNING)
+                || state == FINISHED) {
+            this.state = state;
+        }
 
-	public String[] getPlayers()
-	{
-		return players.toArray(new String[0]);
-	}
+        return (this.state == state);
+    }
 
-	public boolean addPlayer(String user)
-	{
-		return players.add(user);
-	}
+    public String[] getPlayers() {
+        return players.toArray(new String[0]);
+    }
 
-	public boolean removePlayer(String user)
-	{
-		return players.remove(user);
-	}
+    public boolean addPlayer(String user) {
+        return players.add(user);
+    }
 
-	public boolean changePlayerForNode(IFunction function, String playerName)
-	{
-		Node node;
+    public boolean removePlayer(String user) {
+        return players.remove(user);
+    }
 
-		node = getNodeByFunction(function);
-		node.playerName = playerName;
+    public boolean changePlayerForNode(IFunction function, String playerName) {
+        Node node;
 
-		return true;
-	}
+        node = getNodeByFunction(function);
+        node.playerName = playerName;
 
-	public boolean validateParameters(Game game)
-	{
-		return (game.timestamp >= 0
-				&& !"".equals(game.name)
-				&& game.missingUnitCost >= 0
-				&& game.stockUnitCost >= 0
-				&& game.sellingUnitProfit >= 0
-				&& game.realDuration > 0
-				&& game.informedDuration > 0
-				&& game.deliveryDelay >= 0
-				&& game.unitiesOnTravel >= 0
-				&& game.initialStock >= 0
-				&& game.realDuration <= game.informedDuration);
-	}
+        return true;
+    }
 
-	public void buildGame()
-	{
-		int chainSize, position;
-		Node node;
-		TravellingTime travellingTime;
+    public boolean validateParameters(Game game) {
+        return (game.timestamp >= 0
+                && !"".equals(game.name)
+                && game.missingUnitCost >= 0
+                && game.stockUnitCost >= 0
+                && game.sellingUnitProfit >= 0
+                && game.realDuration > 0
+                && game.informedDuration > 0
+                && game.deliveryDelay >= 0
+                && game.unitiesOnTravel >= 0
+                && game.initialStock >= 0
+                && game.realDuration <= game.informedDuration);
+    }
 
-		if(state != SETUP)
-			return;
+    public void buildGame() {
+        int chainSize, position;
+        Node node;
+        TravellingTime travellingTime;
 
-		chainSize = turn.getValues().length;
-		chainSize = chainSize + chainSize * game.deliveryDelay;
+        if (state != SETUP) {
+            return;
+        }
 
-		if(game.timestamp == 0)
-			game.timestamp = new GregorianCalendar().getTimeInMillis();
+        chainSize = turn.getValues().length;
+        chainSize = chainSize + chainSize * game.deliveryDelay;
 
-		game.demand = new int[game.realDuration];
-		game.supplyChain = new AbstractNode[chainSize];
+        if (game.timestamp == 0) {
+            game.timestamp = new GregorianCalendar().getTimeInMillis();
+        }
 
-		position = 0;
-		for(IFunction value : turn.getValues())
-		{
-			node = new Node();
-			node.playerName = "";
-			node.travellingStock = 0;
-			node.currentStock = game.initialStock;
-			node.function = value;
-			node.profit = 0;
-			node.playerMove = new ArrayList<>();
-			game.supplyChain[position] = node;
-			position++;
+        if (game.demand == null) {
+            game.demand = new int[game.realDuration];
+        }
+        game.supplyChain = new AbstractNode[chainSize];
 
-			for(int i = 0; i < game.deliveryDelay; i++, position++)
-			{
-				travellingTime = new TravellingTime();
-				travellingTime.travellingStock = game.unitiesOnTravel;
-				game.supplyChain[position] = travellingTime;
-			}
-		}
-	}
+        position = 0;
+        for (IFunction value : turn.getValues()) {
+            node = new Node();
+            node.playerName = "";
+            node.travellingStock = 0;
+            node.currentStock = game.initialStock;
+            node.function = value;
+            node.profit = 0;
+            node.playerMove = new ArrayList<>();
+            game.supplyChain[position] = node;
+            position++;
 
-	public void rebuildOrders()
-	{
-		Node node;
+            for (int i = 0; i < game.deliveryDelay; i++, position++) {
+                travellingTime = new TravellingTime();
+                travellingTime.travellingStock = game.unitiesOnTravel;
+                game.supplyChain[position] = travellingTime;
+            }
+        }
+    }
 
-		if(state != SETUP)
-			return;
+    public void rebuildOrders() {
+        Node node;
 
-		for(int i = 0; i < game.realDuration; i++)
-		{
-			/* For the client turn */
-			makeOrder(game.demand[i]);
-			nextTurn();
+        if (state != SETUP) {
+            return;
+        }
 
-			while(!clientTurn)
-			{
-				node = getNodeByFunction(turn);
+        for (int i = 0; i < game.realDuration; i++) {
+            /* For the client turn */
+            makeOrder(game.demand[i]);
+            nextTurn();
 
-				if(i == node.playerMove.size())
-					return;
+            while (!clientTurn) {
+                node = getNodeByFunction(turn);
 
-				makeOrder(node.playerMove.get(i));
-				nextTurn();
-			}
-		}
-	}
+                if (i == node.playerMove.size()) {
+                    return;
+                }
 
-	/**
-	 * Makes all the order placed go from one Node to the other.
-	 *
-	 * @param order
-	 * @return
-	 */
-	public int makeOrder(int order)
-	{
-		int posCurrentNode, qtd;
-		Node node;
+                makeOrder(node.playerMove.get(i));
+                nextTurn();
+            }
+        }
+    }
 
-		if(order < 0 || state != RUNNING)
-			return -1;
+    /**
+     * Makes all the order placed go from one Node to the other.
+     *
+     * @param order
+     * @return
+     */
+    public int makeOrder(int order) {
+        int posCurrentNode, qtd;
+        Node node;
 
-		if(clientTurn)
-			qtd = makeOrderRecursion(0, order);
-		else
-		{
-			posCurrentNode = (turn.getPosition() - 1) * game.deliveryDelay + (turn.getPosition() - 1);
-			node = (Node) game.supplyChain[posCurrentNode];
-			qtd = makeOrderRecursion(posCurrentNode + 1, order);
-			node.currentStock += qtd;
-		}
-		nextTurn();
+        if (order < 0 || state != RUNNING) {
+            return -1;
+        }
 
-		return qtd;
-	}
+        if (clientTurn) {
+            qtd = makeOrderRecursion(0, order);
+        } else {
+            posCurrentNode = (turn.getPosition() - 1) * game.deliveryDelay + (turn.getPosition() - 1);
+            node = (Node) game.supplyChain[posCurrentNode];
+            qtd = makeOrderRecursion(posCurrentNode + 1, order);
+            node.currentStock += qtd;
+        }
+        nextTurn();
 
-	private int makeOrderRecursion(int posCurrentNode, int order)
-	{
-		int travellingStock;
-		Node node;
+        return qtd;
+    }
 
-		if(posCurrentNode == game.supplyChain.length)
-			return order;
+    private int makeOrderRecursion(int posCurrentNode, int order) {
+        int travellingStock;
+        Node node;
 
-		if(game.supplyChain[posCurrentNode] instanceof TravellingTime)
-		{
-			travellingStock = game.supplyChain[posCurrentNode].travellingStock;
-			game.supplyChain[posCurrentNode].travellingStock = makeOrderRecursion(posCurrentNode + 1, order);
+        if (posCurrentNode == game.supplyChain.length) {
+            return order;
+        }
 
-			return travellingStock;
-		}
+        if (game.supplyChain[posCurrentNode] instanceof TravellingTime) {
+            travellingStock = game.supplyChain[posCurrentNode].travellingStock;
+            game.supplyChain[posCurrentNode].travellingStock = makeOrderRecursion(posCurrentNode + 1, order);
 
-		if(game.supplyChain[posCurrentNode] instanceof Node)
-		{
-			node = (Node) game.supplyChain[posCurrentNode];
-			calculateProfit(node, order);
-			node.travellingStock = node.currentStock >= order ? order : node.currentStock;
-			node.currentStock = node.currentStock >= order ? node.currentStock - order : 0;
+            return travellingStock;
+        }
 
-			return node.travellingStock;
-		}
+        if (game.supplyChain[posCurrentNode] instanceof Node) {
+            node = (Node) game.supplyChain[posCurrentNode];
+            calculateProfit(node, order);
+            node.travellingStock = node.currentStock >= order ? order : node.currentStock;
+            node.currentStock = node.currentStock >= order ? node.currentStock - order : 0;
 
-		return -1;
-	}
+            return node.travellingStock;
+        }
 
-	private void calculateProfit(Node node, int order)
-	{
-		/* Profit from selling order */
-		node.profit += node.currentStock >= order ? order * game.sellingUnitProfit : node.currentStock * game.sellingUnitProfit;
-		/* Cost from missing unit */
-		node.profit -= node.currentStock >= order ? 0 : (order - node.currentStock) * game.missingUnitCost;
-		/* Cost from the remaining stock after selling */
-		node.profit -= node.currentStock >= order ? (node.currentStock - order) * game.stockUnitCost : 0;
-	}
+        return -1;
+    }
 
-	private Node getNodeByFunction(IFunction function)
-	{
-		int posCurrentNode = (function.getPosition() - 1) * game.deliveryDelay + (function.getPosition() - 1);
+    private void calculateProfit(Node node, int order) {
+        /* Profit from selling order */
+        node.profit += node.currentStock >= order ? order * game.sellingUnitProfit : node.currentStock * game.sellingUnitProfit;
+        /* Cost from missing unit */
+        node.profit -= node.currentStock >= order ? 0 : (order - node.currentStock) * game.missingUnitCost;
+        /* Cost from the remaining stock after selling */
+        node.profit -= node.currentStock >= order ? (node.currentStock - order) * game.stockUnitCost : 0;
+    }
 
-		return (Node) game.supplyChain[posCurrentNode];
-	}
+    private Node getNodeByFunction(IFunction function) {
+        int posCurrentNode = (function.getPosition() - 1) * game.deliveryDelay + (function.getPosition() - 1);
 
-	public Node getNodeOfTurn()
-	{
-		return clientTurn ? null : getNodeByFunction(turn);
-	}
+        return (Node) game.supplyChain[posCurrentNode];
+    }
 
-	private void nextTurn()
-	{
-		if(state == FINISHED)
-			return;
+    public Node getNodeOfTurn() {
+        return clientTurn ? null : getNodeByFunction(turn);
+    }
 
-		if(clientTurn)
-		{
-			turn = turn.first();
-			clientTurn = false;
-		}
-		else if(turn.isLast())
-		{
-			clientTurn = true;
-			weeks++;
-		}
-		else
-			turn = turn.next();
+    private void nextTurn() {
+        if (state == FINISHED) {
+            return;
+        }
 
-		if(game.realDuration == weeks)
-			setState(FINISHED);
-	}
+        if (clientTurn) {
+            turn = turn.first();
+            clientTurn = false;
+        } else if (turn.isLast()) {
+            clientTurn = true;
+            weeks++;
+        } else {
+            turn = turn.next();
+        }
 
-	private void resetConfigs()
-	{
-		players.clear();
-		clientTurn = true;
-		turn = turn.first();
-		weeks = 0;
-		state = SETUP;
-	}
+        if (game.realDuration == weeks) {
+            setState(FINISHED);
+        }
+    }
+
+    private void resetConfigs() {
+        players.clear();
+        clientTurn = true;
+        turn = turn.first();
+        weeks = 0;
+        state = SETUP;
+    }
 }
