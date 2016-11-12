@@ -10,7 +10,7 @@ public class TheBeerGame
 	public static void main(String[] args) throws InterruptedException
 	{
 //		new LoggerTest().test();
-//		new ReportTest().test();
+		new ReportTest().test();
 //		new PlaceOrderTest().test();
 //		new Demo().testPlayThrough();
 //		new Demo().testGameOperations();

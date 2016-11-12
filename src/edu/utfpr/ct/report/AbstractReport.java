@@ -28,7 +28,7 @@ abstract class AbstractReport
 
 	public abstract boolean generateReport(Game game);
 
-	public abstract Game[] loadReport();
+	public abstract Game[] loadReports();
 
 	protected final File createFile(String fileName)
 	{
@@ -43,13 +43,13 @@ abstract class AbstractReport
 			fileName = path + separator + fileName;
 			path = Paths.get(fileName);
 			path = Files.createFile(path);
-
 			path.getFileSystem().getSeparator();
+
 			return path.toFile();
 		}
 		catch(IOException e)
 		{
-			System.out.println("MasterReporter::createFile(Game game, String extension): " + e.getMessage());
+			System.out.println("AbstractReport::createFile(String fileName): " + e.getMessage());
 			return null;
 		}
 	}
@@ -67,7 +67,7 @@ abstract class AbstractReport
 		}
 		catch(IOException e)
 		{
-			System.out.println("MasterReporter::deleteFile(Game game, String extension): " + e.getMessage());
+			System.out.println("AbstractReport::deleteFile(String fileName): " + e.getMessage());
 			return false;
 		}
 	}
@@ -89,7 +89,7 @@ abstract class AbstractReport
 		}
 		catch(IOException e)
 		{
-			System.out.println("MasterReporter::deleteFile(Game game, String extension): " + e.getMessage());
+			System.out.println("AbstractReport::deleteAllFiles(): " + e.getMessage());
 			return false;
 		}
 	}
@@ -113,7 +113,7 @@ abstract class AbstractReport
 		}
 		catch(IOException e)
 		{
-			System.out.println("MasterReporter::listAllFiles(String extension): " + e.getMessage());
+			System.out.println("AbstractReport::listAllFiles(): " + e.getMessage());
 		}
 
 		return files.toArray(new String[0]);

@@ -37,7 +37,6 @@ public enum Function implements IFunction
 	@Override
 	public boolean isLast()
 	{
-		//return (this.position == Function.values()[Function.values().length - 1].getPosition());
 		return (this.position == Function.values().length);
 	}
 

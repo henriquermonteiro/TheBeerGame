@@ -38,7 +38,7 @@ class HTMLReport extends AbstractReport
 	}
 
 	@Override
-	public Game[] loadReport()
+	public Game[] loadReports()
 	{
 		throw new UnsupportedOperationException("Not supported yet.");
 	}

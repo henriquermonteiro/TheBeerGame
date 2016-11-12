@@ -18,6 +18,7 @@ import java.util.Set;
 
 public class ControllerHost implements IControllerHost2
 {
+	private static ControllerHost controllerHost;
 	private final Map<String, Engine> engines;
 	private final Set<Game> reports;
 	private final IReport reportManager;
@@ -31,6 +32,14 @@ public class ControllerHost implements IControllerHost2
 		this.logger = Logger2.getLogger();
 
 		loadResources();
+	}
+	
+	public ControllerHost getControllerHost()
+	{
+		if(controllerHost == null)
+			controllerHost = new ControllerHost();
+		
+		return controllerHost;
 	}
 
 	private void loadResources()
@@ -76,10 +85,7 @@ public class ControllerHost implements IControllerHost2
 		List<Game> unfinishedGames = new ArrayList<>();
 
 		engines.entrySet().stream().forEach(
-			(entry) -> 
-				{
-					unfinishedGames.add(entry.getValue().getGame());
-			});
+			(entry) -> { unfinishedGames.add(entry.getValue().getGame()); });
 
 		return unfinishedGames.toArray(new Game[0]);
 	}

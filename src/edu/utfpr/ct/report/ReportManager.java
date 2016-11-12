@@ -44,11 +44,11 @@ public class ReportManager implements IReport
 	public Game[] getReports()
 	{
 		AbstractReport report;
-		Game[] game;
+		Game[] games;
 
 		report = new BinaryReport();
-		game = report.loadReport();
+		games = report.loadReports();
 
-		return game;
+		return games;
 	}
 }
