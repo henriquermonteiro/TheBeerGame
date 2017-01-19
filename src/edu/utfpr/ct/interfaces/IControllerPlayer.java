@@ -58,4 +58,14 @@ public interface IControllerPlayer
 	 * @return true se o jogador obteve a posição escolhida. false do contrário.
 	 */
 	public boolean selectPlayableNode(Integer gameID, Integer nodeID, String playerName);
+        
+        /**
+         * Retorna os dados de um jogo pertinentes a um jogador.
+         * Se o jogador ou o jogo forem inválidos, retorna null.
+         * 
+         * @param gameID ID do jogo em que se espera obter os dados.
+         * @param playerName Nome do jogador que está requisistando os dados.
+         * @return Dados do jogo pertinentes ao jogador, ou null se ele não tiver permissão ou o jogo for inválido.
+         */
+        public Game getGameData(Integer gameID, String playerName);
 }
