@@ -32,7 +32,7 @@ public interface IControllerPlayer
 	 *
 	 * @return lista de jogos disponíveis.
 	 */
-	public Game[] listAvailableGameRooms();
+	public Game[] listAvailableGameRooms(String playerName);
 
 	/**
 	 * Faz requisição para entrar em um jogo.

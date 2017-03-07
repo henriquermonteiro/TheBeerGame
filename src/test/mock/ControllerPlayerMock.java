@@ -25,7 +25,7 @@ public class ControllerPlayerMock implements IControllerPlayer{
     }
 
     @Override
-    public Game[] listAvailableGameRooms() {
+    public Game[] listAvailableGameRooms(String playerName) {
         Game g1 = new Game();
         Game g2 = new Game();
         Game g3 = new Game();
@@ -38,7 +38,7 @@ public class ControllerPlayerMock implements IControllerPlayer{
         g2.name = "Turma B300";
         g3.name = "Turma S13";
         
-        g1.password = "1234";
+        g1.password = "true";
         
         return new Game[]{g1, g2, g3};
     }

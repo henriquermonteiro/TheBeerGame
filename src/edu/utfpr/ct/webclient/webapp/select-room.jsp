@@ -1,62 +1,47 @@
 <!DOCTYPE html>
 <html>
-	<meta charset="utf-8"/>
-	
-	<script>
-	function checkIn()
-	{
-		alert("oi!");
+    <meta charset="utf-8"/>
 
-		/*
-		var xhttp = new XMLHttpRequest();
-		xhttp.send(document.getElementById("rooms").value);
-		
-		var obj = JSON.parse(xhttp.responseText);
-		if(obj.accept == "true")
-		{
-			xhttp.open("GET", "wating.html", false);
-			xhttp.send();
-		}
-		*/
-	}
-	
-	function populateForm()
-	{
-		/*
-		var xhttp = new XMLHttpRequest();
-		xhttp.send(document.getElementById("nickname").value);
-		
-		var obj = JSON.parse(xhttp.responseText);
-		if(obj.accept == "true")
-		{
-			xhttp.open("GET", "wating.html", false);
-			xhttp.send();
-		}
-		*/
-		
-		var langArray = ["Turma B3", "Turma C4", "Turma K7", "Turma X9"];
-		document.getElementById('rooms').innerHTML = '';
-		
-		for(element of langArray)
-		{
-			var opt = document.createElement("option");
-			opt.value = element;
-			opt.innerHTML = element;
-			document.getElementById("rooms").add(opt);
-		}
-	}
-	</script>
-	
-	<body onload="populateForm()">
-		<h1>JOGO DA CERVEJA!</h1>
-		<br><br>
-		<form>
-			<select id="rooms">
-			</select>
-			<br><br>
-			<input type="submit" value="Enter" onclick="checkIn()">
-		</form>
-	</body>
+    <script>
+        function enter_room(){
+            
+        }
+        
+        function getUpdate() {
+            populateForm();
+        }
+
+        function populateForm()
+        {
+            var jsonHttp = new XMLHttpRequest();
+            jsonHttp.open("GET", "/resorces", false);
+            jsonHttp.send(null);
+
+            var json = JSON.parse(jsonHttp.responseText);
+
+            document.getElementById('rooms').innerHTML = '';
+
+            for (element of json.game_list)
+            {
+                var opt = document.createElement("option");
+                opt.value = element.id;
+                opt.innerHTML = element.name;
+                opt.setAttribute("password", element.use_pw)
+                document.getElementById("rooms").add(opt);
+            }
+        }
+    </script>
+
+    <body onload="setInterval(1000, getUpdate())">
+        <h1>JOGO DA CERVEJA!</h1>
+        <br><br>
+        <form>
+            <select id="rooms">
+            </select>
+            <br><br>
+            <input type="submit" value="Enter" onclick="enter_room()">
+        </form>
+    </body>
 
 </html>
 

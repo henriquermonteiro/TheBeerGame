@@ -188,8 +188,8 @@ public class ActionService {
         return controler.checkIn(playerID);
     }
     
-    public Game[] listAvailableRooms(){
-        return controler.listAvailableGameRooms();
+    public Game[] listAvailableRooms(String playerName){
+        return controler.listAvailableGameRooms(playerName);
     }
     
     public boolean enterGameRoom(Integer gameID, String playerID, String password){

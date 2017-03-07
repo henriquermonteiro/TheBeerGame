@@ -37,8 +37,10 @@ public class ResourcesServlet extends HttpServlet{
             service = (ActionService) obj;
         }
         
+        String user = (String)req.getSession().getAttribute("USER-ID");
+        
         if(service != null){
-            Game[] list = service.listAvailableRooms();
+            Game[] list = service.listAvailableRooms(user);
             
             JSONArray array = new JSONArray();
             
@@ -47,13 +49,13 @@ public class ResourcesServlet extends HttpServlet{
                 
                 element.put("id", g.gameID);
                 element.put("name", g.name);
-                element.put("use-pw", (g.password != null && !g.password.isEmpty() ? Boolean.TRUE : Boolean.FALSE));
+                element.put("use_pw", (g.password != null && !g.password.isEmpty() ? Boolean.TRUE : Boolean.FALSE));
                 element.put("timestamp", g.timestamp);
                 
                 array.add(element);
             }
             
-            json.put("game-list", array);
+            json.put("game_list", array);
             
             resp.getOutputStream().write(json.toJSONString().getBytes());
             resp.getOutputStream().flush();
