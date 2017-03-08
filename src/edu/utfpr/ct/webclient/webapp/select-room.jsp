@@ -26,7 +26,7 @@
                 var opt = document.createElement("option");
                 opt.value = element.id;
                 opt.innerHTML = element.name;
-                opt.setAttribute("password", element.use_pw)
+                opt.setAttribute("password", element.use_pw);
                 document.getElementById("rooms").add(opt);
             }
         }
