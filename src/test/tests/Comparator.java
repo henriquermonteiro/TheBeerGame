@@ -1,4 +1,4 @@
-package edu.utfpr.ct.tests;
+package test.tests;
 
 import edu.utfpr.ct.datamodel.AbstractNode;
 import edu.utfpr.ct.datamodel.Game;

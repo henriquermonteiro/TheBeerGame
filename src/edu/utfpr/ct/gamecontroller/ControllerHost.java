@@ -84,11 +84,7 @@ public class ControllerHost implements IControllerHost
 	{
 		List<Game> unfinishedGames = new ArrayList<>();
 
-		engines.entrySet().stream().forEach(
-				(entry) ->
-		{
-			unfinishedGames.add(entry.getValue().getGame());
-		});
+		engines.entrySet().stream().forEach((entry) -> { unfinishedGames.add(entry.getValue().getGame()); });
 
 		return unfinishedGames.toArray(new Game[0]);
 	}

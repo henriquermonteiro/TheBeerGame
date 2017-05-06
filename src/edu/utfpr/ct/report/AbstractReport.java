@@ -53,7 +53,7 @@ abstract class AbstractReport
 		}
 	}
 
-	protected boolean deleteFile(String fileName)
+	protected final boolean deleteFile(String fileName)
 	{
 		Path path;
 
