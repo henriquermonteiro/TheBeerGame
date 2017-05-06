@@ -6,10 +6,10 @@ import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.datamodel.Node;
 import edu.utfpr.ct.datamodel.TravellingTime;
 import edu.utfpr.ct.gamecontroller.Engine;
-import edu.utfpr.ct.interfaces.ILogger2;
-import edu.utfpr.ct.logmanager.Logger2;
+import edu.utfpr.ct.logmanager.Logger;
 import java.util.Date;
 import java.util.Random;
+import edu.utfpr.ct.interfaces.ILogger;
 
 public class LoggerTest
 {
@@ -19,7 +19,7 @@ public class LoggerTest
 	public void test()
 	{
 		int qty;
-		ILogger2 logger = Logger2.getLogger();
+		ILogger logger = Logger.getLogger();
 		Comparator comparator = new Comparator();
 		Engine engine;
 
@@ -51,7 +51,7 @@ public class LoggerTest
 		System.out.println("Qtd de jogos depois do purge: " + qty);
 	}
 
-	private void fillPLayerMoves(ILogger2 logger)
+	private void fillPLayerMoves(ILogger logger)
 	{
 		Node node;
 		Random random = new Random();

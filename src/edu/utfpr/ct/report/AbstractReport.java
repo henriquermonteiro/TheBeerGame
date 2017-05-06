@@ -43,7 +43,6 @@ abstract class AbstractReport
 			fileName = path + separator + fileName;
 			path = Paths.get(fileName);
 			path = Files.createFile(path);
-			path.getFileSystem().getSeparator();
 
 			return path.toFile();
 		}
@@ -54,7 +53,7 @@ abstract class AbstractReport
 		}
 	}
 
-	protected final boolean deleteFile(String fileName)
+	protected boolean deleteFile(String fileName)
 	{
 		Path path;
 

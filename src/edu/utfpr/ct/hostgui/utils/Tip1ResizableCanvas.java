@@ -1,4 +1,4 @@
-package edu.utfpr.ct.hostgui2.utils;
+package edu.utfpr.ct.hostgui.utils;
 
 import javafx.application.Application;
 import javafx.scene.Scene;

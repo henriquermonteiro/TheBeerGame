@@ -1,12 +1,10 @@
 package edu.utfpr.ct.gamecontroller;
 
-import edu.utfpr.ct.interfaces.IControllerHost2;
 import edu.utfpr.ct.datamodel.Function;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.interfaces.IFunction;
-import edu.utfpr.ct.interfaces.ILogger2;
 import edu.utfpr.ct.interfaces.IReport;
-import edu.utfpr.ct.logmanager.Logger2;
+import edu.utfpr.ct.logmanager.Logger;
 import edu.utfpr.ct.report.ReportManager;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,30 +13,32 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import edu.utfpr.ct.interfaces.IControllerHost;
+import edu.utfpr.ct.interfaces.ILogger;
 
-public class ControllerHost implements IControllerHost2
+public class ControllerHost implements IControllerHost
 {
 	private static ControllerHost controllerHost;
 	private final Map<String, Engine> engines;
 	private final Set<Game> reports;
 	private final IReport reportManager;
-	private final ILogger2 logger;
+	private final ILogger logger;
 
-	public ControllerHost()
+	private ControllerHost()
 	{
 		this.engines = new HashMap<>();
 		this.reports = new HashSet<>();
 		this.reportManager = new ReportManager();
-		this.logger = Logger2.getLogger();
+		this.logger = Logger.getLogger();
 
 		loadResources();
 	}
-	
-	public ControllerHost getControllerHost()
+
+	public static ControllerHost getControllerHost()
 	{
-		if(controllerHost == null)
+		if (controllerHost == null)
 			controllerHost = new ControllerHost();
-		
+
 		return controllerHost;
 	}
 
@@ -46,13 +46,13 @@ public class ControllerHost implements IControllerHost2
 	{
 		Engine engine;
 
-		for(Game game : logger.getGames())
+		for (Game game : logger.getGames())
 		{
 			engine = new Engine();
 			engine.setGame(game, Function.RETAILER);
 			engine.rebuildOrders();
 
-			if(engine.getState() == Engine.FINISHED)
+			if (engine.getState() == Engine.FINISHED)
 				reportManager.createReport(game);
 			else
 				engines.put(game.name, engine);
@@ -66,9 +66,9 @@ public class ControllerHost implements IControllerHost2
 	{
 		Engine engine = new Engine();
 
-		if(!engine.validateParameters(game))
+		if (!engine.validateParameters(game))
 			throw new IllegalArgumentException("Invalid parameters");
-		if(engines.containsKey(game.name))
+		if (engines.containsKey(game.name))
 			throw new IllegalArgumentException("Invalid parameter: name not unique");
 
 		engine.setGame(game, Function.RETAILER);
@@ -85,7 +85,10 @@ public class ControllerHost implements IControllerHost2
 		List<Game> unfinishedGames = new ArrayList<>();
 
 		engines.entrySet().stream().forEach(
-			(entry) -> { unfinishedGames.add(entry.getValue().getGame()); });
+				(entry) ->
+		{
+			unfinishedGames.add(entry.getValue().getGame());
+		});
 
 		return unfinishedGames.toArray(new Game[0]);
 	}
@@ -117,8 +120,8 @@ public class ControllerHost implements IControllerHost2
 	@Override
 	public Game getReport(String gameName)
 	{
-		for(Game game : reports)
-			if(game.name == gameName)
+		for (Game game : reports)
+			if (game.name == gameName)
 				return game;
 
 		return null;
@@ -137,8 +140,8 @@ public class ControllerHost implements IControllerHost2
 	@Override
 	public boolean purgeReport(String gameName)
 	{
-		for(Game report : reports)
-			if(report.name == gameName)
+		for (Game report : reports)
+			if (report.name == gameName)
 			{
 				reportManager.purgeReport(report);
 				reports.remove(report);
@@ -190,20 +193,20 @@ public class ControllerHost implements IControllerHost2
 		Engine engine;
 		int qty;
 
-		if(!engines.containsKey(gameName))
+		if (!engines.containsKey(gameName))
 			throw new IllegalStateException("Game not found");
-		if(order < 0)
+		if (order < 0)
 			throw new IllegalArgumentException("Invalid order");
 
 		engine = engines.get(gameName);
-		if(!engine.isClientTurn())
+		if (!engine.isClientTurn())
 		{
 			engine.getNodeOfTurn().playerMove.add(order);
 			logger.logPlayerMove(engine.getGame().gameID, engine.getNodeOfTurn());
 		}
 		qty = engine.makeOrder(order);
 
-		if(engine.getState() == Engine.FINISHED)
+		if (engine.getState() == Engine.FINISHED)
 		{
 			engines.remove(gameName);
 			logger.purgeGame(order);

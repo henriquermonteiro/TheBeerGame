@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package edu.utfpr.ct.webclient;
 
 import edu.utfpr.ct.interfaces.IControllerPlayer;
@@ -15,10 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONObject;
 
-/**
- *
- * @author henrique
- */
 @WebServlet(
         name = "BeerGamePlayerService-Checkin",
         urlPatterns = {"/checkin"}

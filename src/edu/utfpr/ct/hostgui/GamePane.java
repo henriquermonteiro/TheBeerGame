@@ -1,17 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package edu.utfpr.ct.hostgui2;
+package edu.utfpr.ct.hostgui;
 
 import edu.utfpr.ct.datamodel.Game;
 import javafx.scene.layout.BorderPane;
 
-/**
- *
- * @author henrique
- */
 public class GamePane extends BorderPane {
 
     private Game game;

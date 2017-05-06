@@ -1,14 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package edu.utfpr.ct.hostgui2;
+package edu.utfpr.ct.hostgui;
 
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.datamodel.ModelUtils;
 import edu.utfpr.ct.datamodel.Node;
-import edu.utfpr.ct.hostgui2.utils.LockedToggleButton;
+import edu.utfpr.ct.hostgui.utils.LockedToggleButton;
 import edu.utfpr.ct.localization.LocalizationKeys;
 import edu.utfpr.ct.localization.Localize;
 import java.io.File;
@@ -40,10 +35,6 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
-/**
- *
- * @author henrique
- */
 public class PlayGamePane extends BorderPane {
     private static final Image rIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.RETAILER_ICON)).toURI().toString());
     private static final Image wIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.WHOLESALER_ICON)).toURI().toString());

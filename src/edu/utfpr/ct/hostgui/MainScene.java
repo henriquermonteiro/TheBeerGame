@@ -1,29 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package edu.utfpr.ct.hostgui2;
+package edu.utfpr.ct.hostgui;
 
 import edu.utfpr.ct.datamodel.Game;
-import edu.utfpr.ct.interfaces.IControllerHost;
-import edu.utfpr.ct.interfaces.IControllerHost2;
 import edu.utfpr.ct.interfaces.IFunction;
 import edu.utfpr.ct.localization.LocalizationKeys;
 import edu.utfpr.ct.localization.Localize;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import edu.utfpr.ct.interfaces.IControllerHost;
 
-/**
- *
- * @author henrique
- */
 public class MainScene extends BorderPane {
 
     private TabPane tabPane;
@@ -31,12 +20,12 @@ public class MainScene extends BorderPane {
     private static final Image homeIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.HOME_ICON)).toURI().toString());
     private static final Image addIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.PLUS_ICON)).toURI().toString());
 
-    private IControllerHost2 control;
+    private IControllerHost control;
     
     private LoaderPane loaderPane;
     private HashMap<String, GamePane> games;
 
-    public MainScene(IControllerHost2 control) {
+    public MainScene(IControllerHost control) {
         this.control = control;
         
         games = new HashMap<>();

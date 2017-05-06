@@ -39,6 +39,6 @@ public class ReportTest
 		reportManager.createReport(game);
 		games = reportManager.getReports();
 		comparator.compareAll(game, games[games.length - 1]);
-		//reportManager.purgeReport(game);
+		reportManager.purgeReport(game);
 	}
 }

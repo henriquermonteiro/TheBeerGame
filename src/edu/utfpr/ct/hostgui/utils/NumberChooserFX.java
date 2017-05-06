@@ -1,9 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package edu.utfpr.ct.hostgui2.utils;
+package edu.utfpr.ct.hostgui.utils;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -16,10 +11,6 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 
-/**
- *
- * @author henrique
- */
 public class NumberChooserFX extends HBox {
 
     private Label label;

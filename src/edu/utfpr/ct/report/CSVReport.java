@@ -28,7 +28,7 @@ class CSVReport extends AbstractReport
 			bw.close();
 			return true;
 		}
-		catch(IOException e)
+		catch(Exception e)
 		{
 			System.out.println("CSVReport::generateReport(Game game): " + e.getMessage());
 			return false;

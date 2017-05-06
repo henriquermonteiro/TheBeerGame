@@ -1,9 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package edu.utfpr.ct.hostgui2.utils;
+package edu.utfpr.ct.hostgui.utils;
 
 import edu.utfpr.ct.localization.LocalizationKeys;
 import edu.utfpr.ct.localization.Localize;
@@ -30,10 +25,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 
-/**
- *
- * @author henrique
- */
 public class GameComponent extends GridPane{
     private static final Image deleteIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.DELETE_ICON)).toURI().toString());
     private static final Image reloadIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.LOAD_ICON)).toURI().toString());

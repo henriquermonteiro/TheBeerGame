@@ -1,34 +1,24 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package edu.utfpr.ct.hostgui2;
+package edu.utfpr.ct.hostgui;
 
 import edu.utfpr.ct.gamecontroller.ControllerHost;
-import edu.utfpr.ct.interfaces.IControllerHost;
-import edu.utfpr.ct.interfaces.IControllerHost2;
 import edu.utfpr.ct.interfaces.IGUI;
 import edu.utfpr.ct.localization.LocalizationKeys;
 import edu.utfpr.ct.localization.Localize;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import test.mock.ControllerMock;
+import edu.utfpr.ct.interfaces.IControllerHost;
+//import test.mock.ControllerMock;
 
-/**
- *
- * @author henrique
- */
 public class StartFrame extends Application implements IGUI{
     private MainScene mainScene;
-    private IControllerHost2 controller;
+    private IControllerHost controller;
 
     public StartFrame() {
-        controller = new ControllerHost();
+        controller = ControllerHost.getControllerHost();
     }
 
-    public StartFrame(IControllerHost2 controller) {
+    public StartFrame(IControllerHost controller) {
         this.controller = controller;
     }
     

@@ -5,15 +5,10 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,81 +22,26 @@ class BinaryReport extends AbstractReport
 	@Override
 	public boolean generateReport(Game game)
 	{
-		return generateReport2(game);
-//		return writeFile(getFileName(game), serialization(game));
-	}
-
-	public boolean generateReport2(Game game)
-	{
-		boolean status;
-
-		status = writeFile(getFileName(game), serialization(game));
-		status &= writeFile(getFileName(game) + ".bak", serialization(game));
-
-		return status;
+		return writeFile(getFileName(game), serialization(game));
 	}
 
 	@Override
 	public Game[] loadReports()
-	{
-		return loadReports2();
-//		List<Game> games = new ArrayList<>();
-//		byte[] buffer;
-//
-//		for(String fileName : listAllFiles())
-//		{
-//			buffer = readFile(fileName);
-//			games.add((Game) deserialization(buffer));
-//		}
-//
-//		return games.toArray(new Game[0]);
-	}
-
-	public Game[] loadReports2()
 	{
 		List<Game> games = new ArrayList<>();
 		byte[] buffer;
 
 		for(String fileName : listAllFiles())
 		{
-			try
-			{
-				buffer = readFile(fileName);
+			buffer = readFile(fileName);
+			if(buffer != null)
 				games.add((Game) deserialization(buffer));
-			}
-			catch(Exception e)
-			{
-				System.out.println("BinaryReport::loadReports2(): " + e.getMessage());
-				
-				Game game = loadBackupReport(fileName);
-				if(game != null)
-					games.add(game);
-			}
 		}
 
 		return games.toArray(new Game[0]);
 	}
-	
-	public Game loadBackupReport(String fileName)
-	{
-		Game game = null;
-		byte[] buffer;
-		
-		try
-		{
-			buffer = readFile(fileName + ".bkp");
-			game = (Game) deserialization(buffer);
-			Files.copy(Paths.get(fileName + ".bkp"), Paths.get(fileName), StandardCopyOption.REPLACE_EXISTING);
-		}
-		catch(Exception e)
-		{
-			System.out.println("BinaryReport::loadBackupReport(): " + e.getMessage());
-		}
 
-		return game;
-	}
-
-	private byte[] readFile(String fileName)
+	protected byte[] readFile(String fileName)
 	{
 		byte[] buffer;
 		File file;
@@ -117,19 +57,14 @@ class BinaryReport extends AbstractReport
 
 			return buffer;
 		}
-		catch(FileNotFoundException e)
+		catch(Exception e)
 		{
-			System.out.println("BinaryReport::readFile(String fileName): " + e.getMessage());
-			return null;
-		}
-		catch(IOException e)
-		{
-			System.out.println("BinaryReport::readFile(String fileName): " + e.getMessage());
+			System.out.println("BinaryReport::loadReports(): " + e.getMessage());
 			return null;
 		}
 	}
 
-	private boolean writeFile(String fileName, byte[] buffer)
+	protected boolean writeFile(String fileName, byte[] buffer)
 	{
 		FileOutputStream fos;
 
@@ -141,12 +76,7 @@ class BinaryReport extends AbstractReport
 
 			return true;
 		}
-		catch(FileNotFoundException e)
-		{
-			System.out.println("BinaryReport::writeFile(String fileName, byte[] buffer): " + e.getMessage());
-			return false;
-		}
-		catch(IOException e)
+		catch(Exception e)
 		{
 			System.out.println("BinaryReport::writeFile(String fileName, byte[] buffer): " + e.getMessage());
 			return false;
@@ -167,7 +97,7 @@ class BinaryReport extends AbstractReport
 
 			return bos.toByteArray();
 		}
-		catch(IOException e)
+		catch(Exception e)
 		{
 			System.out.println("BinaryReport::serialization(Serializable object): " + e.getMessage());
 			return null;
@@ -189,7 +119,7 @@ class BinaryReport extends AbstractReport
 
 			return object;
 		}
-		catch(IOException | ClassNotFoundException e)
+		catch(Exception e)
 		{
 			System.out.println("BinaryReport::deserialization(byte[] buffer): " + e.getMessage());
 			return null;

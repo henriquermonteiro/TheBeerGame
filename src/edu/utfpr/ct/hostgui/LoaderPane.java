@@ -1,13 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package edu.utfpr.ct.hostgui2;
+package edu.utfpr.ct.hostgui;
 
 import edu.utfpr.ct.datamodel.Game;
-import edu.utfpr.ct.hostgui2.utils.GameComponent;
-import edu.utfpr.ct.hostgui2.utils.ParameterEventHandler;
+import edu.utfpr.ct.hostgui.utils.GameComponent;
+import edu.utfpr.ct.hostgui.utils.ParameterEventHandler;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -22,10 +17,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 
-/**
- *
- * @author henrique
- */
 public class LoaderPane extends BorderPane {
 
     private HBox topPane;

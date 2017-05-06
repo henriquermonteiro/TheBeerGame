@@ -1,9 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package edu.utfpr.ct.hostgui2;
+package edu.utfpr.ct.hostgui;
 
 import edu.utfpr.ct.datamodel.AbstractNode;
 import edu.utfpr.ct.datamodel.Game;
@@ -21,10 +16,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 
-/**
- *
- * @author henrique
- */
 public class ReportGamePane extends BorderPane{
     private static final Image webImage = new Image(new File(Localize.getTextForKey(LocalizationKeys.WEB_ICON)).toURI().toString());
     

@@ -6,20 +6,20 @@ import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.datamodel.Node;
 import edu.utfpr.ct.datamodel.TravellingTime;
 import edu.utfpr.ct.gamecontroller.ControllerHost;
-import edu.utfpr.ct.interfaces.IControllerHost2;
+import edu.utfpr.ct.interfaces.IControllerHost;
 
 public class Demo
 {
-	private final IControllerHost2 ch;
+	private final IControllerHost ch;
 
 	public Demo()
 	{
-		this.ch = new ControllerHost();
+		this.ch = ControllerHost.getControllerHost();
 	}
 
 	public void testLoggerOperations()
 	{
-		IControllerHost2 ch2;
+		IControllerHost ch2;
 		Comparator comparator = new Comparator();
 		Game game, games[];
 
@@ -30,7 +30,7 @@ public class Demo
 		ch.postMoveForNode(game.name, 8);
 		ch.postMoveForNode(game.name, 16);
 
-		ch2 = new ControllerHost();
+		ch2 = ControllerHost.getControllerHost();
 		games = ch2.getGames();
 		generateDemand(games[0]);
 

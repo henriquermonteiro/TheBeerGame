@@ -185,24 +185,24 @@ public class Engine
 	 */
 	public int makeOrder(int order)
 	{
-		int posCurrentNode, qtd;
+		int posCurrentNode, qty;
 		Node node;
 
 		if(order < 0 || state != RUNNING)
 			return -1;
 
 		if(clientTurn)
-			qtd = makeOrderRecursion(0, order);
+			qty = makeOrderRecursion(0, order);
 		else
 		{
 			posCurrentNode = (turn.getPosition() - 1) * game.deliveryDelay + (turn.getPosition() - 1);
 			node = (Node) game.supplyChain[posCurrentNode];
-			qtd = makeOrderRecursion(posCurrentNode + 1, order);
-			node.currentStock += qtd;
+			qty = makeOrderRecursion(posCurrentNode + 1, order);
+			node.currentStock += qty;
 		}
 		nextTurn();
 
-		return qtd;
+		return qty;
 	}
 
 	private int makeOrderRecursion(int posCurrentNode, int order)
