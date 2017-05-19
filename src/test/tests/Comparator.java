@@ -4,7 +4,6 @@ import edu.utfpr.ct.datamodel.AbstractNode;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.datamodel.Node;
 import edu.utfpr.ct.datamodel.TravellingTime;
-import java.util.List;
 import java.util.Objects;
 
 public class Comparator
@@ -87,30 +86,32 @@ public class Comparator
 					System.out.println("supplyChain1[" + i + "].playerName = " + node1.playerName + ", supplyChain2[" + i + "].playerName = " + node2.playerName);
 				if(node1.function != node2.function)
 					System.out.println("supplyChain1[" + i + "].function = " + node1.function + ", supplyChain2[" + i + "].function = " + node2.function);
-				if(node1.currentStock != node2.currentStock)
-					System.out.println("supplyChain1[" + i + "].currentStock = " + node1.currentStock + ", supplyChain2[" + i + "].currentStock = " + node2.currentStock);
-				if(node1.profit != node2.profit)
-					System.out.println("supplyChain1[" + i + "].profit = " + node1.profit + ", supplyChain2[" + i + "].profit = " + node2.profit);
+				if(node1.currentStock.size() != node2.currentStock.size())
+				{
+					System.out.println("supplyChain1[" + i + "].currentStock.size() = " + node1.currentStock.size() + ", supplyChain2[" + i + "].currentStock.size() = " + node2.currentStock.size());
+					break;
+				}
+				if(node1.profit.size() != node2.profit.size())
+				{
+					System.out.println("supplyChain1[" + i + "].profit.size() = " + node1.profit.size() + ", supplyChain2[" + i + "].profit.size() = " + node2.profit.size());
+					break;
+				}
+				if(node1.playerMove.size() != node2.playerMove.size())
+				{
+					System.out.println("supplyChain1[" + i + "].playerMove.size() = " + node1.playerMove.size() + ", supplyChain2[" + i + "].playerMove.size() = " + node2.playerMove.size());
+					break;
+				}
 
-				playerMoveComparator(node1.playerMove, node2.playerMove);
-
-				continue;
+				for(int j = 0; j < node1.currentStock.size(); j++)
+				{
+					if(!Objects.equals(node1.currentStock.get(j), node2.currentStock.get(j)))
+						System.out.println("supplyChain1[" + i + "].currentStock.get(" + j + ") = " + node1.currentStock.get(j) + ", supplyChain2[" + i + "].currentStock.get(" + j + ") = " + node2.currentStock.get(j));
+					if(!Objects.equals(node1.profit.get(j), node2.profit.get(j)))
+						System.out.println("supplyChain1[" + i + "].profit.get(" + j + ") = " + node1.profit.get(j) + ", supplyChain2[" + i + "].profit.get(" + j + ") = " + node2.profit.get(j));
+					if(!Objects.equals(node1.playerMove.get(j), node1.playerMove.get(j)))
+						System.out.println("supplyChain1[" + i + "].playerMove.get(" + j + ") = " + node1.playerMove.get(j) + ", supplyChain2[" + i + "].playerMove.get(" + j + ") = " + node2.playerMove.get(j));
+				}
 			}
-
-			System.out.println("supplyChain1[" + i + "] = " + supplyChain1[i] + ", supplyChain2[" + i + "] = " + supplyChain2[i]);
 		}
-	}
-
-	public void playerMoveComparator(List<Integer> playerMove1, List<Integer> playerMove2)
-	{
-		if(playerMove1.size() != playerMove2.size())
-		{
-			System.out.println("playerMove1.size() = " + playerMove1.size() + ", playerMove2.size() = " + playerMove2.size());
-			return;
-		}
-
-		for(int i = 0; i < playerMove1.size(); i++)
-			if(!Objects.equals(playerMove1.get(i), playerMove2.get(i)))
-				System.out.println("playerMove1.get(" + i + ") = " + playerMove1.get(i) + ", playerMove2.get(" + i + ") = " + playerMove2.get(i));
 	}
 }

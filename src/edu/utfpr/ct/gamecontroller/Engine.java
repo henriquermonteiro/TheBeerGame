@@ -133,12 +133,15 @@ public class Engine
 		for(IFunction value : turn.getValues())
 		{
 			node = new Node();
-			node.playerName = "";
-			node.travellingStock = 0;
-			node.currentStock = game.initialStock;
-			node.function = value;
-			node.profit = 0;
+			node.currentStock = new ArrayList<>();
+			node.profit = new ArrayList<>();
 			node.playerMove = new ArrayList<>();
+			
+			node.travellingStock = 0;
+			node.playerName = "";
+			node.function = value;
+			node.currentStock.add(game.initialStock);
+			node.profit.add(0.0);
 			game.supplyChain[position] = node;
 			position++;
 
@@ -198,7 +201,7 @@ public class Engine
 			posCurrentNode = (turn.getPosition() - 1) * game.deliveryDelay + (turn.getPosition() - 1);
 			node = (Node) game.supplyChain[posCurrentNode];
 			qty = makeOrderRecursion(posCurrentNode + 1, order);
-			node.currentStock += qty;
+			node.currentStock.add(node.getLastStock() + qty);
 		}
 		nextTurn();
 
@@ -225,25 +228,29 @@ public class Engine
 		{
 			node = (Node) game.supplyChain[posCurrentNode];
 			calculateProfit(node, order);
-			node.travellingStock = node.currentStock >= order ? order : node.currentStock;
-			node.currentStock = node.currentStock >= order ? node.currentStock - order : 0;
-
+			
+			node.travellingStock = node.getLastStock() >= order ? order : node.getLastStock();
+			node.currentStock.add(node.getLastStock() >= order ? node.getLastStock() - order : 0);
+			
 			return node.travellingStock;
 		}
 
 		return -1;
 	}
-
+	
 	private void calculateProfit(Node node, int order)
 	{
-		/* Profit from selling order */
-		node.profit += node.currentStock >= order ? order * game.sellingUnitProfit : node.currentStock * game.sellingUnitProfit;
+		double profit = node.getLastProfit();
+		
+		profit += node.getLastStock() >= order ? order * game.sellingUnitProfit : node.getLastStock() * game.sellingUnitProfit;
 		/* Cost from missing unit */
-		node.profit -= node.currentStock >= order ? 0 : (order - node.currentStock) * game.missingUnitCost;
+		profit -= node.getLastStock() >= order ? 0 : (order - node.getLastStock()) * game.missingUnitCost;
 		/* Cost from the remaining stock after selling */
-		node.profit -= node.currentStock >= order ? (node.currentStock - order) * game.stockUnitCost : 0;
+		profit -= node.getLastStock() >= order ? (node.getLastStock() - order) * game.stockUnitCost : 0;
+		
+		node.profit.add(profit);
 	}
-
+	
 	private Node getNodeByFunction(IFunction function)
 	{
 		int posCurrentNode = (function.getPosition() - 1) * game.deliveryDelay + (function.getPosition() - 1);

@@ -101,7 +101,7 @@ class CSVReport extends AbstractReport
 			bw.write(node.function.getName() + ", ");
 			bw.write(node.playerName + ", ");
 			bw.write(node.currentStock + ", ");
-			bw.write(Double.toString(node.profit));
+			bw.write(Double.toString(node.getLastProfit()));
 
 			for(int i = 0; i < node.playerMove.size(); i++)
 				bw.write(", " + node.playerMove.get(i));

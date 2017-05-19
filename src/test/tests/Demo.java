@@ -180,7 +180,7 @@ public class Demo
 				node = (Node) an;
 
 				System.out.print("<" + node.travellingStock + " | ");
-				System.out.print(node.currentStock + "> -> ");
+				System.out.print(node.getLastStock() + "> -> ");
 			}
 		}
 		System.out.println("");
@@ -196,7 +196,7 @@ public class Demo
 			{
 				node = (Node) an;
 
-				System.out.print(node.profit + " -> ");
+				System.out.print(node.getLastProfit() + " -> ");
 			}
 		}
 		System.out.println("");
