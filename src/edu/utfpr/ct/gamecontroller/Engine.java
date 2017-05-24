@@ -51,6 +51,11 @@ public class Engine
 		return turn;
 	}
 
+	public int getWeeks()
+	{
+		return weeks;
+	}
+	
 	public int getState()
 	{
 		return state;

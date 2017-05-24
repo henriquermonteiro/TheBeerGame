@@ -112,6 +112,12 @@ public class ControllerHost implements IControllerHost
 	{
 		return engines.get(gameName).getState();
 	}
+	
+	@Override
+	public int getGameWeek(String gameName)
+	{
+		return engines.get(gameName).getWeeks();
+	}
 
 	@Override
 	public Game getReport(String gameName)

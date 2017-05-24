@@ -14,6 +14,8 @@ public interface IControllerHost
 
 	Game getGame(String gameName);
 	
+	int getGameWeek(String gameName);
+	
 	int getGameState(String gameName);
 
 	Game getReport(String gameName);
