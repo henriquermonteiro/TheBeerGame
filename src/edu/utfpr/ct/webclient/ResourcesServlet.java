@@ -42,6 +42,7 @@ public class ResourcesServlet extends HttpServlet{
                 element.put("name", g.name);
                 element.put("use_pw", (g.password != null && !g.password.isEmpty() ? Boolean.TRUE : Boolean.FALSE));
                 element.put("timestamp", g.timestamp);
+                element.put("finished", true);
                 
                 array.add(element);
             }

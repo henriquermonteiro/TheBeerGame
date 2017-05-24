@@ -2,6 +2,7 @@ package edu.utfpr.ct.datamodel;
 
 import edu.utfpr.ct.localization.LocalizationKeys;
 import edu.utfpr.ct.localization.Localize;
+import java.util.ArrayList;
 
 public enum SupplyChainTypes
 {
@@ -24,7 +25,7 @@ public enum SupplyChainTypes
 			for(int k = 0; k < 4; k++)
 			{
 				Node n = new Node();
-				n.currentStock = 0;
+				n.currentStock = new ArrayList<>();
 				n.function = Function.values()[k];
 
 				nodes[k * (delay + 1)] = n;

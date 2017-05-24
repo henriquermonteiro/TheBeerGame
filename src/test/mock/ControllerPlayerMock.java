@@ -16,7 +16,7 @@ public class ControllerPlayerMock implements IControllerPlayer{
 
     @Override
     public Integer checkIn(String playerName) {
-        return -1;
+        return (playerName.equals("juanito")? -2 : -1);
     }
 
     @Override

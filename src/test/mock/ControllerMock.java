@@ -16,7 +16,7 @@ import edu.utfpr.ct.interfaces.ILogger;
 public class ControllerMock implements IControllerHost{
     private ILogger log;
 
-    public ControllerMock() {
+    public ControllerMock() throws IllegalArgumentException{
         log = new LoggerMock();
     }
     

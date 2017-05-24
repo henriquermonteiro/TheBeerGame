@@ -21,6 +21,7 @@ import org.apache.catalina.webresources.JarResourceSet;
 import org.apache.catalina.webresources.StandardRoot;
 import org.apache.tomcat.util.scan.Constants;
 import org.apache.tomcat.util.scan.StandardJarScanFilter;
+import test.mock.ControllerPlayerMock;
 
 public class ActionService {
     private Tomcat server;
@@ -51,7 +52,7 @@ public class ActionService {
     }
 
     public static void main(String[] args) throws Exception {
-        //new ActionService(new ControllerPlayerMock());
+        new ActionService(new ControllerPlayerMock());
 //        File root = getRootFolder();
 //        System.setProperty("org.apache.catalina.startup.EXIT_ON_INIT_FAILURE", "true");
 //        Tomcat tomcat = new Tomcat();
