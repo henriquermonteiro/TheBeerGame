@@ -100,6 +100,11 @@ public class Engine
 
 		return true;
 	}
+	
+	public boolean isPlayerSet(IFunction function)
+	{
+		return "".equals(getNodeByFunction(function).playerName);
+	}
 
 	public boolean validateParameters(Game game)
 	{

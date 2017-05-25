@@ -2,6 +2,7 @@ package edu.utfpr.ct.gamecontroller;
 
 import edu.utfpr.ct.datamodel.Function;
 import edu.utfpr.ct.datamodel.Game;
+import edu.utfpr.ct.datamodel.Node;
 import edu.utfpr.ct.interfaces.IFunction;
 import edu.utfpr.ct.interfaces.IReport;
 import edu.utfpr.ct.logmanager.Logger;
@@ -11,17 +12,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import edu.utfpr.ct.interfaces.IControllerHost;
+import edu.utfpr.ct.interfaces.IControllerPlayer2;
 import edu.utfpr.ct.interfaces.ILogger;
+import java.util.Arrays;
 
-public class ControllerHost implements IControllerHost
+public class Controller implements IControllerHost, IControllerPlayer2
 {
-	private static ControllerHost controllerHost;
+	private static Controller controller;
 	private final Map<String, Engine> engines;
 	private final Map<Game, Boolean> reports;
 	private final IReport reportManager;
 	private final ILogger logger;
 
-	private ControllerHost()
+	private Controller()
 	{
 		this.engines = new HashMap<>();
 		this.reports = new HashMap<>();
@@ -31,12 +34,12 @@ public class ControllerHost implements IControllerHost
 		loadResources();
 	}
 
-	public synchronized static ControllerHost getControllerHost()
+	public synchronized static Controller getController()
 	{
-		if(controllerHost == null)
-			controllerHost = new ControllerHost();
+		if(controller == null)
+			controller = new Controller();
 
-		return controllerHost;
+		return controller;
 	}
 
 	private void loadResources()
@@ -82,7 +85,10 @@ public class ControllerHost implements IControllerHost
 	{
 		List<Game> unfinishedGames = new ArrayList<>();
 
-		engines.entrySet().stream().forEach((entry) -> { unfinishedGames.add(entry.getValue().getGame()); });
+		engines.entrySet().stream().forEach((entry) ->
+		{
+			unfinishedGames.add(entry.getValue().getGame());
+		});
 
 		return unfinishedGames.toArray(new Game[0]);
 	}
@@ -215,5 +221,72 @@ public class ControllerHost implements IControllerHost
 		}
 
 		return qty;
+	}
+
+	/* IControllerPlayer2 */
+
+	@Override
+	public String checkIn(String playerName)
+	{
+		for(Engine engine : engines.values())
+			if(Arrays.stream(engine.getPlayers()).anyMatch(playerName::equals))
+				return engine.getGame().name;
+
+		return ""; //null?
+	}
+
+	@Override
+	public Integer postMove(String gameName, IFunction function, String playerName, Integer order)
+	{
+		try
+		{
+			Node node = engines.get(gameName).getNodeOfTurn();
+
+			if(node.function == function && node.playerName.equals(playerName))
+				return postMoveForNode(gameName, order);
+		}
+		catch(Exception e)
+		{
+			System.out.println("Controller::postMove(String gameName, IFunction function, String playerName, Integer order): " + e);
+		}
+
+		return -1;
+	}
+
+	/* Pra que eu preciso do nome do usuário? Se for só apra ele ler a lista de 
+	jogos disponíveis é indiferente eu ter ou não o nome */
+	@Override
+	public Game[] listAvailableGameRooms(String playerName)
+	{
+		return getGames();
+	}
+
+	@Override
+	public boolean enterGameRoom(String gameName, String playerName)
+	{
+		return engines.get(gameName).addPlayer(playerName);
+	}
+
+	@Override
+	public synchronized boolean selectPlayableNode(String gameName, IFunction function, String playerName)
+	{
+		Engine engine = engines.get(gameName);
+		
+		if(!engine.isPlayerSet(function))
+			return engine.changePlayerForNode(function, playerName);
+		
+		return false;
+	}
+
+	@Override
+	public Game getGameData(String gameName, String playerName)
+	{
+		Engine engine = engines.get(gameName);
+		
+		if(engine != null)
+			if(Arrays.stream(engine.getPlayers()).anyMatch(s -> s.equals(playerName)))
+				return engine.getGame();
+		
+		return null;
 	}
 }
