@@ -7,6 +7,7 @@ package test.mock;
 
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.interfaces.IControllerPlayer;
+import edu.utfpr.ct.interfaces.IFunction;
 
 /**
  *
@@ -15,12 +16,12 @@ import edu.utfpr.ct.interfaces.IControllerPlayer;
 public class ControllerPlayerMock implements IControllerPlayer {
 
     @Override
-    public Integer checkIn(String playerName) {
-        return (playerName.equals("juanito") ? -2 : -1);
+    public String checkIn(String playerName) {
+        return (playerName.equals("juanito") ? "-2" : "-1");
     }
 
     @Override
-    public Integer postMove(String gameName, Integer nodeID, String playerName, Integer move) {
+    public Integer postMove(String gameName, IFunction function, String playerName, Integer move) {
         return move;
     }
 
@@ -49,7 +50,7 @@ public class ControllerPlayerMock implements IControllerPlayer {
     }
 
     @Override
-    public boolean selectPlayableNode(String gameName, Integer nodeID, String playerName) {
+    public boolean selectPlayableNode(String gameName, IFunction function, String playerName) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

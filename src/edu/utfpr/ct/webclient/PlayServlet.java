@@ -1,5 +1,7 @@
 package edu.utfpr.ct.webclient;
 
+import edu.utfpr.ct.datamodel.Function;
+import edu.utfpr.ct.interfaces.IFunction;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -62,7 +64,7 @@ public class PlayServlet extends HttpServlet {
             Integer nPos = Integer.parseInt(nodePosition);
             Integer mv = Integer.parseInt(move);
 
-            answer(resp, service.postMove(gameName, nPos, playerName, mv));
+            answer(resp, service.postMove(gameName, Function.DISTRIBUTOR.getValues()[nPos - 1], playerName, mv));
 
         } catch (NumberFormatException ex) {
             answer(resp, -1);

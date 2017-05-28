@@ -5,7 +5,7 @@ import edu.utfpr.ct.datamodel.Function;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.datamodel.Node;
 import edu.utfpr.ct.datamodel.TravellingTime;
-import edu.utfpr.ct.gamecontroller.ControllerHost;
+import edu.utfpr.ct.gamecontroller.Controller;
 import edu.utfpr.ct.interfaces.IControllerHost;
 
 public class Demo
@@ -14,7 +14,7 @@ public class Demo
 
 	public Demo()
 	{
-		this.ch = ControllerHost.getControllerHost();
+		this.ch = Controller.getController();
 	}
 
 	public void testLoggerOperations()
@@ -30,7 +30,7 @@ public class Demo
 		ch.postMoveForNode(game.name, 8);
 		ch.postMoveForNode(game.name, 16);
 
-		ch2 = ControllerHost.getControllerHost();
+		ch2 = Controller.getController();
 		games = ch2.getGames();
 		generateDemand(games[0]);
 

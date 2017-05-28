@@ -12,11 +12,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import edu.utfpr.ct.interfaces.IControllerHost;
-import edu.utfpr.ct.interfaces.IControllerPlayer2;
 import edu.utfpr.ct.interfaces.ILogger;
 import java.util.Arrays;
+import edu.utfpr.ct.interfaces.IControllerPlayer;
 
-public class Controller implements IControllerHost, IControllerPlayer2
+public class Controller implements IControllerHost, IControllerPlayer
 {
 	private static Controller controller;
 	private final Map<String, Engine> engines;
@@ -260,11 +260,16 @@ public class Controller implements IControllerHost, IControllerPlayer2
 	{
 		return getGames();
 	}
-
+	
 	@Override
-	public boolean enterGameRoom(String gameName, String playerName)
+	public boolean enterGameRoom(String gameName, String playerName, String password)
 	{
-		return engines.get(gameName).addPlayer(playerName);
+		Engine engine = engines.get(gameName);
+		
+		if(engine.getGame().password.equals(password))
+			return engines.get(gameName).addPlayer(playerName);
+		else
+			return false;
 	}
 
 	@Override

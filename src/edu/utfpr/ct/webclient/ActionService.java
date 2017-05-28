@@ -1,7 +1,6 @@
 package edu.utfpr.ct.webclient;
 
 import edu.utfpr.ct.datamodel.Game;
-import edu.utfpr.ct.interfaces.IControllerPlayer;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -22,6 +21,8 @@ import org.apache.catalina.webresources.StandardRoot;
 import org.apache.tomcat.util.scan.Constants;
 import org.apache.tomcat.util.scan.StandardJarScanFilter;
 import test.mock.ControllerPlayerMock;
+import edu.utfpr.ct.interfaces.IControllerPlayer;
+import edu.utfpr.ct.interfaces.IFunction;
 
 public class ActionService {
     private Tomcat server;
@@ -175,7 +176,7 @@ public class ActionService {
         server.getServer().await();
     }
     
-    public int checkIn(String playerID){
+    public String checkIn(String playerID){
         return controler.checkIn(playerID);
     }
     
@@ -187,8 +188,8 @@ public class ActionService {
         return controler.enterGameRoom(gameName, playerID, password);
     }
     
-    public int postMove(String gameName, Integer nodePosition, String playerID, Integer move){
-        return controler.postMove(gameName, nodePosition, playerID, move);
+    public int postMove(String gameName, IFunction function, String playerID, Integer move){
+        return controler.postMove(gameName, function, playerID, move);
     }
     
     public Game updateData(String gameName, String playerName){
