@@ -28,7 +28,7 @@ public class GameUpdateServlet extends HttpServlet {
         if (service != null) {
             JSONObject json = new JSONObject();
 
-            Integer gameID = null;
+            String gameID = null;
             String playerName = null;
 
             boolean flag = true;
@@ -38,7 +38,7 @@ public class GameUpdateServlet extends HttpServlet {
                 flag = false;
             } else {
                 try {
-                    gameID = Integer.parseInt(s);
+                    gameID = s;
                 } catch (NumberFormatException ex) {
                     flag = false;
                 }

@@ -1,6 +1,6 @@
 package edu.utfpr.ct.hostgui;
 
-import edu.utfpr.ct.gamecontroller.ControllerHost;
+import edu.utfpr.ct.gamecontroller.Controller;
 import edu.utfpr.ct.interfaces.IGUI;
 import edu.utfpr.ct.localization.LocalizationKeys;
 import edu.utfpr.ct.localization.Localize;
@@ -15,7 +15,7 @@ public class StartFrame extends Application implements IGUI{
     private IControllerHost controller;
 
     public StartFrame() {
-        controller = ControllerHost.getControllerHost();
+        controller = Controller.getController();
     }
 
     public StartFrame(IControllerHost controller) {

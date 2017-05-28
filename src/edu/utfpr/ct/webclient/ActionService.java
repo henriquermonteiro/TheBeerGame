@@ -1,7 +1,6 @@
 package edu.utfpr.ct.webclient;
 
 import edu.utfpr.ct.datamodel.Game;
-import edu.utfpr.ct.interfaces.IControllerPlayer;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -22,6 +21,8 @@ import org.apache.catalina.webresources.StandardRoot;
 import org.apache.tomcat.util.scan.Constants;
 import org.apache.tomcat.util.scan.StandardJarScanFilter;
 import test.mock.ControllerPlayerMock;
+import edu.utfpr.ct.interfaces.IControllerPlayer;
+import edu.utfpr.ct.interfaces.IFunction;
 
 public class ActionService {
     private Tomcat server;
@@ -175,7 +176,7 @@ public class ActionService {
         server.getServer().await();
     }
     
-    public int checkIn(String playerID){
+    public String checkIn(String playerID){
         return controler.checkIn(playerID);
     }
     
@@ -183,15 +184,15 @@ public class ActionService {
         return controler.listAvailableGameRooms(playerName);
     }
     
-    public boolean enterGameRoom(Integer gameID, String playerID, String password){
-        return controler.enterGameRoom(gameID, playerID);
+    public boolean enterGameRoom(String gameID, String playerID, String password){
+        return controler.enterGameRoom(gameID, playerID, password);
     }
     
-    public int postMove(Integer gameID, Integer nodePosition, String playerID, Integer move){
+    public int postMove(String gameID, IFunction nodePosition, String playerID, Integer move){
         return controler.postMove(gameID, nodePosition, playerID, move);
     }
     
-    public Game updateData(Integer gameID, String playerName){
+    public Game updateData(String gameID, String playerName){
         return controler.getGameData(gameID, playerName);
     }
 }
