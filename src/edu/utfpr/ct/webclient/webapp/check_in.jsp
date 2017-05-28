@@ -11,7 +11,6 @@
     String hidden = (request.getParameter("warning") != null ? "" : " hidden");
     
     if(request.getMethod().equals("POST")){
-        System.out.println("Post");
         String nick = request.getParameter("nickname");
         
         String recv;

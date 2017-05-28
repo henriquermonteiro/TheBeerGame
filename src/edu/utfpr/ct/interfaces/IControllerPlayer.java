@@ -17,19 +17,20 @@ public interface IControllerPlayer
 	 * Realiza uma jogada de um jogador.
 	 * Retorna o montante do pedido atendido. -1 se a jogada for inválida.
 	 *
-	 * @param gameID ID do jogo onde a jogada será realizada.
+	 * @param gameName Nome do jogo onde a jogada será realizada.
 	 * @param nodeID ID do Node onde a jogada será realizada.
 	 * @param playerName Nome do jogador que realizou a jogada.
 	 * @param move Jogada realizada.
 	 * @return Montante do pedido atendido. -1 se a jogada for inválida.
 	 */
-	public Integer postMove(Integer gameID, Integer nodeID, String playerName, Integer move);
+	public Integer postMove(String gameName, Integer nodeID, String playerName, Integer move);
 
 	/**
 	 * Lista os jogos disponíveis para serem acessados.
 	 * A lista consiste do nome e do ID dos jogos.
 	 * O jogo estar disponível não implica em o usuário estar autorizado a jogar.
 	 *
+         * @param playerName Nome do usuário. Jogadores convidados podem não ter acesso a todos os recursos.
 	 * @return lista de jogos disponíveis.
 	 */
 	public Game[] listAvailableGameRooms(String playerName);
@@ -42,30 +43,44 @@ public interface IControllerPlayer
 	 * Ao entrar em um jogo em andamento, o jogador fica na sala de espera,
 	 * o Host da partida pode alocar os jogadores nas posições desejadas.
 	 *
-	 * @param gameID ID do jogo em que se deseja entrar.
+	 * @param gameName Nome do jogo em que se deseja entrar.
 	 * @param playerName Nome do jogador fazendo a requisição.
+         * @param password Senha para o jogo. Se o jogo não necessitar de senha, esta será ignorada.
 	 * @return true se a entrada foi autorizada. false se a entrada foi negada.
 	 */
-	public boolean enterGameRoom(Integer gameID, String playerName);
+	public boolean enterGameRoom(String gameName, String playerName, String password);
 
 	/**
 	 * Permite ao jogador selecionar uma posição disponível se a seleção for automática.
 	 * Atenção com condição de corrida na implementação!
 	 *
-	 * @param gameID ID do jogo que se está selecionando a posição.
+	 * @param gameName Nome do jogo que se está selecionando a posição.
 	 * @param nodeID ID do Node selecionado.
 	 * @param playerName Nome do jogador selecionando a posição.
 	 * @return true se o jogador obteve a posição escolhida. false do contrário.
 	 */
-	public boolean selectPlayableNode(Integer gameID, Integer nodeID, String playerName);
+	public boolean selectPlayableNode(String gameName, Integer nodeID, String playerName);
         
         /**
          * Retorna os dados de um jogo pertinentes a um jogador.
          * Se o jogador ou o jogo forem inválidos, retorna null.
          * 
-         * @param gameID ID do jogo em que se espera obter os dados.
+         * @param gameName Nome do jogo em que se espera obter os dados.
          * @param playerName Nome do jogador que está requisistando os dados.
          * @return Dados do jogo pertinentes ao jogador, ou null se ele não tiver permissão ou o jogo for inválido.
          */
-        public Game getGameData(Integer gameID, String playerName);
+        public Game getGameData(String gameName, String playerName);
+        
+        /**
+         * Retorna o código do estado do jogo cujo nome foi passado como parâmetro.
+         * 
+         * SETUP = 1;
+         * RUNNING = 2;
+         * PAUSED = 4;
+         * FINISHED = 8;
+         * 
+         * @param gameName
+         * @return Código do estado do jogo.
+         */
+        public int getGameState(String gameName);
 }

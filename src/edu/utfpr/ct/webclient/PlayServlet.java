@@ -33,12 +33,12 @@ public class PlayServlet extends HttpServlet {
     }
 
     private void doMove(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String gameID = req.getParameter("game-id");
+        String gameName = req.getParameter("game-name");
         String nodePosition = req.getParameter("node-position");
         String playerName = req.getParameter("player-name");
         String move = req.getParameter("player-move");
 
-        if (gameID == null || gameID.isEmpty()) {
+        if (gameName == null || gameName.isEmpty()) {
             answer(resp, -1);
             return;
         }
@@ -59,11 +59,10 @@ public class PlayServlet extends HttpServlet {
         }
 
         try {
-            Integer gID = Integer.parseInt(gameID);
             Integer nPos = Integer.parseInt(nodePosition);
             Integer mv = Integer.parseInt(move);
 
-            answer(resp, service.postMove(gID, nPos, playerName, mv));
+            answer(resp, service.postMove(gameName, nPos, playerName, mv));
 
         } catch (NumberFormatException ex) {
             answer(resp, -1);

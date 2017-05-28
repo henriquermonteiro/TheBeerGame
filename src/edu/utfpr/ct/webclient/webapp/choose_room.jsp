@@ -6,12 +6,19 @@
     System.out.println("Test - " + request.getMethod());
     if(session.getAttribute("USER-ID") == null || ((String)session.getAttribute("USER-ID")).isEmpty()){
         if(request.getParameter("guest") != null){
-            Integer guestCount = (Integer)application.getAttribute("guest_counter");
             
-            if(guestCount == null){
-                guestCount = 1;
-            }else{
-                guestCount++;
+            Integer guestCount = 0;
+            
+            synchronized(this){
+                guestCount = (Integer)application.getAttribute("guest_counter");
+
+                if(guestCount == null){
+                    guestCount = 1;
+                }else{
+                    guestCount++;
+                }
+
+                application.setAttribute("guest_counter", guestCount);
             }
             
             session.setAttribute("USER-ID", String.format("guest%04d", guestCount));
@@ -74,12 +81,12 @@
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                 <input class="mdl-textfield__input" type="text" pattern="-?[A-Z,a-z,0-9]?" id="password">
                                 <label class="mdl-textfield__label" for="password">Senha...</label>
-                                <span class="mdl-textfield__error">Senha não confere</span>
                             </div>
+                            <span id="warning_pw" class="warning hidden">Senha não confere</span>
                         </form>
                     </div>
                     <div class="mdl-dialog__actions">
-                        <button type="button" class="mdl-button">Entrar</button>
+                        <button id="call_button" type="button" class="mdl-button" onclick="enter_room()">Entrar</button>
                         <button type="button" class="mdl-button close" onclick="close_dialog()">Fechar</button>
                     </div>
                 </dialog>
@@ -88,6 +95,7 @@
                 <div id="bub_back" class="bubbles"></div>
 
                 <div class="center-content">
+                    <p id="player-name" hidden="true"><%=session.getAttribute("USER-ID")%></p>
                     <%
                         for(Object jsonObj : list){
                             if(jsonObj instanceof JSONObject){
@@ -121,6 +129,8 @@
                 <script>
                     var dialog = document.querySelector('dialog');
                     var showDialogButtons = document.getElementsByName('gmbutton');
+                    var error_reload = 0;
+                    
                     //if (! dialog.showModal) {
                     //	dialogPolyfill.registerDialog(dialog);
                     //}
@@ -130,7 +140,7 @@
                             if (this.dataset.pw == "required") {
                                 callDialogBox(this.dataset.game);
                             } else {
-                                enter_room("", this.dataset.id);
+                                enter_room(this.dataset.game);
                             }
                         });
                     }
@@ -145,9 +155,18 @@
                     function callDialogBox(game_name) {
                         var el = document.getElementById("dialog");
                         var title = document.getElementById("dlg_title");
+                        var warning = document.getElementById("warning_pw");
+                        var button = document.getElementById("call_button");
 
                         title.innerHTML = game_name;
-
+                        
+                        var patt = /\bhidden/;
+                        button.setAttribute("onClick", "javascript: enter_room(\"" + game_name + "\");");
+                        
+                        if(! patt.test(warning.className)){
+                            warning.className = warning.className.concat(' hidden');
+                        }
+                        
                         el.showModal();
                     }
 
@@ -157,8 +176,27 @@
                         el.close();
                     }
 
-                    function enter_room(pw, game) {
-                        // send request
+                    function enter_room(game) {                        
+                        var pw = document.getElementById("password").value;
+                        
+                        var jsonHttp = new XMLHttpRequest();
+                        jsonHttp.open( "POST", "accessgame", false);
+                        jsonHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                        jsonHttp.send("game_name="+encodeURIComponent(game)+"&player_name="+encodeURIComponent(document.getElementById("player-name").innerHTML)+"&password="+encodeURIComponent(pw));
+                    
+                        var json = JSON.parse(jsonHttp.responseText);
+                        
+                        if(json.accepted === true){
+                            // go to game
+                        }else{
+                            document.getElementById("warning_pw").className = document.getElementById("warning_pw").className.replace(/\bhidden\b/, '');
+                            
+                            error_reload ++;
+                            
+                            if(error_reload > 3){
+                                location.reload(true);
+                            }
+                        }
                     }
                 </script>
 

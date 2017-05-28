@@ -28,20 +28,14 @@ public class GameUpdateServlet extends HttpServlet {
         if (service != null) {
             JSONObject json = new JSONObject();
 
-            Integer gameID = null;
+            String gameName = null;
             String playerName = null;
 
             boolean flag = true;
 
-            String s = req.getParameter("game-id");
-            if (s == null || s.isEmpty()) {
+            gameName = req.getParameter("game-name");
+            if (gameName == null || gameName.isEmpty()) {
                 flag = false;
-            } else {
-                try {
-                    gameID = Integer.parseInt(s);
-                } catch (NumberFormatException ex) {
-                    flag = false;
-                }
             }
 
             playerName = req.getParameter("player-name");
@@ -50,7 +44,7 @@ public class GameUpdateServlet extends HttpServlet {
             }
 
             if (flag) {
-                Game g = service.updateData(gameID, playerName);
+                Game g = service.updateData(gameName, playerName);
 
                 if (g != null) {
                     json.put("id", g.gameID);

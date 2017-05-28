@@ -183,15 +183,20 @@ public class ActionService {
         return controler.listAvailableGameRooms(playerName);
     }
     
-    public boolean enterGameRoom(Integer gameID, String playerID, String password){
-        return controler.enterGameRoom(gameID, playerID);
+    public boolean enterGameRoom(String gameName, String playerID, String password){
+        return controler.enterGameRoom(gameName, playerID, password);
     }
     
-    public int postMove(Integer gameID, Integer nodePosition, String playerID, Integer move){
-        return controler.postMove(gameID, nodePosition, playerID, move);
+    public int postMove(String gameName, Integer nodePosition, String playerID, Integer move){
+        return controler.postMove(gameName, nodePosition, playerID, move);
     }
     
-    public Game updateData(Integer gameID, String playerName){
-        return controler.getGameData(gameID, playerName);
+    public Game updateData(String gameName, String playerName){
+        return controler.getGameData(gameName, playerName);
+    }
+    
+    public Boolean gameHasFinished(String gameName){
+        Integer ret = controler.getGameState(gameName);
+        return (ret == 1? false : (ret == 8? true: null));
     }
 }

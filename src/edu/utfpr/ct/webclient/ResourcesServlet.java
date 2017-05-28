@@ -38,11 +38,14 @@ public class ResourcesServlet extends HttpServlet{
             for(Game g : list){
                 JSONObject element = new JSONObject();
                 
+                Boolean finished = service.gameHasFinished(g.name);
+                if(finished == null) continue;
+                
                 element.put("id", g.gameID);
                 element.put("name", g.name);
                 element.put("use_pw", (g.password != null && !g.password.isEmpty() ? Boolean.TRUE : Boolean.FALSE));
                 element.put("timestamp", g.timestamp);
-                element.put("finished", true);
+                element.put("finished", finished);
                 
                 array.add(element);
             }
