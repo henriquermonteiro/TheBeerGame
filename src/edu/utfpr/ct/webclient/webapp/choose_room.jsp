@@ -2,29 +2,80 @@
 <%@page import="java.net.*" %>
 <%@page import="org.json.simple.*" %>
 <%@page import="org.json.simple.parser.*" %>
+
 <%
-    System.out.println("Test - " + request.getMethod());
+    //System.out.println("Test - " + request.getMethod());
     if(session.getAttribute("USER-ID") == null || ((String)session.getAttribute("USER-ID")).isEmpty()){
-        if(request.getParameter("guest") != null){
-            
-            Integer guestCount = 0;
-            
-            synchronized(this){
-                guestCount = (Integer)application.getAttribute("guest_counter");
-
-                if(guestCount == null){
-                    guestCount = 1;
-                }else{
-                    guestCount++;
-                }
-
-                application.setAttribute("guest_counter", guestCount);
-            }
-            
-            session.setAttribute("USER-ID", String.format("guest%04d", guestCount));
-            System.out.println(session.getAttribute("USER-ID"));
-        }else{
+//        if(request.getParameter("guest") != null){
+//            
+//            Integer guestCount = 0;
+//            
+//            synchronized(this){
+//                guestCount = (Integer)application.getAttribute("guest_counter");
+//
+//                if(guestCount == null){
+//                    guestCount = 1;
+//                }else{
+//                    guestCount++;
+//                }
+//
+//                application.setAttribute("guest_counter", guestCount);
+//            }
+//            
+//            session.setAttribute("USER-ID", String.format("guest%04d", guestCount));
+//            System.out.println(session.getAttribute("USER-ID"));
+//        }else{
             response.sendRedirect("/check_in.jsp");
+            return;
+//        }
+    }else{
+        if(session.getAttribute("LOGGED_GAME") != null && !((String)session.getAttribute("LOGGED_GAME")).isEmpty()){
+            response.sendRedirect("/game.jsp");
+            return;
+        }
+    }
+    
+    if(request.getMethod().equals("POST")){
+        String game = request.getParameter("game_name");
+        String pw = request.getParameter("password");
+        
+        boolean flag_fail = false;
+        if(game == null || game.isEmpty()){
+            flag_fail = true;
+        }
+        
+        if(pw == null){
+            flag_fail = true;
+        }
+        
+        if(flag_fail){
+            response.sendRedirect("/choose_room.jsp?warning");
+            return;
+        }
+        
+        String recv;
+        String recvbuff = "";
+        URL checkin_json = new URL(request.getScheme(), request.getServerName(), request.getServerPort(), "/accessgame?game_name=" + URLEncoder.encode(game, "UTF-8").replace("+", "%20") + "&player_name=" + URLEncoder.encode(session.getAttribute("USER-ID").toString(), "UTF-8").replace("+", "%20") + "&password=" + URLEncoder.encode(pw, "UTF-8").replace("+", "%20"));
+        URLConnection urlcon = checkin_json.openConnection();
+        BufferedReader buffread = new BufferedReader(new InputStreamReader(urlcon.getInputStream()));
+
+        while ((recv = buffread.readLine()) != null)
+            recvbuff += recv;
+        buffread.close();
+        
+        System.out.println(recvbuff);
+        
+        JSONParser parser = new JSONParser();
+        JSONObject json = (JSONObject) parser.parse(recvbuff);
+        
+        if(((Boolean)json.get("accepted")) == false){
+            response.sendRedirect("/choose_room.jsp?warning");
+            return;
+        }
+        
+        if(((Boolean)json.get("accepted")) == true){
+            session.setAttribute("LOGGED_GAME", game);
+            response.sendRedirect("/game.jsp");
         }
     }
     
@@ -77,7 +128,7 @@
                         <p  id="dlg_text">
                             The game requires a password:
                         </p>
-                        <form method="post" action="/enter-room.jsp">
+                        <form method="post" action="">
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                 <input class="mdl-textfield__input" type="text" pattern="-?[A-Z,a-z,0-9]?" id="password">
                                 <label class="mdl-textfield__label" for="password">Senha...</label>
@@ -95,7 +146,12 @@
                 <div id="bub_back" class="bubbles"></div>
 
                 <div class="center-content">
-                    <p id="player-name" hidden="true"><%=session.getAttribute("USER-ID")%></p>
+                    <div hidden="true">
+                        <form id="form_access" name="access" action="/choose_room.jsp" method="POST">
+                            <input id="input_game" name="game_name" type="text">
+                            <input id="input_pw" name="password" type="password">
+                        </form>
+                    </div>
                     <%
                         for(Object jsonObj : list){
                             if(jsonObj instanceof JSONObject){
@@ -130,14 +186,14 @@
                     var dialog = document.querySelector('dialog');
                     var showDialogButtons = document.getElementsByName('gmbutton');
                     var error_reload = 0;
-                    
+
                     //if (! dialog.showModal) {
                     //	dialogPolyfill.registerDialog(dialog);
                     //}
 
                     for (var i = 0; i < showDialogButtons.length; i++) {
                         showDialogButtons[i].addEventListener('click', function () {
-                            if (this.dataset.pw == "required") {
+                            if (this.dataset.pw === "required") {
                                 callDialogBox(this.dataset.game);
                             } else {
                                 enter_room(this.dataset.game);
@@ -159,14 +215,14 @@
                         var button = document.getElementById("call_button");
 
                         title.innerHTML = game_name;
-                        
+
                         var patt = /\bhidden/;
                         button.setAttribute("onClick", "javascript: enter_room(\"" + game_name + "\");");
-                        
-                        if(! patt.test(warning.className)){
+
+                        if (!patt.test(warning.className)) {
                             warning.className = warning.className.concat(' hidden');
                         }
-                        
+
                         el.showModal();
                     }
 
@@ -176,27 +232,14 @@
                         el.close();
                     }
 
-                    function enter_room(game) {                        
-                        var pw = document.getElementById("password").value;
+                    function enter_room(game) {
+                        var input_game = document.getElementById("input_game");
+                        var input_pw = document.getElementById("input_pw");
                         
-                        var jsonHttp = new XMLHttpRequest();
-                        jsonHttp.open( "POST", "accessgame", false);
-                        jsonHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                        jsonHttp.send("game_name="+encodeURIComponent(game)+"&player_name="+encodeURIComponent(document.getElementById("player-name").innerHTML)+"&password="+encodeURIComponent(pw));
-                    
-                        var json = JSON.parse(jsonHttp.responseText);
+                        input_game.value = game;
+                        input_pw.value = document.getElementById("password").value;
                         
-                        if(json.accepted === true){
-                            // go to game
-                        }else{
-                            document.getElementById("warning_pw").className = document.getElementById("warning_pw").className.replace(/\bhidden\b/, '');
-                            
-                            error_reload ++;
-                            
-                            if(error_reload > 3){
-                                location.reload(true);
-                            }
-                        }
+                        document.access.submit();
                     }
                 </script>
 

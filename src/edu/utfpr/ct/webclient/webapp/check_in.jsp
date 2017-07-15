@@ -109,9 +109,9 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="mdl-card__supporting-text">
+                        <!--div class="mdl-card__supporting-text">
                             <a href="/choose_room.jsp?guest">Entrar como convidado</a>
-                        </div>
+                        </div-->
                         <div class="mdl-card__actions">
                             <button onclick="submitForm()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
                                 Entrar

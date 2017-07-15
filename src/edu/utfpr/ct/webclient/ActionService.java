@@ -23,6 +23,7 @@ import org.apache.tomcat.util.scan.StandardJarScanFilter;
 import test.mock.ControllerPlayerMock;
 import edu.utfpr.ct.interfaces.IControllerPlayer;
 import edu.utfpr.ct.interfaces.IFunction;
+import org.apache.catalina.Context;
 
 public class ActionService {
     private Tomcat server;
@@ -153,9 +154,9 @@ public class ActionService {
 
         WebResourceSet resourceSet;
         
-        File f = new File("TheBeerGame.jar");
-        String path = f.getAbsolutePath();
-        System.out.println(path);
+//        File f = new File("TheBeerGame.jar");
+//        String path = f.getAbsolutePath();
+//        System.out.println(path);
         
 //        resourceSet = new JarResourceSet(resources, "/WEB-INF/classes", path, "/");
         
@@ -170,7 +171,7 @@ public class ActionService {
         ctx.setResources(resources);
         
 //        tomcat.addServlet("/checkin", "BeerGameServletCheckin", new CheckinServlet(this));
-        
+
         server.start();
         System.out.println("Wee");
         server.getServer().await();
