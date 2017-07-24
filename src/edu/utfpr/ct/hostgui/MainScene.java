@@ -1,5 +1,6 @@
 package edu.utfpr.ct.hostgui;
 
+import edu.utfpr.ct.datamodel.Function;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.interfaces.IFunction;
 import edu.utfpr.ct.localization.LocalizationKeys;
@@ -82,8 +83,8 @@ public class MainScene extends BorderPane {
         }
     }
     
-    public void changePlayerInNode(Game game, String newPlayer, IFunction node){
-        if(control.changePlayerForNode(game.name, node, newPlayer));
+    public void changePlayerInNode(Game game, String newPlayer, Integer node){
+        if(control.changePlayerForNode(game.name, Function.values()[node], newPlayer));
         
         updateGame(game.name);
     }

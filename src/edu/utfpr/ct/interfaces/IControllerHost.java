@@ -28,6 +28,10 @@ public interface IControllerHost
 
 	boolean pauseGame(String gameName);
 
+	boolean startReport(String gameName);
+
+	boolean pauseReport(String gameName);
+
 	boolean addPlayerOnGame(String gameName, String playerName);
 
 	boolean purgePlayerOnGame(String gameName, String playerName);

@@ -12,6 +12,7 @@ public class Node extends AbstractNode
 	public List<Integer> currentStock;
 	public List<Double> profit;
 	public List<Integer> playerMove;
+        public Integer latsRequest;
 
 	public int getLastStock()
 	{

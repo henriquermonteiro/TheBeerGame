@@ -4,7 +4,7 @@
 <%@page import="org.json.simple.parser.*" %>
 
 <%
-    System.out.println("Test Game - " + request.getMethod());
+//    System.out.println("Test Game - " + request.getMethod());
     if(session.getAttribute("USER-ID") == null || ((String)session.getAttribute("USER-ID")).isEmpty() || session.getAttribute("LOGGED_GAME") == null || ((String)session.getAttribute("LOGGED_GAME")).isEmpty() ){
         response.sendRedirect("/check_in.jsp");
     }
@@ -263,26 +263,26 @@
                 ctx.restore();
             }
             
-            function processWait(state){
+            function processWait(jason_state){
                 if(state !== "w"){
                     location.reload();
                     return;
                 }
                 
-                for (var player in state.players) {
-                    var name = player.name;
+                for (var player in jason_state.players) {
+                    var name = jason_state.players[player].name;
                     
                     if(name === "" || name === null){
-                        document.getElementById(player.function + "_name").innerHTML = "?";
-                        document.getElementById(player.function + "_img").className = "alpha6";
+                        document.getElementById(jason_state.players[player].function + "_name").innerHTML = "?";
+                        document.getElementById(jason_state.players[player].function + "_img").className = "alpha6";
                     }else{
-                        document.getElementById(player.function + "_name").innerHTML = player.name;
-                        document.getElementById(player.function + "_img").className = "";
+                        document.getElementById(jason_state.players[player].function + "_name").innerHTML = jason_state.players[player].name;
+                        document.getElementById(jason_state.players[player].function + "_img").className = "";
                     }
                 }
             }
             
-            function processPlay(state){
+            function processPlay(jason_state){
                 if(state === "w"){
                     start_game();
                 } else if (state !== "p"){
@@ -292,7 +292,7 @@
                 
             }
             
-            function processReport(state){
+            function processReport(jason_state){
                 if(state !== "r"){
                     goto_report();
                 }
@@ -358,20 +358,20 @@
                                 <div class="table">
                                     <div class="row">
                                         <div class="cell">
-                                            <img id="industry_img" src="resources/Industry.png" style="width: 120px; height: 120px;">
-                                            <p id="industry_name"></p>
+                                            <img id="PRODUCER_img" src="resources/Industry.png" style="width: 120px; height: 120px;">
+                                            <p id="PRODUCER_name"></p>
                                         </div>
                                         <div class="cell">
-                                            <img id="distributor_img" src="resources/distributor.png" style="width: 120px; height: 120px;">
-                                            <p id="distributor_name"></p>
+                                            <img id="DISTRIBUTOR_img" src="resources/distributor.png" style="width: 120px; height: 120px;">
+                                            <p id="DISTRIBUTOR_name"></p>
                                         </div>
                                         <div class="cell">
-                                            <img id="wholesaler_img" src="resources/wholesaler.png" style="width: 120px; height: 120px;">
-                                            <p id="wholesaler_name"></p>
+                                            <img id="WHOLESALER_img" src="resources/wholesaler.png" style="width: 120px; height: 120px;">
+                                            <p id="WHOLESALER_name"></p>
                                         </div>
                                         <div class="cell">
-                                            <img id="retailer_img" src="resources/retailer.png" style="width: 120px; height: 120px;">
-                                            <p id="retailer_name"></p>
+                                            <img id="RETAILER_img" src="resources/retailer.png" style="width: 120px; height: 120px;">
+                                            <p id="RETAILER_name"></p>
                                         </div>
                                     </div>
                                 </div>

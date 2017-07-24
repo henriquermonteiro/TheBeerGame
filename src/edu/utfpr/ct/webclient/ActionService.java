@@ -1,5 +1,6 @@
 package edu.utfpr.ct.webclient;
 
+import edu.utfpr.ct.datamodel.EngineData;
 import edu.utfpr.ct.datamodel.Game;
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +29,7 @@ import org.apache.catalina.Context;
 public class ActionService {
     private Tomcat server;
     private IControllerPlayer controler;
+    private Thread listenner;
     
     private static ActionService service;
 
@@ -174,7 +176,17 @@ public class ActionService {
 
         server.start();
         System.out.println("Wee");
-        server.getServer().await();
+        
+        listenner = new Thread(){
+            @Override
+            public void run() {
+                server.getServer().await();
+            }
+             
+        };
+        
+        listenner.start();
+//        server.getServer().await();
     }
     
     public String checkIn(String playerID){
@@ -193,12 +205,15 @@ public class ActionService {
         return controler.postMove(gameName, function, playerID, move);
     }
     
-    public Game updateData(String gameName, String playerName){
+    public EngineData updateData(String gameName, String playerName){
         return controler.getGameData(gameName, playerName);
     }
     
     public Boolean gameHasFinished(String gameName){
         Integer ret = controler.getGameState(gameName);
-        return (ret == 1? false : (ret == 8? true: null));
+        
+        if(ret == 1 || ret == 2) return false;
+        
+        return (ret == 8 ? true : null);
     }
 }

@@ -28,7 +28,7 @@ public class GamePane extends BorderPane {
 
     public void updateGame(Game game, Integer state, String[] pool) {
         if (state <= 4) {
-            ((PlayGamePane) center).updateGame(game, state == 2, pool);
+            ((PlayGamePane) center).updateGame(game, state <= 2, pool);
 
         } else if (isGame) {
             center = new ReportGamePane(game, state == 8);

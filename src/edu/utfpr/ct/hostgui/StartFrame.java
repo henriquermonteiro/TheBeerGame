@@ -27,6 +27,10 @@ public class StartFrame extends Application implements IGUI{
     public void start(Stage primaryStage) {
         mainScene = new MainScene(controller);
         
+        if (controller != null && controller instanceof Controller){
+            ((Controller)controller).setHostGUI(this);
+        }
+        
         primaryStage.setMinWidth(680);
         primaryStage.setMinHeight(460);
         
@@ -47,6 +51,10 @@ public class StartFrame extends Application implements IGUI{
     @Override
     public void pushGameRoomUpdate(String gameName) {
         mainScene.updateGame(gameName);
+    }
+    
+    public void runGUI(){
+        launch();
     }
     
 }

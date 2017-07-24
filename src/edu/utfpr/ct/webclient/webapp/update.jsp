@@ -21,9 +21,9 @@
         }
         
         String recv;
-        URL checkin_json = new URL(request.getScheme(), request.getServerName(), request.getServerPort(), "/update?game_name=" + URLEncoder.encode(game, "UTF-8").replace("+", "%20") + "&player_name=" + URLEncoder.encode(user, "UTF-8").replace("+", "%20"));
+        URL checkin_json = new URL(request.getScheme(), request.getServerName(), request.getServerPort(), "/update?game-name=" + URLEncoder.encode(game, "UTF-8").replace("+", "%20") + "&player-name=" + URLEncoder.encode(user, "UTF-8").replace("+", "%20"));
         HttpURLConnection urlcon = (HttpURLConnection)checkin_json.openConnection();
-        urlcon.setRequestMethod("POST");
+        urlcon.setRequestMethod("GET");
         BufferedReader buffread = new BufferedReader(new InputStreamReader(urlcon.getInputStream()));
 
         while ((recv = buffread.readLine()) != null)

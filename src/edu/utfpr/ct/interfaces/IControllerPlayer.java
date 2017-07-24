@@ -1,5 +1,6 @@
 package edu.utfpr.ct.interfaces;
 
+import edu.utfpr.ct.datamodel.EngineData;
 import edu.utfpr.ct.datamodel.Game;
 
 public interface IControllerPlayer
@@ -71,7 +72,7 @@ public interface IControllerPlayer
 	 * @return Dados do jogo pertinentes ao jogador, ou null se ele não tiver
 	 * permissão ou o jogo for inválido.
 	 */
-	public Game getGameData(String gameName, String playerName);
+	public EngineData getGameData(String gameName, String playerName);
         
         /**
          * Retorna o código do estado do jogo cujo nome foi passado como parâmetro.

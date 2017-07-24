@@ -5,7 +5,9 @@
  */
 package test.mock;
 
+import edu.utfpr.ct.datamodel.EngineData;
 import edu.utfpr.ct.datamodel.Game;
+import edu.utfpr.ct.gamecontroller.Engine;
 import edu.utfpr.ct.interfaces.IControllerPlayer;
 import edu.utfpr.ct.interfaces.IFunction;
 
@@ -55,13 +57,18 @@ public class ControllerPlayerMock implements IControllerPlayer {
     }
 
     @Override
-    public Game getGameData(String gameName, String playerName) {
+    public EngineData getGameData(String gameName, String playerName) {
+        EngineData engD = new EngineData();
         Game g = new Game();
 
         g.name = gameName;
         g.gameID = 1;
+        
+        engD.game = g;
+        engD.state = Engine.SETUP;
+        engD.weeks = 70;
 
-        return g;
+        return engD;
     }
 
     @Override
