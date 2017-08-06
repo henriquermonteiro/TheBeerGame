@@ -3,13 +3,16 @@ package edu.utfpr.ct.hostgui;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.datamodel.ModelUtils;
 import edu.utfpr.ct.datamodel.Node;
+import edu.utfpr.ct.hostgui.utils.AutoCompleteTextField;
 import edu.utfpr.ct.hostgui.utils.IdentifiableChangeListener;
-import edu.utfpr.ct.hostgui.utils.IdentifiableTextField;
 import edu.utfpr.ct.hostgui.utils.LockedToggleButton;
 import edu.utfpr.ct.localization.LocalizationKeys;
 import edu.utfpr.ct.localization.Localize;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -51,10 +54,11 @@ public class PlayGamePane extends BorderPane {
 
     private Label gameName;
     private ToggleButton playPauseButton;
-    private IdentifiableTextField[] playersInNodes;
+    private AutoCompleteTextField[] playersInNodes;
     private LineChart[] charts;
     private XYChart.Series<Integer, Integer>[] chartsData;
     private ListView<String> pool;
+    private Set<String> validPlayers;
 
     private ImageView playIcon;
     private ImageView pauseIcon;
@@ -64,10 +68,15 @@ public class PlayGamePane extends BorderPane {
 
     public void updateGame(Game game, Boolean state, String[] newPool) {
         gameName.setText(game.name);
+        
+        validPlayers.clear();
 
         for (int k = 0; k < playersInNodes.length; k++) {
             Node playerNode = ((Node) game.supplyChain[ModelUtils.getActualNodePosition(game, k)]);
             playersInNodes[k].setText(playerNode.playerName);
+            validPlayers.add(playerNode.playerName);
+            playersInNodes[k].getEntries().clear();
+            playersInNodes[k].getEntries().addAll(Arrays.asList(newPool));
 
             XYChart.Series xyD = chartsData[k];
 
@@ -96,8 +105,20 @@ public class PlayGamePane extends BorderPane {
 
     }
 
-    private boolean validPlayerText(String text) {
-        return pool.getItems().contains(text);
+    private int validPlayerText(String text) {
+        for (String s : pool.getItems()) {
+            if (s.startsWith(text)) {
+                return (s.equals(text) ? 1 : 0);
+            }
+        }
+        
+        for(String s : validPlayers.toArray(new String[0])){
+            if(s.startsWith(text)){
+                return (s.equals(text) ? 2 : -1);
+            }
+        }
+
+        return (text.isEmpty() ? 0 : -2);
     }
 
     private void createContent() {
@@ -120,18 +141,20 @@ public class PlayGamePane extends BorderPane {
             }
         });
 
-        playersInNodes = new IdentifiableTextField[game.supplyChain.length / (game.deliveryDelay + 1)];
+        playersInNodes = new AutoCompleteTextField[game.supplyChain.length / (game.deliveryDelay + 1)];
 //        playersInNodes = new TextField[game.supplyChain.length];
         charts = new LineChart[playersInNodes.length];
         chartsData = new XYChart.Series[playersInNodes.length];
 
         for (int k = 0; k < playersInNodes.length; k++) {
-            playersInNodes[k] = new IdentifiableTextField(k);
+            playersInNodes[k] = new AutoCompleteTextField(k);
             charts[k] = new LineChart(new NumberAxis(1.0, game.realDuration, 5.0), new NumberAxis());
             chartsData[k] = new XYChart.Series<>();
 
             charts[k].getData().add(chartsData[k]);
         }
+        
+        validPlayers = new HashSet<String>();
 
         pool = new ListView<>();
         pool.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -199,9 +222,19 @@ public class PlayGamePane extends BorderPane {
             playersInNodes[k].textProperty().addListener(new IdentifiableChangeListener<String>(playersInNodes[k].getIdentificator()) {
                 @Override
                 public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                    if (validPlayerText(newValue)) {
-                        mainScene.changePlayerInNode(game, newValue, ((IdentifiableChangeListener) this).getId());
-                        mainScene.updateGame(game.name);
+                    int test = validPlayerText(newValue);
+                    if (test >= -1) {
+                        if (test == 1) {
+                            mainScene.changePlayerInNode(game, newValue, ((IdentifiableChangeListener) this).getId());
+                            mainScene.updateGame(game.name);
+                        }
+                        
+                        if(test == -1){
+                            mainScene.removePlayerFromNode(game, ((IdentifiableChangeListener) this).getId());
+                            mainScene.updateGame(game.name);
+                        }
+                    } else {
+                        playersInNodes[((IdentifiableChangeListener) this).getId()].setText(oldValue);
                     }
                 }
             });

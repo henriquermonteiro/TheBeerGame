@@ -89,6 +89,10 @@ public class MainScene extends BorderPane {
         updateGame(game.name);
     }
     
+    public void removePlayerFromNode(Game game, Integer node){
+        control.removePlayerFromNode(game.name, Function.values()[node]);
+    }
+    
     public void updateGame(String gameName){
         GamePane p = games.get(gameName);
         
