@@ -99,30 +99,16 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
         <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.amber-blue.min.css" />
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+        <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
         <meta charset="utf-8"/>
         <link rel="stylesheet" type="text/css" href="bub.css"/>
+        <script src="resources/dialog-polyfill.js"></script>
+        <link rel="stylesheet" type="text/css" href="resources/dialog-polyfill.css"/>
         <link rel="stylesheet" type="text/css" href="choose.css"/>
         <script src="bub.js"></script>
     </head>
     <body onload="bubbles();">
-        <div class="mdl-layout mdl-js-layout">
-            <header class="mdl-layout__header">
-                <div class="mdl-layout-icon"> </div>
-                <div class="mdl-layout__header-row">
-                    <span class="mdl-layout__title">Simple Layout</span>
-                </div>
-            </header>
-            <div class="mdl-layout__drawer">
-                <span class="mdl-layout__title">Simple Layout</span>
-                <nav class="mdl-navigation">
-                    <a class="mdl-navigation__link" href="#">Nav link 1</a>
-                    <a class="mdl-navigation__link" href="#">Nav link 2</a>
-                    <a class="mdl-navigation__link" href="#">Nav link 3</a>
-                </nav>
-            </div>
-            <main class="mdl-layout__content">
-                <dialog id="dialog" class="mdl-dialog">
+        <dialog id="dialog" class="mdl-dialog">
                     <h4  id="dlg_title" class="mdl-dialog__title"></h4>
                     <div class="mdl-dialog__content">
                         <p  id="dlg_text">
@@ -141,6 +127,24 @@
                         <button type="button" class="mdl-button close" onclick="close_dialog()">Fechar</button>
                     </div>
                 </dialog>
+        
+        <div class="mdl-layout mdl-js-layout">
+            <header class="mdl-layout__header">
+                <div class="mdl-layout-icon"> </div>
+                <div class="mdl-layout__header-row">
+                    <span class="mdl-layout__title">Simple Layout</span>
+                </div>
+            </header>
+            <div class="mdl-layout__drawer">
+                <span class="mdl-layout__title">Simple Layout</span>
+                <nav class="mdl-navigation">
+                    <a class="mdl-navigation__link" href="#">Nav link 1</a>
+                    <a class="mdl-navigation__link" href="#">Nav link 2</a>
+                    <a class="mdl-navigation__link" href="#">Nav link 3</a>
+                </nav>
+            </div>
+            <main class="mdl-layout__content">
+                
 
 
                 <div id="bub_back" class="bubbles"></div>
@@ -184,6 +188,7 @@
 
                 <script>
                     var dialog = document.querySelector('dialog');
+                    dialogPolyfill.registerDialog(dialog);
                     var showDialogButtons = document.getElementsByName('gmbutton');
                     var error_reload = 0;
 
@@ -235,10 +240,10 @@
                     function enter_room(game) {
                         var input_game = document.getElementById("input_game");
                         var input_pw = document.getElementById("input_pw");
-                        
+
                         input_game.value = game;
                         input_pw.value = document.getElementById("password").value;
-                        
+
                         document.access.submit();
                     }
                 </script>
