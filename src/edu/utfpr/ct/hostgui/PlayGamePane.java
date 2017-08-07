@@ -9,15 +9,12 @@ import edu.utfpr.ct.hostgui.utils.LockedToggleButton;
 import edu.utfpr.ct.localization.LocalizationKeys;
 import edu.utfpr.ct.localization.Localize;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.chart.LineChart;
@@ -60,6 +57,8 @@ public class PlayGamePane extends BorderPane {
     private ListView<String> pool;
     private Set<String> validPlayers;
 
+    private boolean byPass_setText = false;
+
     private ImageView playIcon;
     private ImageView pauseIcon;
     private GridPane playerColumns;
@@ -68,8 +67,10 @@ public class PlayGamePane extends BorderPane {
 
     public void updateGame(Game game, Boolean state, String[] newPool) {
         gameName.setText(game.name);
-        
+
         validPlayers.clear();
+
+        byPass_setText = true;
 
         for (int k = 0; k < playersInNodes.length; k++) {
             Node playerNode = ((Node) game.supplyChain[ModelUtils.getActualNodePosition(game, k)]);
@@ -97,6 +98,8 @@ public class PlayGamePane extends BorderPane {
 
         }
 
+        byPass_setText = false;
+
         Platform.runLater(() -> {
             playPauseButton.setSelected(state);
             pool.setItems(FXCollections.observableList(Arrays.asList(newPool)));
@@ -111,9 +114,9 @@ public class PlayGamePane extends BorderPane {
                 return (s.equals(text) ? 1 : 0);
             }
         }
-        
-        for(String s : validPlayers.toArray(new String[0])){
-            if(s.startsWith(text)){
+
+        for (String s : validPlayers.toArray(new String[0])) {
+            if (s.startsWith(text)) {
                 return (s.equals(text) ? 2 : -1);
             }
         }
@@ -132,13 +135,10 @@ public class PlayGamePane extends BorderPane {
         playPauseButton = new ToggleButton();
         playPauseButton.setGraphic(pauseIcon);
 
-        playPauseButton.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                playPauseButton.setGraphic((newValue ? playIcon : pauseIcon));
-
-                mainScene.changeGameState(game, newValue);
-            }
+        playPauseButton.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            playPauseButton.setGraphic((newValue ? playIcon : pauseIcon));
+            
+            mainScene.changeGameState(game, newValue);
         });
 
         playersInNodes = new AutoCompleteTextField[game.supplyChain.length / (game.deliveryDelay + 1)];
@@ -148,28 +148,31 @@ public class PlayGamePane extends BorderPane {
 
         for (int k = 0; k < playersInNodes.length; k++) {
             playersInNodes[k] = new AutoCompleteTextField(k);
+//            playersInNodes[k].addEventFilter(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
+//                @Override
+//                public void handle(KeyEvent event) {
+//                    if(event.getCode().name().equals(KeyCode.BACK_SPACE.name())) event.consume();
+//                }
+//            });
             charts[k] = new LineChart(new NumberAxis(1.0, game.realDuration, 5.0), new NumberAxis());
             chartsData[k] = new XYChart.Series<>();
 
             charts[k].getData().add(chartsData[k]);
         }
-        
-        validPlayers = new HashSet<String>();
+
+        validPlayers = new HashSet<>();
 
         pool = new ListView<>();
         pool.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
-        pool.setOnDragDetected(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                Dragboard db = pool.startDragAndDrop(TransferMode.MOVE);
-
-                ClipboardContent cbCont = new ClipboardContent();
-                cbCont.putString(pool.getSelectionModel().getSelectedItem());
-                db.setContent(cbCont);
-
-                event.consume();
-            }
+        pool.setOnDragDetected((MouseEvent event) -> {
+            Dragboard db = pool.startDragAndDrop(TransferMode.MOVE);
+            
+            ClipboardContent cbCont = new ClipboardContent();
+            cbCont.putString(pool.getSelectionModel().getSelectedItem());
+            db.setContent(cbCont);
+            
+            event.consume();
         });
 
         BorderPane topPane = new BorderPane();
@@ -192,46 +195,46 @@ public class PlayGamePane extends BorderPane {
             LockedToggleButton lTB = new LockedToggleButton();
 
             playersInNodes[k].disableProperty().bind(lTB.selectedProperty());
-            playersInNodes[k].setOnDragOver(new EventHandler<DragEvent>() {
-                @Override
-                public void handle(DragEvent event) {
-                    if (event.getGestureSource() == pool && event.getDragboard().hasString()) {
-                        event.acceptTransferModes(TransferMode.ANY);
-                    }
-
-                    event.consume();
+            playersInNodes[k].setOnDragOver((DragEvent event) -> {
+                if (event.getGestureSource() == pool && event.getDragboard().hasString()) {
+                    event.acceptTransferModes(TransferMode.ANY);
                 }
+                
+                event.consume();
             });
 
-            playersInNodes[k].setOnDragDropped(new EventHandler<DragEvent>() {
-                @Override
-                public void handle(DragEvent event) {
-                    Dragboard db = event.getDragboard();
-
-                    boolean success = false;
-                    if (db.hasString()) {
-                        ((TextField) event.getSource()).setText(db.getString());
-                        success = true;
-                    }
-
-                    event.setDropCompleted(success);
-                    event.consume();
+            playersInNodes[k].setOnDragDropped((DragEvent event) -> {
+                Dragboard db = event.getDragboard();
+                
+                boolean success = false;
+                if (db.hasString()) {
+                    ((TextField) event.getSource()).setText(db.getString());
+                    success = true;
                 }
+                
+                event.setDropCompleted(success);
+                event.consume();
             });
 
             playersInNodes[k].textProperty().addListener(new IdentifiableChangeListener<String>(playersInNodes[k].getIdentificator()) {
                 @Override
                 public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                    if (byPass_setText) {
+                        return;
+                    }
+
                     int test = validPlayerText(newValue);
                     if (test >= -1) {
                         if (test == 1) {
                             mainScene.changePlayerInNode(game, newValue, ((IdentifiableChangeListener) this).getId());
                             mainScene.updateGame(game.name);
                         }
-                        
-                        if(test == -1){
+
+                        if (test == -1) {
                             mainScene.removePlayerFromNode(game, ((IdentifiableChangeListener) this).getId());
-                            mainScene.updateGame(game.name);
+                            Platform.runLater(() -> {
+                                mainScene.updateGame(game.name);
+                            });
                         }
                     } else {
                         playersInNodes[((IdentifiableChangeListener) this).getId()].setText(oldValue);
