@@ -75,6 +75,7 @@ public class PlayGamePane extends BorderPane {
         for (int k = 0; k < playersInNodes.length; k++) {
             Node playerNode = ((Node) game.supplyChain[ModelUtils.getActualNodePosition(game, k)]);
             playersInNodes[k].setText(playerNode.playerName);
+            playersInNodes[k].setValidText(true);
             validPlayers.add(playerNode.playerName);
             playersInNodes[k].getEntries().clear();
             playersInNodes[k].getEntries().addAll(Arrays.asList(newPool));
@@ -225,6 +226,10 @@ public class PlayGamePane extends BorderPane {
 
                     int test = validPlayerText(newValue);
                     if (test >= -1) {
+                        if(test == 0) {
+                            playersInNodes[((IdentifiableChangeListener) this).getId()].setValidText(false);
+                        }
+                        
                         if (test == 1) {
                             mainScene.changePlayerInNode(game, newValue, ((IdentifiableChangeListener) this).getId());
                             mainScene.updateGame(game.name);

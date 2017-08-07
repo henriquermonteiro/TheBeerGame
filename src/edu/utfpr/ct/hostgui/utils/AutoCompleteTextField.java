@@ -5,7 +5,6 @@ package edu.utfpr.ct.hostgui.utils;
  * https://gist.github.com/floralvikings/10290131#file-autocompletetextbox-java
  *
  */
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -20,6 +19,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import javafx.geometry.Insets;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 
 /**
  * This class is a TextField which implements an "autocomplete" functionality,
@@ -45,27 +49,35 @@ public class AutoCompleteTextField extends TextField {
      */
     public AutoCompleteTextField(Integer id) {
         super();
-        
+
         this.id = id;
-        
+
         entries = new TreeSet<>();
         entriesPopup = new ContextMenu();
-        
+
         initialize();
     }
-    
+
     public AutoCompleteTextField(Integer id, String text) {
         super(text);
 
         this.id = id;
-        
+
         entries = new TreeSet<>();
         entriesPopup = new ContextMenu();
-        
+
         initialize();
     }
-    
-    private void initialize(){
+
+    public void setValidText(boolean isValid) {
+        if (isValid) {
+                this.setStyle("");
+        } else {
+                this.setStyle("-fx-base: coral;");
+        }
+    }
+
+    private void initialize() {
         textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String s2) {
@@ -78,6 +90,7 @@ public class AutoCompleteTextField extends TextField {
                         populatePopup(searchResult);
                         if (!entriesPopup.isShowing()) {
                             entriesPopup.show(AutoCompleteTextField.this, Side.BOTTOM, 0, 0);
+//                            entriesPopup.setStyle("-fx-control-inner-background: LIGHTGREY;");
                         }
                     } else {
                         entriesPopup.hide();
@@ -133,6 +146,6 @@ public class AutoCompleteTextField extends TextField {
         }
         entriesPopup.getItems().clear();
         entriesPopup.getItems().addAll(menuItems);
-
+        entriesPopup.setStyle("-fx-base: azure;");
     }
 }
