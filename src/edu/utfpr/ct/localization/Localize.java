@@ -8,77 +8,101 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
-public class Localize {
+public class Localize
+{
+	private static Map<String, Localize> localizes;
 
-    private static Localize localize;
+	private final String language;
+	private HashMap<String, String> stringMapping;
 
-    private String language;
-    private HashMap<String, String> stringMapping;
+	private Localize(String language)
+	{
+		this.language = language;
+		changeLanguage(language);
+	}
 
-    private Localize() {
-        language = Locale.getDefault().getLanguage();
+	public static Localize getInstance()
+	{
+		return getInstance(Locale.getDefault().getLanguage());
+	}
 
-        changeLanguage(language);
-    }
+	public static Localize getInstance(String language)
+	{
+		if(localizes == null)
+			localizes = new HashMap<>();
 
-    public static Localize getInstance() {
-        if (localize == null) {
-            localize = new Localize();
-        }
+		if(!localizes.containsKey(language))
+			localizes.put(language, new Localize(language));
 
-        return localize;
-    }
+		return localizes.get(language);
+	}
 
-    public String getTextFor(String keyString) {
-        String ret = stringMapping.get(keyString);
+	public String getTextFor(String keyString)
+	{
+		String ret = stringMapping.get(keyString);
 
-        if (ret == null) {
-            ret = "Error when tried to grab String, check Localization package or language definition file.";
-        }
+		if(ret == null)
+		{
+			ret = "Error when tried to grab String, check Localization package or language definition file.";
+		}
 
-        return ret;
-    }
+		return ret;
+	}
 
-    public static String getTextForKey(String keyString) {
-        return getInstance().getTextFor(keyString);
-    }
+	public static String getTextForKey(String keyString)
+	{
+		return getInstance().getTextFor(keyString);
+	}
 
-    public final void changeLanguage(String language) {
-        File f = new File("lang" + File.separator + language + ".map");
+	public final void changeLanguage(String language)
+	{
+		File f = new File("lang" + File.separator + language + ".map");
 
-        if (!f.exists()) {
-            f = new File("lang" + File.separator + "default.map");
-        }
+		if(!f.exists())
+			f = new File("lang" + File.separator + "default.map");
 
-        stringMapping = new HashMap<>();
+		stringMapping = new HashMap<>();
+		FileInputStream fis = null;
 
-        FileInputStream fis = null;
+		try
+		{
+			fis = new FileInputStream(f);
+			BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
 
-        try {
-            fis = new FileInputStream(f);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
+			String s;
+			while((s = reader.readLine()) != null)
+			{
+				String[] ss = s.split("<>");
 
-            String s;
-            while ((s = reader.readLine()) != null) {
-                String[] ss = s.split("<>");
+				if(ss.length == 2)
+				{
+					stringMapping.put(ss[0], ss[1]);
+				}
+			}
 
-                if (ss.length == 2) {
-                    stringMapping.put(ss[0], ss[1]);
-                }
-            }
-
-        } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } finally {
-            if (fis != null) {
-                try {
-                    fis.close();
-                } catch (IOException ex) {
-                }
-            }
-        }
-    }
+		}
+		catch(FileNotFoundException ex)
+		{
+			ex.printStackTrace();
+		}
+		catch(IOException ex)
+		{
+			ex.printStackTrace();
+		}
+		finally
+		{
+			if(fis != null)
+			{
+				try
+				{
+					fis.close();
+				}
+				catch(IOException ex)
+				{
+				}
+			}
+		}
+	}
 }
