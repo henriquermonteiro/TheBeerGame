@@ -23,7 +23,7 @@ public class ControllerPlayerMock implements IControllerPlayer {
     }
 
     @Override
-    public Integer postMove(String gameName, IFunction function, String playerName, Integer move) {
+    public Integer postMove(String gameName, String playerName, Integer move) {
         return move;
     }
 

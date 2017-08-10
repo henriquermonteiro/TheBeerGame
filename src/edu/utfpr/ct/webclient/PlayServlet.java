@@ -12,16 +12,9 @@ import org.json.simple.JSONObject;
 
 @WebServlet(
         name = "BeerGamePlayerService-Play",
-        urlPatterns = {"/play"}
+        urlPatterns = {"/makeorder"}
 )
 public class PlayServlet extends HttpServlet {
-
-    private ActionService service;
-
-    public PlayServlet(ActionService service) {
-        super();
-        this.service = service;
-    }
 
     private void answer(HttpServletResponse resp, Integer moveDone) throws IOException {
         resp.setContentType("application/json");
@@ -35,45 +28,58 @@ public class PlayServlet extends HttpServlet {
     }
 
     private void doMove(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String gameName = req.getParameter("game-name");
-        String nodePosition = req.getParameter("node-position");
-        String playerName = req.getParameter("player-name");
-        String move = req.getParameter("player-move");
+        ActionService service = null;
+        Object obj = req.getServletContext().getAttribute("action-service");
 
-        if (gameName == null || gameName.isEmpty()) {
-            answer(resp, -1);
-            return;
+        if (obj != null && obj instanceof ActionService) {
+            service = (ActionService) obj;
         }
 
-        if (nodePosition == null || nodePosition.isEmpty()) {
-            answer(resp, -1);
-            return;
-        }
+        if (service != null) {
+            String gameName = req.getParameter("game-name");
+//        String nodePosition = req.getParameter("node-position");
+            String playerName = req.getParameter("player-name");
+            String move = req.getParameter("player-move");
 
-        if (playerName == null || playerName.isEmpty()) {
-            answer(resp, -1);
-            return;
-        }
+            if (gameName == null || gameName.isEmpty()) {
+                answer(resp, -1);
+                return;
+            }
 
-        if (move == null || move.isEmpty()) {
-            answer(resp, -1);
-            return;
-        }
+//        if (nodePosition == null || nodePosition.isEmpty()) {
+//            answer(resp, -1);
+//            return;
+//        }
+            if (playerName == null || playerName.isEmpty()) {
+                answer(resp, -1);
+                return;
+            }
 
-        try {
-            Integer nPos = Integer.parseInt(nodePosition);
-            Integer mv = Integer.parseInt(move);
+            if (move == null || move.isEmpty()) {
+                answer(resp, -1);
+                return;
+            }
 
-            answer(resp, service.postMove(gameName, Function.DISTRIBUTOR.getValues()[nPos - 1], playerName, mv));
+            try {
+//            Integer nPos = Integer.parseInt(nodePosition);
+                Integer mv = Integer.parseInt(move);
 
-        } catch (NumberFormatException ex) {
-            answer(resp, -1);
+                answer(resp, service.postMove(gameName, playerName, mv));
+
+            } catch (NumberFormatException ex) {
+                answer(resp, -1);
+            }
         }
 
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doMove(req, resp);
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         doMove(req, resp);
     }
 

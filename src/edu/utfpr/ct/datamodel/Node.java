@@ -24,7 +24,7 @@ public class Node extends AbstractNode
 
 	public double getLastProfit()
 	{
-		if(profit.isEmpty())
+                if(profit.isEmpty())
 			return -1;
 		else
 			return profit.get(profit.size() - 1);

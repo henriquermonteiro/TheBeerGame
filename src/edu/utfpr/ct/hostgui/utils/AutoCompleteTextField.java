@@ -71,9 +71,9 @@ public class AutoCompleteTextField extends TextField {
 
     public void setValidText(boolean isValid) {
         if (isValid) {
-                this.setStyle("");
+//                this.setStyle("");
         } else {
-                this.setStyle("-fx-base: coral;");
+//                this.setStyle("-fx-base: coral;");
         }
     }
 

@@ -25,7 +25,7 @@ public interface IControllerPlayer
 	 * @param order Jogada realizada.
 	 * @return Montante do pedido atendido. -1 se a jogada for inválida.
 	 */
-	public Integer postMove(String gameName, IFunction function, String playerName, Integer order);
+	public Integer postMove(String gameName, String playerName, Integer order);
 
 	/**
 	 * Lista os jogos disponíveis para serem acessados. A lista consiste do nome

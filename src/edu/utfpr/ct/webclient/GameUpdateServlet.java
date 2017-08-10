@@ -1,8 +1,10 @@
 package edu.utfpr.ct.webclient;
 
+import edu.utfpr.ct.datamodel.AbstractNode;
 import edu.utfpr.ct.datamodel.EngineData;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.datamodel.Node;
+import edu.utfpr.ct.datamodel.TravellingTime;
 import edu.utfpr.ct.gamecontroller.Engine;
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -57,16 +59,18 @@ public class GameUpdateServlet extends HttpServlet {
                             break;
                         case Engine.RUNNING:
                             json.put("state", "playing");
-                            json.put("your-turn", (playerName == null ? false : playerName.equals(g.playerOfTurn)));
+                            json.put("your_turn", (playerName == null ? false : playerName.equals(g.playerOfTurn)));
                             break;
                         case Engine.FINISHED:
                             json.put("state", "reporting");
                     }
                     json.put("id", g.game.gameID);
                     json.put("name", g.game.name);
-                    json.put("missing-cost", g.game.missingUnitCost);
-                    json.put("stock-cost", g.game.stockUnitCost);
-                    json.put("selling-profit", g.game.sellingUnitProfit);
+                    json.put("missing_cost", g.game.missingUnitCost);
+                    json.put("stock_cost", g.game.stockUnitCost);
+                    json.put("selling_profit", g.game.sellingUnitProfit);
+                    json.put("current_week", g.weeks);
+                    json.put("total_week", g.game.informedDuration);
                     
                     JSONArray players = new JSONArray();
                     
@@ -75,8 +79,25 @@ public class GameUpdateServlet extends HttpServlet {
                     for(int k = 0; k < players_amount; k++){
                         JSONObject player = new JSONObject();
                         
-                        player.put("name", ((Node)g.game.supplyChain[k * (g.game.deliveryDelay + 1)]).playerName);
-                        player.put("function", ((Node)g.game.supplyChain[k * (g.game.deliveryDelay + 1)]).function.getName());
+                        Node n_aux = ((Node)g.game.supplyChain[k * (g.game.deliveryDelay + 1)]);
+                        
+                        player.put("name", n_aux.playerName);
+                        player.put("function", n_aux.function.getName());
+                        player.put("cost", (n_aux.profit != null ? n_aux.getLastProfit() : "---"));
+                        player.put("stock", (n_aux.currentStock != null ? n_aux.getLastStock() : "---"));
+                        
+                        JSONArray receiving = new JSONArray();
+                        
+                        for(int l = 1; l <= g.game.deliveryDelay; l++){
+                            AbstractNode t_aux = g.game.supplyChain[(k * (g.game.deliveryDelay + 1)) + l];
+                            
+                            JSONObject incoming = new JSONObject();
+                            incoming.put("distance", l);
+                            incoming.put("value", (t_aux != null ? t_aux.travellingStock : "?"));
+                            receiving.add(incoming);
+                        }
+                        
+                        player.put("incoming", receiving);
                                 
                         players.add(k, player);
                     }

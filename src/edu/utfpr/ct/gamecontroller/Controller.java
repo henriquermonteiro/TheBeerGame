@@ -5,6 +5,7 @@ import edu.utfpr.ct.datamodel.EngineData;
 import edu.utfpr.ct.datamodel.Function;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.datamodel.Node;
+import edu.utfpr.ct.datamodel.TravellingTime;
 import edu.utfpr.ct.hostgui.StartFrame;
 import edu.utfpr.ct.interfaces.IFunction;
 import edu.utfpr.ct.interfaces.IReport;
@@ -264,6 +265,10 @@ public class Controller implements IControllerHost, IControllerPlayer {
             reportManager.createReport(engine.getGame());
             reports.putIfAbsent(engine.getGame(), false);
         }
+        
+        if(engine.isClientTurn()){
+            engine.makeOrder(engine.getGame().demand[engine.getWeeks() - 1]);
+        }
 
         return qty;
     }
@@ -281,11 +286,12 @@ public class Controller implements IControllerHost, IControllerPlayer {
     }
 
     @Override
-    public Integer postMove(String gameName, IFunction function, String playerName, Integer order) {
+    public Integer postMove(String gameName, String playerName, Integer order) {
         try {
             Node node = engines.get(gameName).getNodeOfTurn();
 
-            if (node.function == function && node.playerName.equals(playerName)) {
+//            if (node.function == function && node.playerName.equals(playerName)) {
+            if (node.playerName.equals(playerName)) {
                 return postMoveForNode(gameName, order);
             }
         } catch (Exception e) {

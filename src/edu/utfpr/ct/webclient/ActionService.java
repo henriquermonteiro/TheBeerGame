@@ -5,7 +5,6 @@ import edu.utfpr.ct.datamodel.Game;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import javax.servlet.ServletException;
@@ -13,18 +12,14 @@ import org.apache.catalina.LifecycleException;
 import org.apache.catalina.WebResourceRoot;
 import org.apache.catalina.WebResourceSet;
 import org.apache.catalina.core.StandardContext;
-import org.apache.catalina.startup.ContextConfig;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.catalina.webresources.DirResourceSet;
 import org.apache.catalina.webresources.EmptyResourceSet;
-import org.apache.catalina.webresources.JarResourceSet;
 import org.apache.catalina.webresources.StandardRoot;
 import org.apache.tomcat.util.scan.Constants;
 import org.apache.tomcat.util.scan.StandardJarScanFilter;
 import test.mock.ControllerPlayerMock;
 import edu.utfpr.ct.interfaces.IControllerPlayer;
-import edu.utfpr.ct.interfaces.IFunction;
-import org.apache.catalina.Context;
 
 public class ActionService {
     private Tomcat server;
@@ -201,8 +196,8 @@ public class ActionService {
         return controler.enterGameRoom(gameName, playerID, password);
     }
     
-    public int postMove(String gameName, IFunction function, String playerID, Integer move){
-        return controler.postMove(gameName, function, playerID, move);
+    public int postMove(String gameName, String playerID, Integer move){
+        return controler.postMove(gameName, playerID, move);
     }
     
     public EngineData updateData(String gameName, String playerName){

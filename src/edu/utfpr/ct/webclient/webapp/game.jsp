@@ -51,6 +51,8 @@
 
                 if (input.hasAttribute("disabled")) {
                     input.removeAttribute("disabled");
+                }else{
+                    return;
                 }
 
                 if (button.hasAttribute("disabled")) {
@@ -71,6 +73,8 @@
 
                 if (!input.hasAttribute("disabled")) {
                     input.setAttribute("disabled", "");
+                }else{
+                    return;
                 }
 
                 if (!button.hasAttribute("disabled")) {
@@ -78,6 +82,17 @@
                 }
 
                 label.innerHTML = "Aguarde sua vez ...";
+                input.value = "";
+            }
+            
+            function send_request() {
+                var move = document.getElementById("order__input").value;
+                if(isNaN(move)) return;
+                
+                var jsonHttp = new XMLHttpRequest();
+                jsonHttp.open( "POST", "/do-move.jsp", false);
+                jsonHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                jsonHttp.send( "move="+move );
             }
 
             function add_history_info(func, week, stock, profit, order1, order2, demand) {
@@ -263,36 +278,57 @@
                 ctx.restore();
             }
             
-            function processWait(jason_state){
+            function processWait(json_state){
                 if(state !== "w"){
                     location.reload();
                     return;
                 }
                 
-                for (var player in jason_state.players) {
-                    var name = jason_state.players[player].name;
+                for (var player in json_state.players) {
+                    var name = json_state.players[player].name;
                     
                     if(name === "" || name === null){
-                        document.getElementById(jason_state.players[player].function + "_name").innerHTML = "?";
-                        document.getElementById(jason_state.players[player].function + "_img").className = "alpha6";
+                        document.getElementById(json_state.players[player].function + "_name").innerHTML = "?";
+                        document.getElementById(json_state.players[player].function + "_img").className = "alpha6";
                     }else{
-                        document.getElementById(jason_state.players[player].function + "_name").innerHTML = jason_state.players[player].name;
-                        document.getElementById(jason_state.players[player].function + "_img").className = "";
+                        document.getElementById(json_state.players[player].function + "_name").innerHTML = json_state.players[player].name;
+                        document.getElementById(json_state.players[player].function + "_img").className = "";
                     }
                 }
             }
             
-            function processPlay(jason_state){
+            function processPlay(json_state){
                 if(state === "w"){
                     start_game();
                 } else if (state !== "p"){
                     location.reload();
+                    return;
                 }
                 
+                if(json_state.your_turn){
+                    allow_move();
+                }else{
+                    block_move();
+                }
                 
+                document.getElementById("curweek").innerHTML = json_state.current_week;
+                document.getElementById("totweek").innerHTML = json_state.total_week;
+                
+                for( var player in json_state.players) {
+                    var func = json_state.players[player].function;
+                    
+                    document.getElementById(func+"_name2").innerHTML = json_state.players[player].name;
+                    document.getElementById(func+"_cost").innerHTML = json_state.players[player].cost;
+                    document.getElementById(func+"_stock").innerHTML = json_state.players[player].stock;
+                    
+                    for( var inc in json_state.players[player].incoming) {
+                        var dist = json_state.players[player].incoming[inc].distance;
+                        document.getElementById(func+"_inc_"+dist).innerHTML = json_state.players[player].incoming[inc].value;
+                    }
+                }
             }
             
-            function processReport(jason_state){
+            function processReport(json_state){
                 if(state !== "r"){
                     goto_report();
                 }
@@ -301,25 +337,28 @@
             function updatePage() {
                 var jsonHttp = new XMLHttpRequest();
                 jsonHttp.open( "POST", "/update.jsp", false);
-                jsonHttp.send( null );
                 
-                var json = JSON.parse(jsonHttp.responseText);
+                jsonHttp.onreadystatechange = function(){
+                    var json = JSON.parse(jsonHttp.responseText);
                 
-                if(json !== null){
-                    switch(json.state){
-                        case "waiting":
-                            processWait(json);
-                            break;
-                        case "playing":
-                            processPlay(json);
-                            break;
-                        case "reporting":
-                            processReport(json);
-                            break;
-                        default : // para testes
-                            break;
+                    if(json !== null){
+                        switch(json.state){
+                            case "waiting":
+                                processWait(json);
+                                break;
+                            case "playing":
+                                processPlay(json);
+                                break;
+                            case "reporting":
+                                processReport(json);
+                                break;
+                            default : // para testes
+                                break;
+                        }
                     }
-                }
+                };
+                
+                jsonHttp.send( null );
             }
             
             function initialize() {
@@ -413,7 +452,7 @@
                                 <section class="mdl-layout__tab-panel  is-active" id="fixed-tab-2">
                                     <div class="table-card mdl-card mdl-shadow--6dp mdl-card--horizontal">
                                         <div class="mdl-card__supporting-text  mdl-card--border">
-                                            <span>Semana k/L</span>
+                                            <span>Semana </span><span id="curweek">k</span>/<span id="totweek">L</span>
                                         </div>
                                         <div class="mdl-card__media mdl-card--border">
                                             <table>
@@ -430,50 +469,50 @@
                                                     <td><img src="resources\Industry.png" alt="Producer">
 
                                                 <tr id="name">
-                                                    <td id="retailer"><b>Nome: </b>Name 1
-                                                    <td id="wholesaler"><b>Nome: </b>Name 2
-                                                    <td id="distributor"><b>Nome: </b>Name 3
-                                                    <td id="producer"><b>Nome: </b>Name 4
+                                                    <td id="retailer"><b>Nome: </b><span id="RETAILER_name2">Name 1</span>
+                                                    <td id="wholesaler"><b>Nome: </b><span id="WHOLESALER_name2">Name 2</span>
+                                                    <td id="distributor"><b>Nome: </b><span id="DISTRIBUTOR_name2">Name 3</span>
+                                                    <td id="producer"><b>Nome: </b><span id="PRODUCER_name2">Name 4</span>
 
                                                 <tr id="profit">
-                                                    <td id="retailer"><b>Custo: </b>0.00
-                                                    <td id="wholesaler"><b>Custo: </b>0.00
-                                                    <td id="distributor"><b>Custo: </b>0.00
-                                                    <td id="producer"><b>Custo: </b>0.00
+                                                    <td id="retailer"><b>Custo: </b><span id="RETAILER_cost">0.00</span>
+                                                    <td id="wholesaler"><b>Custo: </b><span id="WHOLESALER_cost">0.00</span>
+                                                    <td id="distributor"><b>Custo: </b><span id="DISTRIBUTOR_cost">0.00</span>
+                                                    <td id="producer"><b>Custo: </b><span id="PRODUCER_cost">0.00</span>
 
                                                 <tr id="stock">
-                                                    <td id="retailer"><b>Estoque: </b>16
-                                                    <td id="wholesaler"><b>Estoque: </b>16
-                                                    <td id="distributor"><b>Estoque: </b>16
-                                                    <td id="producer"><b>Estoque: </b>16
+                                                    <td id="retailer"><b>Estoque: </b><span id="RETAILER_stock">16</span>
+                                                    <td id="wholesaler"><b>Estoque: </b><span id="WHOLESALER_stock">16</span>
+                                                    <td id="distributor"><b>Estoque: </b><span id="DISTRIBUTOR_stock">16</span>
+                                                    <td id="producer"><b>Estoque: </b><span id="PRODUCER_stock">16</span>
                                                 <tr id="incoming-order">
                                                     <td id="retailer">
                                                         <table>
-                                                            <tr> <td>? <td>4
-                                                            <tr> <td>&nbsp</td>
+                                                            <tr> <td>? <td id="RETAILER_inc_1">4
+                                                            <tr> <td>  <td id="RETAILER_inc_2">&nbsp</td>
                                                         </table>
 
                                                     <td id="wholesaler">
                                                         <table>
-                                                            <tr> <td>? <td>4
-                                                            <tr> <td>? <td>4
+                                                            <tr> <td>? <td id="WHOLESALER_inc_1">4
+                                                            <tr> <td>? <td id="WHOLESALER_inc_2">4
                                                         </table>
 
                                                     <td id="distributor">
                                                         <table>
-                                                            <tr> <td>? <td>4
-                                                            <tr> <td>? <td>4
+                                                            <tr> <td>? <td id="DISTRIBUTOR_inc_1">4
+                                                            <tr> <td>? <td id="DISTRIBUTOR_inc_2">4
                                                         </table>
 
                                                     <td id="producer">
                                                         <table>
-                                                            <tr> <td>? <td>4
-                                                            <tr> <td>? <td>4
+                                                            <tr> <td>? <td id="PRODUCER_inc_1">4
+                                                            <tr> <td>? <td id="PRODUCER_inc_2">4
                                                         </table>
                                             </table>
                                         </div>
                                         <div class="mdl-card__supporting-text  mdl-card--border">
-                                            <span>HistÃ³rico</span>
+                                            <span>Histórico</span>
                                         </div>
                                         <div class="mdl-card__media mdl-card--border">
                                             <table id="history">
@@ -506,7 +545,7 @@
                                     <span class="mdl-textfield__error">Não é um pedido válido!</span>
                                 </div>
                                 <span style="display: inline-block;">
-                                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" id="order__button">
+                                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" id="order__button" onclick="send_request();">
                                         Enviar Pedido
                                     </button>
                                 </span>
