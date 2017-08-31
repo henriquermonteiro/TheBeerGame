@@ -2,6 +2,7 @@ package edu.utfpr.ct.interfaces;
 
 import edu.utfpr.ct.datamodel.EngineData;
 import edu.utfpr.ct.datamodel.Game;
+import edu.utfpr.ct.exception.FinalizedGameException;
 
 public interface IControllerPlayer
 {
@@ -82,8 +83,12 @@ public interface IControllerPlayer
          * PAUSED = 4;
          * FINISHED = 8;
          * 
+         * Se for um relatório, retorna -1
+         * 
          * @param gameName
          * @return Código do estado do jogo.
          */
         public int getGameState(String gameName);
+	
+	public int getReportState(String gameName);
 }

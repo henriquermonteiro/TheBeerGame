@@ -86,4 +86,9 @@ public class ControllerPlayerMock implements IControllerPlayer {
 
     }
 
+    @Override
+    public int getReportState(String gameName) {
+        return 8;
+    }
+
 }

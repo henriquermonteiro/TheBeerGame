@@ -2,6 +2,7 @@ package edu.utfpr.ct.webclient;
 
 import edu.utfpr.ct.datamodel.EngineData;
 import edu.utfpr.ct.datamodel.Game;
+import edu.utfpr.ct.exception.FinalizedGameException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -209,6 +210,6 @@ public class ActionService {
         
         if(ret == 1 || ret == 2) return false;
         
-        return (ret == 8 ? true : null);
+        return (ret == -1 ? true : null);
     }
 }

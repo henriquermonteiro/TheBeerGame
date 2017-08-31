@@ -43,6 +43,7 @@
 
             var state = "w";
             var update_interval;
+            var report_data;
 
             function allow_move() {
                 var input = document.getElementById("order__input");
@@ -51,7 +52,7 @@
 
                 if (input.hasAttribute("disabled")) {
                     input.removeAttribute("disabled");
-                }else{
+                } else {
                     return;
                 }
 
@@ -73,7 +74,7 @@
 
                 if (!input.hasAttribute("disabled")) {
                     input.setAttribute("disabled", "");
-                }else{
+                } else {
                     return;
                 }
 
@@ -84,15 +85,16 @@
                 label.innerHTML = "Aguarde sua vez ...";
                 input.value = "";
             }
-            
+
             function send_request() {
                 var move = document.getElementById("order__input").value;
-                if(isNaN(move)) return;
-                
+                if (isNaN(move))
+                    return;
+
                 var jsonHttp = new XMLHttpRequest();
-                jsonHttp.open( "POST", "/do-move.jsp", false);
+                jsonHttp.open("POST", "/do-move.jsp", false);
                 jsonHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                jsonHttp.send( "move="+move );
+                jsonHttp.send("move=" + move);
             }
 
             function add_history_info(func, week, stock, profit, order1, order2, demand) {
@@ -118,7 +120,7 @@
 
             function start_game() {
                 var wait = document.getElementById("waiting");
-                if (wait !== undefined) {
+                if (wait !== undefined && wait !== null) {
                     wait.outerHTML = '';
                 }
                 delete wait;
@@ -126,7 +128,7 @@
                 if (game !== undefined) {
                     game.classList.remove("hidden");
                 }
-                
+
                 state = "p";
             }
 
@@ -142,7 +144,7 @@
                 start_game();
 
                 var game = document.getElementById("game-panel");
-                if (game !== undefined) {
+                if (game !== undefined && game !== null) {
                     game.outerHTML = '';
                 }
                 delete game;
@@ -153,7 +155,7 @@
                 }
 
                 draw_flag();
-                
+
                 clearInterval(update_interval);
                 state = "r";
             }
@@ -225,7 +227,7 @@
                 graph_area.innerHTML = '';
 
                 var chart = new google.visualization.AreaChart(graph_area);
-                chart.draw(google.visualization.arrayToDataTable(get_data()), options);
+                chart.draw(google.visualization.arrayToDataTable(report_data), options);
             }
 
             function draw() {
@@ -277,72 +279,101 @@
 
                 ctx.restore();
             }
-            
-            function processWait(json_state){
-                if(state !== "w"){
+
+            function processWait(json_state) {
+                if (state !== "w") {
                     location.reload();
                     return;
                 }
-                
+
                 for (var player in json_state.players) {
                     var name = json_state.players[player].name;
-                    
-                    if(name === "" || name === null){
+
+                    if (name === "" || name === null) {
                         document.getElementById(json_state.players[player].function + "_name").innerHTML = "?";
                         document.getElementById(json_state.players[player].function + "_img").className = "alpha6";
-                    }else{
+                    } else {
                         document.getElementById(json_state.players[player].function + "_name").innerHTML = json_state.players[player].name;
                         document.getElementById(json_state.players[player].function + "_img").className = "";
                     }
                 }
             }
-            
-            function processPlay(json_state){
-                if(state === "w"){
+
+            function processPlay(json_state) {
+                if (state === "w") {
                     start_game();
-                } else if (state !== "p"){
+                } else if (state !== "p") {
                     location.reload();
                     return;
                 }
-                
-                if(json_state.your_turn){
+
+                if (json_state.your_turn) {
                     allow_move();
-                }else{
+                } else {
                     block_move();
                 }
-                
+
                 document.getElementById("curweek").innerHTML = json_state.current_week;
                 document.getElementById("totweek").innerHTML = json_state.total_week;
-                
-                for( var player in json_state.players) {
+
+                for (var player in json_state.players) {
                     var func = json_state.players[player].function;
-                    
-                    document.getElementById(func+"_name2").innerHTML = json_state.players[player].name;
-                    document.getElementById(func+"_cost").innerHTML = json_state.players[player].cost;
-                    document.getElementById(func+"_stock").innerHTML = json_state.players[player].stock;
-                    
-                    for( var inc in json_state.players[player].incoming) {
+
+                    document.getElementById(func + "_name2").innerHTML = json_state.players[player].name;
+                    document.getElementById(func + "_cost").innerHTML = json_state.players[player].cost;
+                    document.getElementById(func + "_stock").innerHTML = json_state.players[player].stock;
+
+                    for (var inc in json_state.players[player].incoming) {
                         var dist = json_state.players[player].incoming[inc].distance;
-                        document.getElementById(func+"_inc_"+dist).innerHTML = json_state.players[player].incoming[inc].value;
+                        document.getElementById(func + "_inc_" + dist).innerHTML = json_state.players[player].incoming[inc].value;
                     }
                 }
             }
-            
-            function processReport(json_state){
-                if(state !== "r"){
+
+            function processReport(json_state) {
+                if (state !== "r") {
+                    report_data = [['Semana', 'Consumidor', 'Varejista', 'Atacadista', 'Distribuidor', 'Produtor']];
+                    
+                    for(var week in json_state.graph_data){
+                        var week_ax = json_state.graph_data[week];
+                        
+                        var array = new Array(week_ax.week, week_ax.c, week_ax.r, week_ax.w, week_ax.d, week_ax.p);
+                        
+                        report_data.push(array);
+                    }
+
+                    document.getElementById("rep_name").innerHTML = json_state.name;
+                    document.getElementById("rep_type").innerHTML = json_state.informed_chain;
+
+                    document.getElementById("rep_stockcost").innerHTML = json_state.stock_cost;
+                    document.getElementById("rep_missingcost").innerHTML = json_state.missing_cost;
+                    document.getElementById("rep_saleprofit").innerHTML = json_state.selling_profit;
+
+                    document.getElementById("rep_delay").innerHTML = json_state.delay;
+                    document.getElementById("rep_infduration").innerHTML = json_state.total_week;
+                    document.getElementById("rep_realduration").innerHTML = json_state.real_duration;
+
+                    for (var player in json_state.players) {
+                        var func = json_state.players[player].function;
+
+                        document.getElementById("rep_" + func + "_name").innerHTML = json_state.players[player].name;
+                        document.getElementById("rep_" + func + "_cost").innerHTML = json_state.players[player].cost;
+                        document.getElementById("rep_" + func + "_stock").innerHTML = json_state.players[player].stock;
+                    }
+
                     goto_report();
                 }
             }
-            
+
             function updatePage() {
                 var jsonHttp = new XMLHttpRequest();
-                jsonHttp.open( "POST", "/update.jsp", false);
-                
-                jsonHttp.onreadystatechange = function(){
+                jsonHttp.open("POST", "/update.jsp", false);
+
+                jsonHttp.onreadystatechange = function () {
                     var json = JSON.parse(jsonHttp.responseText);
-                
-                    if(json !== null){
-                        switch(json.state){
+
+                    if (json !== null) {
+                        switch (json.state) {
                             case "waiting":
                                 processWait(json);
                                 break;
@@ -357,19 +388,19 @@
                         }
                     }
                 };
-                
-                jsonHttp.send( null );
+
+                jsonHttp.send(null);
             }
-            
+
             function initialize() {
                 bubbles();
                 update_interval = setInterval(updatePage, 1000);
             }
-            
+
         </script>
     </head>
     <body onload="initialize();">
-                <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
             <header class="mdl-layout__header">
                 <div class="mdl-layout-icon"> </div>
                 <div class="mdl-layout__header-row">
@@ -557,22 +588,22 @@
                         <div class="mdl-card mdl-shadow--6dp mdl-card--horizontal">
                             <div class="mdl-card__supporting-text mdl-card--border">
                                 <p style="display: table; width: 100%;">
-                                    <label style="display: table-row; font-size: 22px;"><b>Nome: </b>Sala B-204</label>
-                                    <label style="display: table-row;"><b>Tipo: </b>Não Informada</label>
+                                    <label style="display: table-row; font-size: 22px;"><b>Nome: </b><span id="rep_name">Sala B-204</span></label>
+                                    <label style="display: table-row;"><b>Tipo: </b><span id="rep_type">Não Informada</span></label>
                                 </p>
                             </div>
                             <div class="mdl-card__supporting-text mdl-card--border">
                                 <p style="display: table; width: 100%;">
-                                    <label style="display: table-cell;"><b>Custo Armazenamento: </b>0,5</label>
-                                    <label style="display: table-cell;"><b>Custo de Não Entrega: </b>1,0</label>
-                                    <label style="display: table-cell;"><b>Lucro Sobre Venda: </b>1,0</label>
+                                    <label style="display: table-cell;"><b>Custo Armazenamento: </b><span id="rep_stockcost">0,5</span></label>
+                                    <label style="display: table-cell;"><b>Custo de Não Entrega: </b><span id="rep_missingcost">1,0</span></label>
+                                    <label style="display: table-cell;"><b>Lucro Sobre Venda: </b><span id="rep_saleprofit">1,0</span></label>
                                 </p>
                             </div>
                             <div class="mdl-card__supporting-text mdl-card--border">
                                 <p style="display: table; width: 100%;">
-                                    <label style="display: table-cell;"><b>Tempo de Entrega: </b>2</label>
-                                    <label style="display: table-cell;"><b>Total de Semanas: </b>50</label>
-                                    <label style="display: table-cell;"><b>Semanas Informadas: </b>70</label>
+                                    <label style="display: table-cell;"><b>Tempo de Entrega: </b><span id="rep_delay">2</span></label>
+                                    <label style="display: table-cell;"><b>Total de Semanas: </b><span id="rep_realduration">50</span></label>
+                                    <label style="display: table-cell;"><b>Semanas Informadas: </b><span id="rep_infduration">70</span></label>
                                 </p>
                             </div>
                             <div class="mdl-card__supporting-text mdl-card--border">
@@ -590,22 +621,22 @@
                                         <td><img src="resources\Industry.png" alt="Producer">
 
                                     <tr id="name">
-                                        <td id="retailer"><b>Nome: </b>Name 1
-                                        <td id="wholesaler"><b>Nome: </b>Name 2
-                                        <td id="distributor"><b>Nome: </b>Name 3
-                                        <td id="producer"><b>Nome: </b>Name 4
+                                        <td id="retailer"><b>Nome: </b><span id="rep_RETAILER_name">Name 1</span>
+                                        <td id="wholesaler"><b>Nome: </b><span id="rep_WHOLESALER_name">Name 2</span>
+                                        <td id="distributor"><b>Nome: </b><span id="rep_DISTRIBUTOR_name">Name 3</span>
+                                        <td id="producer"><b>Nome: </b><span id="rep_PRODUCER_name">Name 4</span>
 
                                     <tr id="profit">
-                                        <td id="retailer"><b>Custo: </b>0.00
-                                        <td id="wholesaler"><b>Custo: </b>0.00
-                                        <td id="distributor"><b>Custo: </b>0.00
-                                        <td id="producer"><b>Custo: </b>0.00
+                                        <td id="retailer"><b>Custo: </b><span id="rep_RETAILER_cost">0.00</span>
+                                        <td id="wholesaler"><b>Custo: </b><span id="rep_WHOLESALER_cost">0.00</span>
+                                        <td id="distributor"><b>Custo: </b><span id="rep_DISTRIBUTOR_cost">0.00</span>
+                                        <td id="producer"><b>Custo: </b><span id="rep_PRODUCER_cost">0.00</span>
 
                                     <tr id="stock">
-                                        <td id="retailer"><b>Estoque: </b>16
-                                        <td id="wholesaler"><b>Estoque: </b>16
-                                        <td id="distributor"><b>Estoque: </b>16
-                                        <td id="producer"><b>Estoque: </b>16
+                                        <td id="retailer"><b>Estoque: </b><span id="rep_RETAILER_stock">16</span>
+                                        <td id="wholesaler"><b>Estoque: </b><span id="rep_WHOLESALER_stock">16</span>
+                                        <td id="distributor"><b>Estoque: </b><span id="rep_DISTRIBUTOR_stock">16</span>
+                                        <td id="producer"><b>Estoque: </b><span id="rep_PRODUCER_stock">16</span>
                                 </table>
                                 </table>
                             </div>

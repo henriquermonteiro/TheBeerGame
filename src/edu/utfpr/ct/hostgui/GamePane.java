@@ -21,7 +21,7 @@ public class GamePane extends BorderPane {
             center = new PlayGamePane(mainScene, game, state == 2, pool);
             this.setCenter(center);
         } else {
-            center = new ReportGamePane(game, state == 8);
+            center = new ReportGamePane(game, state == 8, mainScene);
             this.setCenter(center);
         }
     }
@@ -31,7 +31,7 @@ public class GamePane extends BorderPane {
             ((PlayGamePane) center).updateGame(game, state <= 2, pool);
 
         } else if (isGame) {
-            center = new ReportGamePane(game, state == 8);
+            center = new ReportGamePane(game, state == 8, mainScene);
             this.setCenter(center);
             isGame = false;
         } else {

@@ -60,7 +60,13 @@ public class MainScene extends BorderPane {
     }
 
     public void makeGameTab(Game game) {
-        games.put(game.name, new GamePane(game, control.getGameState(game.name), control.getPlayersOnGame(game.name), this));
+        int state = control.getGameState(game.name);
+        
+        if(state != -1){
+            games.put(game.name, new GamePane(game, control.getGameState(game.name), control.getPlayersOnGame(game.name), this));
+        }else{
+            games.put(game.name, new GamePane(game, control.getReportState(game.name), null, this));
+        }
         Tab gameTab = new Tab(game.name, games.get(game.name));
 
         this.tabPane.getTabs().add(tabPane.getTabs().size() - 1, gameTab);
@@ -106,6 +112,14 @@ public class MainScene extends BorderPane {
             control.startGame(game.name);
         } else {
             control.pauseGame(game.name);
+        }
+    }
+
+    public void changeReportState(Game game, boolean isStart) {
+        if (isStart) {
+            control.startReport(game.name);
+        } else {
+            control.pauseReport(game.name);
         }
     }
     

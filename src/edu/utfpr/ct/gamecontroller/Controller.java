@@ -60,14 +60,19 @@ public class Controller implements IControllerHost, IControllerPlayer {
 
             if (engine.getState() == Engine.FINISHED) {
                 reportManager.createReport(game);
+                logger.purgeGame(game.gameID);
             } else {
                 engines.put(game.name, engine);
-                
+
                 engine.setState(Engine.PAUSED);
             }
         }
 
+//        Engine builder = new Engine();
         for (Game game : reportManager.getReports()) {
+//            builder.setGame(game, Function.RETAILER, false);
+//            builder.rebuildOrders();
+//            reports.putIfAbsent(builder.getGame(), false);
             reports.putIfAbsent(game, false);
         }
     }
@@ -85,9 +90,10 @@ public class Controller implements IControllerHost, IControllerPlayer {
 
         engine.setGame(game, Function.RETAILER);
         engine.buildGame();
-        
+        engine.rebuildOrders();
+
         engine.setState(Engine.PAUSED);
-        
+
         logger.logGameStart(game);
         engines.put(game.name, engine);
 
@@ -97,11 +103,10 @@ public class Controller implements IControllerHost, IControllerPlayer {
     @Override
     public Game[] getGames() {
         List<Game> unfinishedGames = new ArrayList<>();
-        
+
 //        engines.values().stream().filter((eng) -> (eng.getState() == Engine.SETUP || eng.getState() == Engine.RUNNING || eng.getState() == Engine.FINISHED)).forEachOrdered((eng) -> {
 //            unfinishedGames.add(eng.getGame());
 //        });
-
         engines.entrySet().stream().forEach((entry)
                 -> {
             unfinishedGames.add(entry.getValue().getGame());
@@ -128,7 +133,13 @@ public class Controller implements IControllerHost, IControllerPlayer {
 
     @Override
     public int getGameState(String gameName) {
-        return engines.get(gameName).getState();
+        return (engines.get(gameName) == null ? (getReport(gameName) != null ? -1 : -2) : engines.get(gameName).getState());
+    }
+
+    @Override
+    public int getReportState(String gameName) {
+        Game g = getReport(gameName);
+        return (g == null ? -1 : (reports.get(g) ? 8 : 16));
     }
 
     @Override
@@ -140,7 +151,8 @@ public class Controller implements IControllerHost, IControllerPlayer {
     public Game getReport(String gameName) {
         for (Map.Entry<Game, Boolean> entry : reports.entrySet()) {
             if (entry.getKey().name.equals(gameName)) {
-                return entry.getValue() ? entry.getKey() : null;
+//                return entry.getValue() ? entry.getKey() : null;
+                return entry.getKey();
             }
         }
 
@@ -171,15 +183,15 @@ public class Controller implements IControllerHost, IControllerPlayer {
 
     @Override
     public boolean startGame(String gameName) {
-        if(engines.containsKey(gameName)){
+        if (engines.containsKey(gameName)) {
             Game g = engines.get(gameName).getGame();
-            for(int k = 0; k < g.supplyChain.length; k+= g.deliveryDelay + 1){
-                if(((Node)g.supplyChain[k]).playerName == null || ((Node)g.supplyChain[k]).playerName.equals("")){
+            for (int k = 0; k < g.supplyChain.length; k += g.deliveryDelay + 1) {
+                if (((Node) g.supplyChain[k]).playerName == null || ((Node) g.supplyChain[k]).playerName.equals("")) {
                     return engines.get(gameName).setState(Engine.SETUP);
                 }
             }
         }
-        
+
         return engines.get(gameName).setState(Engine.RUNNING);
     }
 
@@ -187,36 +199,40 @@ public class Controller implements IControllerHost, IControllerPlayer {
     public boolean pauseGame(String gameName) {
         return engines.get(gameName).setState(Engine.PAUSED);
     }
-    
+
     @Override
     public boolean startReport(String gameName) {
         Game game = null;
-        
-        for(Game g : reports.keySet()){
-            if(g.name.equals(gameName)){
+
+        for (Game g : reports.keySet()) {
+            if (g.name.equals(gameName)) {
                 game = g;
                 break;
             }
         }
-        
-        if(game != null) reports.put(game, true);
-        
+
+        if (game != null) {
+            reports.put(game, true);
+        }
+
         return game != null;
     }
 
     @Override
     public boolean pauseReport(String gameName) {
         Game game = null;
-        
-        for(Game g : reports.keySet()){
-            if(g.name.equals(gameName)){
+
+        for (Game g : reports.keySet()) {
+            if (g.name.equals(gameName)) {
                 game = g;
                 break;
             }
         }
-        
-        if(game != null) reports.put(game, false);
-        
+
+        if (game != null) {
+            reports.put(game, false);
+        }
+
         return game != null;
     }
 
@@ -260,13 +276,13 @@ public class Controller implements IControllerHost, IControllerPlayer {
         qty = engine.makeOrder(order);
 
         if (engine.getState() == Engine.FINISHED) {
+            logger.purgeGame(engine.getGame().gameID);
             engines.remove(gameName);
-            logger.purgeGame(order);
             reportManager.createReport(engine.getGame());
             reports.putIfAbsent(engine.getGame(), false);
         }
-        
-        if(engine.isClientTurn()){
+
+        if (engine.isClientTurn()) {
             engine.makeOrder(engine.getGame().demand[engine.getWeeks() - 1]);
         }
 
@@ -307,13 +323,15 @@ public class Controller implements IControllerHost, IControllerPlayer {
     public Game[] listAvailableGameRooms(String playerName) {
 //        return getGames();
         List<Game> unfinishedGames = new ArrayList<>();
-        
+
         engines.values().stream().filter((eng) -> (eng.getState() == Engine.SETUP || eng.getState() == Engine.RUNNING || eng.getState() == Engine.FINISHED)).forEachOrdered((eng) -> {
             unfinishedGames.add(eng.getGame());
         });
-        
-        for(Game g : reports.keySet()){
-            if(reports.get(g)) unfinishedGames.add(g);
+
+        for (Game g : reports.keySet()) {
+            if (reports.get(g)) {
+                unfinishedGames.add(g);
+            }
         }
 
         return unfinishedGames.toArray(new Game[0]);
@@ -322,6 +340,12 @@ public class Controller implements IControllerHost, IControllerPlayer {
     @Override
     public boolean enterGameRoom(String gameName, String playerName, String password) {
         Engine engine = engines.get(gameName);
+
+        if (engine == null) {
+            Game g = getReport(gameName);
+
+            return g != null;
+        }
 
         if (engine.getGame().password.equals(password)) {
             if (engines.get(gameName).addPlayer(playerName)) {
@@ -408,14 +432,16 @@ public class Controller implements IControllerHost, IControllerPlayer {
 
         Game report = getReport(gameName);
         if (report != null) {
-            EngineData data = new EngineData();
+            if (reports.get(report)) {
+                EngineData data = new EngineData();
 
-            data.state = Engine.FINISHED;
-            data.weeks = report.realDuration;
-            data.turn = null;
-            data.game = report;
+                data.state = Engine.FINISHED;
+                data.weeks = report.realDuration;
+                data.turn = null;
+                data.game = report;
 
-            return data;
+                return data;
+            }
         }
 
         return null;

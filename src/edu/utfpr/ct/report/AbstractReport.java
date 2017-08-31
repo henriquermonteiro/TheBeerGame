@@ -61,6 +61,8 @@ abstract class AbstractReport
 		{
 			fileName = defaultFolder + separator + fileName;
 			path = Paths.get(fileName);
+                        
+                        path = path.toAbsolutePath();
 
 			return Files.deleteIfExists(path);
 		}

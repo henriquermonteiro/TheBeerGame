@@ -6,6 +6,7 @@ import edu.utfpr.ct.datamodel.Node;
 import edu.utfpr.ct.localization.LocalizationKeys;
 import edu.utfpr.ct.localization.Localize;
 import java.io.File;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -23,6 +24,8 @@ public class ReportGamePane extends BorderPane{
     
     private Label gameName;
     private ToggleButton webStart;
+
+    private MainScene mainScene;
     
     private Parent nodePane(Node node){
         return new ScrollPane();
@@ -37,6 +40,10 @@ public class ReportGamePane extends BorderPane{
         
         webStart = new ToggleButton();
         webStart.setGraphic(new ImageView(webImage));
+        
+        webStart.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            mainScene.changeReportState(game, newValue);
+        });
         
         BorderPane topPane = new BorderPane();
         topPane.setCenter(gameName);
@@ -81,8 +88,9 @@ public class ReportGamePane extends BorderPane{
         this.setCenter(reports);
     }
 
-    public ReportGamePane(Game game, boolean isStreaming) {
+    public ReportGamePane(Game game, boolean isStreaming, MainScene mainScene) {
         this.game = game;
+        this.mainScene = mainScene;
         
         createContent();
         

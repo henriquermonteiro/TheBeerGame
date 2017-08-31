@@ -34,9 +34,16 @@ public class Engine {
     }
 
     public void setGame(Game game, IFunction function) {
+//        this.game = game;
+//        this.turn = function;
+//        resetConfigs();
+        setGame(game, function, true);
+    }
+    
+    public void setGame(Game game, IFunction function, boolean clearPlayers) {
         this.game = game;
         this.turn = function;
-        resetConfigs();
+        resetConfigs(clearPlayers);
     }
 
     public boolean isClientTurn() {
@@ -188,23 +195,28 @@ public class Engine {
         if (state != SETUP) {
             return;
         }
-
+        
+        state = RUNNING;
+        
         for (int i = 0; i < game.realDuration; i++) {
             /* For the client turn */
             makeOrder(game.demand[i]);
-            nextTurn();
+//            nextTurn();
 
             while (!clientTurn) {
                 node = getNodeByFunction(turn);
 
                 if (i == node.playerMove.size()) {
+                    state = SETUP;
                     return;
                 }
 
                 makeOrder(node.playerMove.get(i));
-                nextTurn();
+//                nextTurn();
             }
         }
+        
+        state = FINISHED;
     }
 
     /**
@@ -254,7 +266,8 @@ public class Engine {
             calculateProfit(node, order);
 
             node.travellingStock = node.getLastStock() >= order ? order : node.getLastStock();
-            node.currentStock.add(node.getLastStock() >= order ? node.getLastStock() - order : 0);
+//            node.currentStock.add(node.getLastStock() >= order ? node.getLastStock() - order : 0);
+            node.currentStock.set(node.currentStock.size()-1, node.getLastStock() >= order ? node.getLastStock() - order : 0);
 
             node.latsRequest = order; // Save the amount requested for rendering purposes.
 
@@ -306,8 +319,8 @@ public class Engine {
         }
     }
 
-    private void resetConfigs() {
-        players.clear();
+    private void resetConfigs(boolean clearPlayers) {
+        if(clearPlayers) players.clear();
         clientTurn = true;
         turn = turn.first();
         weeks = 0;
