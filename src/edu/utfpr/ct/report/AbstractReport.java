@@ -60,9 +60,7 @@ abstract class AbstractReport
 		try
 		{
 			fileName = defaultFolder + separator + fileName;
-			path = Paths.get(fileName);
-                        
-                        path = path.toAbsolutePath();
+			path = Paths.get(fileName).toAbsolutePath();
 
 			return Files.deleteIfExists(path);
 		}
@@ -82,7 +80,7 @@ abstract class AbstractReport
 			for(String file : listAllFiles())
 			{
 				file = defaultFolder + separator + file;
-				path = Paths.get(file);
+				path = Paths.get(file).toAbsolutePath();
 				Files.deleteIfExists(path);
 			}
 

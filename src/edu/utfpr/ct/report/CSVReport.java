@@ -7,6 +7,8 @@ import edu.utfpr.ct.datamodel.TravellingTime;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 class CSVReport extends AbstractReport
 {
@@ -24,7 +26,7 @@ class CSVReport extends AbstractReport
 		{
 			bw = new BufferedWriter(new FileWriter(createFile(getFileName(game))));
 			writeGameConfig(bw, game);
-			writePlayerMoves(bw, game);
+			writeNodeData(bw, game);
 			bw.close();
 			return true;
 		}
@@ -43,22 +45,22 @@ class CSVReport extends AbstractReport
 
 	private void writeGameConfig(BufferedWriter bw, Game game) throws IOException
 	{
-		String header = "gameID, "
-						+ "timestamp, "
-						+ "name, "
-						+ "password, "
-						+ "missingUnitCost, "
-						+ "stockUnitCost, "
-						+ "sellingUnitProfit, "
-						+ "realDuration, "
-						+ "informedDuration, "
-						+ "deliveryDelay, "
-						+ "unitiesOnTravel, "
-						+ "initialStock, "
-						+ "informedChainSupply";
+		String header = "ID, "
+						+ "Timestamp, "
+						+ "Name, "
+						+ "Password, "
+						+ "Cost of missing unit, "
+						+ "Cost of unit in stock, "
+						+ "Profit per unit, "
+						+ "Real duration, "
+						+ "Informed duration, "
+						+ "Delivery delay, "
+						+ "Units on travel, "
+						+ "Initial stock, "
+						+ "Informed chain supply";
 
 		String data = game.gameID + ", "
-					  + game.timestamp + ", "
+					  + new SimpleDateFormat("yyyy-MM-dd HH-mm-ss").format(new Date(game.timestamp)) + ", "
 					  + game.name + ", "
 					  + game.password + ", "
 					  + game.missingUnitCost + ", "
@@ -71,6 +73,8 @@ class CSVReport extends AbstractReport
 					  + game.initialStock + ", "
 					  + game.informedChainSupply;
 
+		new SimpleDateFormat("yyyy-MM-dd HH-mm-ss").format(new Date(game.timestamp));
+		
 		bw.write("Configuration");
 		bw.newLine();
 		bw.write(header);
@@ -80,31 +84,38 @@ class CSVReport extends AbstractReport
 		bw.newLine();
 	}
 
-	private void writePlayerMoves(BufferedWriter bw, Game game) throws IOException
+	private void writeNodeData(BufferedWriter bw, Game game) throws IOException
 	{
 		Node node;
-
-		bw.write("Player moves");
-		bw.newLine();
-
-		bw.write("Function, PlayerName, Stock, Profit");
-		for(int i = 0; i < game.realDuration; i++)
-			bw.write(", Week " + (i + 1));
 
 		for(AbstractNode abstractNode : game.supplyChain)
 		{
 			if(abstractNode instanceof TravellingTime)
 				continue;
-
 			node = (Node) abstractNode;
-			bw.newLine();
-			bw.write(node.function.getName() + ", ");
-			bw.write(node.playerName + ", ");
-			bw.write(node.currentStock + ", ");
-			bw.write(Double.toString(node.getLastProfit()));
 
-			for(int i = 0; i < node.playerMove.size(); i++)
-				bw.write(", " + node.playerMove.get(i));
+			bw.write(node.function.getName());
+			bw.newLine();
+
+			for(int i = 0; i < game.realDuration; i++)
+				bw.write(", Week " + (i + 1));
+			bw.newLine();
+
+			bw.write("Stock");
+			for(int value : node.currentStock)
+				bw.write(", " + value);
+			bw.newLine();
+
+			bw.write("Move");
+			for(int value : node.playerMove)
+				bw.write(", " + value);
+			bw.newLine();
+
+			bw.write("Profit");
+			for(double value : node.profit)
+				bw.write(", " + value);
+			bw.newLine();
+			bw.newLine();
 		}
 	}
 }

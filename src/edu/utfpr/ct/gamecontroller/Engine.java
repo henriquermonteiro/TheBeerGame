@@ -1,5 +1,6 @@
 package edu.utfpr.ct.gamecontroller;
 
+import edu.utfpr.ct.dataextractor.Table;
 import edu.utfpr.ct.datamodel.AbstractNode;
 import edu.utfpr.ct.datamodel.Function;
 import edu.utfpr.ct.datamodel.Game;
@@ -11,58 +12,69 @@ import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Engine {
+public class Engine
+{
+	public static final int SETUP = 1;
+	public static final int RUNNING = 2;
+	public static final int PAUSED = 4;
+	public static final int FINISHED = 8;
 
-    public static final int SETUP = 1;
-    public static final int RUNNING = 2;
-    public static final int PAUSED = 4;
-    public static final int FINISHED = 8;
+	private final Set<String> players;
+	private final Table table;
+	private Game game;
+	private boolean clientTurn;
+	private IFunction turn;
+	private int weeks;
+	private int state;
 
-    private final Set<String> players;
-    private Game game;
-    private boolean clientTurn;
-    private IFunction turn;
-    private int weeks;
-    private int state;
+	public Engine()
+	{
+		this.players = new HashSet<>();
+		this.table = new Table(game);
+	}
 
-    public Engine() {
-        this.players = new HashSet<>();
-    }
+	public Game getGame()
+	{
+		return game;
+	}
 
-    public Game getGame() {
-        return game;
-    }
-
-    public void setGame(Game game, IFunction function) {
+	public void setGame(Game game, IFunction function)
+	{
 //        this.game = game;
 //        this.turn = function;
 //        resetConfigs();
-        setGame(game, function, true);
-    }
-    
-    public void setGame(Game game, IFunction function, boolean clearPlayers) {
-        this.game = game;
-        this.turn = function;
-        resetConfigs(clearPlayers);
-    }
+		setGame(game, function, true);
+	}
 
-    public boolean isClientTurn() {
-        return clientTurn;
-    }
+	public void setGame(Game game, IFunction function, boolean clearPlayers)
+	{
+		this.game = game;
+		this.turn = function;
+		resetConfigs(clearPlayers);
+	}
 
-    public IFunction getTurn() {
-        return turn;
-    }
+	public boolean isClientTurn()
+	{
+		return clientTurn;
+	}
 
-    public int getWeeks() {
-        return weeks;
-    }
+	public IFunction getTurn()
+	{
+		return turn;
+	}
 
-    public int getState() {
-        return state;
-    }
+	public int getWeeks()
+	{
+		return weeks;
+	}
 
-    public boolean setState(int state) {
+	public int getState()
+	{
+		return state;
+	}
+
+	public boolean setState(int state)
+	{
 //        if ((this.state == SETUP && state == RUNNING)
 //                || (this.state == SETUP && state == PAUSED)
 //                || (this.state == RUNNING && state == PAUSED)
@@ -71,259 +83,304 @@ public class Engine {
 //                || state == FINISHED) {
 //            this.state = state;
 //        }
-        if(this.state != FINISHED){
-            this.state = state;
-        }
+		if(this.state != FINISHED)
+		{
+			this.state = state;
+		}
 
-        return (this.state == state);
-    }
+		return (this.state == state);
+	}
 
-    public String[] getPlayers() {
-        return players.toArray(new String[0]);
-    }
+	public String[] getPlayers()
+	{
+		return players.toArray(new String[0]);
+	}
 
-    public String[] getPlayersOnPool() {
-        Set<String> list = new HashSet<>(players);
+	public String[] getPlayersOnPool()
+	{
+		Set<String> list = new HashSet<>(players);
 
-        for (Function f : Function.values()) {
-            list.remove(getNodeByFunction(f).playerName);
-        }
+		for(Function f : Function.values())
+		{
+			list.remove(getNodeByFunction(f).playerName);
+		}
 
-        return list.toArray(new String[0]);
-    }
+		return list.toArray(new String[0]);
+	}
 
-    public boolean addPlayer(String playerName) {
-        return players.add(playerName);
-    }
+	public boolean addPlayer(String playerName)
+	{
+		return players.add(playerName);
+	}
 
-    public boolean removePlayer(String playerName) {
-        for (IFunction function : turn.getValues()) {
-            if (getNodeByFunction(function).playerName.equals(playerName)) {
-                getNodeByFunction(function).playerName = "";
-                
-                setState(Engine.SETUP); // Se falta jogadores o jogo não pode continuar;
-            }
-        }
+	public boolean removePlayer(String playerName)
+	{
+		for(IFunction function : turn.getValues())
+		{
+			if(getNodeByFunction(function).playerName.equals(playerName))
+			{
+				getNodeByFunction(function).playerName = "";
 
-        return players.remove(playerName);
-    }
+				setState(Engine.SETUP); // Se falta jogadores o jogo não pode continuar;
+			}
+		}
 
-    public boolean changePlayerForNode(IFunction function, String playerName) {
-        if (!"".equals(playerName) && !players.contains(playerName)) {
-            return false;
-        }
+		return players.remove(playerName);
+	}
 
-        getNodeByFunction(function).playerName = playerName;
-        
-        for(Function f : Function.values()){
-            Node n = getNodeByFunction(f);
-            
-            if(n.playerName == null || n.playerName.equals("")){
-                return true;
-            }
-        }
-        
-        setState(Engine.RUNNING);
+	public boolean changePlayerForNode(IFunction function, String playerName)
+	{
+		if(!"".equals(playerName) && !players.contains(playerName))
+		{
+			return false;
+		}
 
-        return true;
-    }
+		getNodeByFunction(function).playerName = playerName;
 
-    public boolean isPlayerSet(IFunction function) {
-        return "".equals(getNodeByFunction(function).playerName);
-    }
+		for(Function f : Function.values())
+		{
+			Node n = getNodeByFunction(f);
 
-    public boolean validateParameters(Game game) {
-        return (game.timestamp >= 0
-                && !"".equals(game.name)
-                && game.missingUnitCost >= 0
-                && game.stockUnitCost >= 0
-                && game.sellingUnitProfit >= 0
-                && game.realDuration > 0
-                && game.informedDuration > 0
-                && game.deliveryDelay >= 0
-                && game.unitiesOnTravel >= 0
-                && game.initialStock >= 0
-                && game.realDuration <= game.informedDuration);
-    }
+			if(n.playerName == null || n.playerName.equals(""))
+			{
+				return true;
+			}
+		}
 
-    public void buildGame() {
-        int chainSize, position;
-        Node node;
-        TravellingTime travellingTime;
+		setState(Engine.RUNNING);
 
-        if (state != SETUP) {
-            return;
-        }
+		return true;
+	}
 
-        chainSize = turn.getValues().length;
-        chainSize = chainSize + chainSize * game.deliveryDelay;
+	public boolean isPlayerSet(IFunction function)
+	{
+		return "".equals(getNodeByFunction(function).playerName);
+	}
 
-        if (game.timestamp == 0) {
-            game.timestamp = new GregorianCalendar().getTimeInMillis();
-        }
-        if (game.demand == null) {
-            game.demand = new int[game.realDuration];
-        }
-        game.supplyChain = new AbstractNode[chainSize];
+	public boolean validateParameters(Game game)
+	{
+		return (game.timestamp >= 0
+				&& !"".equals(game.name)
+				&& game.missingUnitCost >= 0
+				&& game.stockUnitCost >= 0
+				&& game.sellingUnitProfit >= 0
+				&& game.realDuration > 0
+				&& game.informedDuration > 0
+				&& game.deliveryDelay >= 0
+				&& game.unitiesOnTravel >= 0
+				&& game.initialStock >= 0
+				&& game.realDuration <= game.informedDuration);
+	}
 
-        position = 0;
-        for (IFunction value : turn.getValues()) {
-            node = new Node();
-            node.currentStock = new ArrayList<>();
-            node.profit = new ArrayList<>();
-            node.playerMove = new ArrayList<>();
+	public void buildGame()
+	{
+		int chainSize, position;
+		Node node;
+		TravellingTime travellingTime;
 
-            node.travellingStock = 0;
-            node.playerName = "";
-            node.function = value;
-            node.currentStock.add(game.initialStock);
-            node.profit.add(0.0);
-            game.supplyChain[position] = node;
-            position++;
+		if(state != SETUP)
+		{
+			return;
+		}
 
-            for (int i = 0; i < game.deliveryDelay; i++, position++) {
-                travellingTime = new TravellingTime();
-                travellingTime.travellingStock = game.unitiesOnTravel;
-                game.supplyChain[position] = travellingTime;
-            }
-        }
-    }
+		chainSize = turn.getValues().length;
+		chainSize = chainSize + chainSize * game.deliveryDelay;
 
-    public void rebuildOrders() {
-        Node node;
+		if(game.timestamp == 0)
+		{
+			game.timestamp = new GregorianCalendar().getTimeInMillis();
+		}
+		if(game.demand == null)
+		{
+			game.demand = new int[game.realDuration];
+		}
+		game.supplyChain = new AbstractNode[chainSize];
 
-        if (state != SETUP) {
-            return;
-        }
-        
-        state = RUNNING;
-        
-        for (int i = 0; i < game.realDuration; i++) {
-            /* For the client turn */
-            makeOrder(game.demand[i]);
+		position = 0;
+		for(IFunction value : turn.getValues())
+		{
+			node = new Node();
+			node.currentStock = new ArrayList<>();
+			node.profit = new ArrayList<>();
+			node.playerMove = new ArrayList<>();
+
+			node.travellingStock = 0;
+			node.playerName = "";
+			node.function = value;
+			node.currentStock.add(game.initialStock);
+			node.profit.add(0.0);
+			game.supplyChain[position] = node;
+			position++;
+
+			for(int i = 0; i < game.deliveryDelay; i++, position++)
+			{
+				travellingTime = new TravellingTime();
+				travellingTime.travellingStock = game.unitiesOnTravel;
+				game.supplyChain[position] = travellingTime;
+			}
+		}
+	}
+
+	public Table getTable()
+	{
+		return table;
+	}
+	
+	public void rebuildOrders()
+	{
+		Node node;
+
+		if(state != SETUP)
+		{
+			return;
+		}
+
+		state = RUNNING;
+
+		for(int i = 0; i < game.realDuration; i++)
+		{
+			/* For the client turn */
+			makeOrder(game.demand[i]);
 //            nextTurn();
 
-            while (!clientTurn) {
-                node = getNodeByFunction(turn);
+			while(!clientTurn)
+			{
+				node = getNodeByFunction(turn);
 
-                if (i == node.playerMove.size()) {
-                    state = SETUP;
-                    return;
-                }
+				if(i == node.playerMove.size())
+				{
+					state = SETUP;
+					return;
+				}
 
-                makeOrder(node.playerMove.get(i));
+				makeOrder(node.playerMove.get(i));
 //                nextTurn();
-            }
-        }
-        
-        state = FINISHED;
-    }
+			}
+		}
 
-    /**
-     * Makes all the order placed go from one Node to the other.
-     *
-     * @param order
-     * @return
-     */
-    public int makeOrder(int order) {
-        int posCurrentNode, qty;
-        Node node;
+		state = FINISHED;
+	}
 
-        if (order < 0 || state != RUNNING) {
-            return -1;
-        }
+	/**
+	 * Makes all the order placed go from one Node to the other.
+	 *
+	 * @param order
+	 * @return
+	 */
+	public int makeOrder(int order)
+	{
+		int posCurrentNode, qty;
+		Node node;
 
-        if (clientTurn) {
-            qty = makeOrderRecursion(0, order);
-        } else {
-            posCurrentNode = (turn.getPosition() - 1) * game.deliveryDelay + (turn.getPosition() - 1);
-            node = (Node) game.supplyChain[posCurrentNode];
-            qty = makeOrderRecursion(posCurrentNode + 1, order);
-            node.currentStock.add(node.getLastStock() + qty);
-        }
-        nextTurn();
+		if(order < 0 || state != RUNNING)
+			return -1;
 
-        return qty;
-    }
+		if(clientTurn)
+			qty = makeOrderRecursion(0, order);
+		else
+		{
+			posCurrentNode = (turn.getPosition() - 1) * game.deliveryDelay + (turn.getPosition() - 1);
+			node = (Node) game.supplyChain[posCurrentNode];
+			qty = makeOrderRecursion(posCurrentNode + 1, order);
+			node.currentStock.add(node.getLastStock() + qty);
+			table.updateLines();
+		}
+		nextTurn();
 
-    private int makeOrderRecursion(int posCurrentNode, int order) {
-        int travellingStock;
-        Node node;
+		return qty;
+	}
 
-        if (posCurrentNode == game.supplyChain.length) {
-            return order;
-        }
+	private int makeOrderRecursion(int posCurrentNode, int order)
+	{
+		int travellingStock;
+		Node node;
 
-        if (game.supplyChain[posCurrentNode] instanceof TravellingTime) {
-            travellingStock = game.supplyChain[posCurrentNode].travellingStock;
-            game.supplyChain[posCurrentNode].travellingStock = makeOrderRecursion(posCurrentNode + 1, order);
+		if(posCurrentNode == game.supplyChain.length)
+			return order;
 
-            return travellingStock;
-        }
+		if(game.supplyChain[posCurrentNode] instanceof TravellingTime)
+		{
+			travellingStock = game.supplyChain[posCurrentNode].travellingStock;
+			game.supplyChain[posCurrentNode].travellingStock = makeOrderRecursion(posCurrentNode + 1, order);
 
-        if (game.supplyChain[posCurrentNode] instanceof Node) {
-            node = (Node) game.supplyChain[posCurrentNode];
-            calculateProfit(node, order);
+			return travellingStock;
+		}
 
-            node.travellingStock = node.getLastStock() >= order ? order : node.getLastStock();
-//            node.currentStock.add(node.getLastStock() >= order ? node.getLastStock() - order : 0);
-            node.currentStock.set(node.currentStock.size()-1, node.getLastStock() >= order ? node.getLastStock() - order : 0);
+		if(game.supplyChain[posCurrentNode] instanceof Node)
+		{
+			node = (Node) game.supplyChain[posCurrentNode];
+			calculateProfit(node, order);
+			node.travellingStock = node.getLastStock() >= order ? order : node.getLastStock();
+//			node.currentStock.add(node.getLastStock() >= order ? node.getLastStock() - order : 0);
+			node.currentStock.set(node.currentStock.size() - 1, node.getLastStock() >= order ? node.getLastStock() - order : 0);
+			node.latsRequest = order; // Save the amount requested for rendering purposes.
 
-            node.latsRequest = order; // Save the amount requested for rendering purposes.
+			return node.travellingStock;
+		}
 
-            return node.travellingStock;
-        }
+		return Integer.MIN_VALUE;
+	}
 
-        return -1;
-    }
+	private void calculateProfit(Node node, int order)
+	{
+		double profit = node.getLastProfit();
 
-    private void calculateProfit(Node node, int order) {
-        double profit = node.getLastProfit();
+		profit += node.getLastStock() >= order ? order * game.sellingUnitProfit : node.getLastStock() * game.sellingUnitProfit;
+		/* Cost from missing unit */
+		profit -= node.getLastStock() >= order ? 0 : (order - node.getLastStock()) * game.missingUnitCost;
+		/* Cost from the remaining stock after selling */
+		profit -= node.getLastStock() >= order ? (node.getLastStock() - order) * game.stockUnitCost : 0;
 
-        profit += node.getLastStock() >= order ? order * game.sellingUnitProfit : node.getLastStock() * game.sellingUnitProfit;
-        /* Cost from missing unit */
-        profit -= node.getLastStock() >= order ? 0 : (order - node.getLastStock()) * game.missingUnitCost;
-        /* Cost from the remaining stock after selling */
-        profit -= node.getLastStock() >= order ? (node.getLastStock() - order) * game.stockUnitCost : 0;
+		node.profit.add(profit);
+	}
 
-        node.profit.add(profit);
-    }
+	private Node getNodeByFunction(IFunction function)
+	{
+		int posCurrentNode = (function.getPosition() - 1) * game.deliveryDelay + (function.getPosition() - 1);
 
-    private Node getNodeByFunction(IFunction function) {
-        int posCurrentNode = (function.getPosition() - 1) * game.deliveryDelay + (function.getPosition() - 1);
+		return (Node) game.supplyChain[posCurrentNode];
+	}
 
-        return (Node) game.supplyChain[posCurrentNode];
-    }
+	public Node getNodeOfTurn()
+	{
+		return clientTurn ? null : getNodeByFunction(turn);
+	}
 
-    public Node getNodeOfTurn() {
-        return clientTurn ? null : getNodeByFunction(turn);
-    }
+	private void nextTurn()
+	{
+		if(state == FINISHED)
+		{
+			return;
+		}
 
-    private void nextTurn() {
-        if (state == FINISHED) {
-            return;
-        }
+		if(clientTurn)
+		{
+			turn = turn.first();
+			clientTurn = false;
+		}
+		else if(turn.isLast())
+		{
+			clientTurn = true;
+			weeks++;
+		}
+		else
+		{
+			turn = turn.next();
+		}
 
-        if (clientTurn) {
-            turn = turn.first();
-            clientTurn = false;
-        } else if (turn.isLast()) {
-            clientTurn = true;
-            weeks++;
-        } else {
-            turn = turn.next();
-        }
+		if(game.realDuration == weeks)
+		{
+			setState(FINISHED);
+		}
+	}
 
-        if (game.realDuration == weeks) {
-            setState(FINISHED);
-        }
-    }
-
-    private void resetConfigs(boolean clearPlayers) {
-        if(clearPlayers) players.clear();
-        clientTurn = true;
-        turn = turn.first();
-        weeks = 0;
-        state = SETUP;
-    }
+	private void resetConfigs(boolean clearPlayers)
+	{
+		if(clearPlayers)
+			players.clear();
+		clientTurn = true;
+		turn = turn.first();
+		weeks = 0;
+		state = SETUP;
+	}
 }
