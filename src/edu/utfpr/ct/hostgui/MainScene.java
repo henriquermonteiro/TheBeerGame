@@ -3,8 +3,8 @@ package edu.utfpr.ct.hostgui;
 import edu.utfpr.ct.datamodel.Function;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.interfaces.IFunction;
-import edu.utfpr.ct.localization.LocalizationKeys;
-import edu.utfpr.ct.localization.Localize;
+import edu.utfpr.ct.localization.HostLocalizationKeys;
+import edu.utfpr.ct.localization.LocalizeHost;
 import java.io.File;
 import java.util.HashMap;
 import javafx.scene.control.Tab;
@@ -18,8 +18,8 @@ public class MainScene extends BorderPane {
 
     private TabPane tabPane;
 
-    private static final Image homeIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.HOME_ICON)).toURI().toString());
-    private static final Image addIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.PLUS_ICON)).toURI().toString());
+    private static final Image homeIcon = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.HOME_ICON)).toURI().toString());
+    private static final Image addIcon = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.PLUS_ICON)).toURI().toString());
 
     private IControllerHost control;
     

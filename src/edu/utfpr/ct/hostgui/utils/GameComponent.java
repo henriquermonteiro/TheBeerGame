@@ -1,7 +1,7 @@
 package edu.utfpr.ct.hostgui.utils;
 
-import edu.utfpr.ct.localization.LocalizationKeys;
-import edu.utfpr.ct.localization.Localize;
+import edu.utfpr.ct.localization.HostLocalizationKeys;
+import edu.utfpr.ct.localization.LocalizeHost;
 import java.io.File;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -26,9 +26,9 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 
 public class GameComponent extends GridPane{
-    private static final Image deleteIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.DELETE_ICON)).toURI().toString());
-    private static final Image reloadIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.LOAD_ICON)).toURI().toString());
-    private static final Image viewIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.VIEW_ICON)).toURI().toString());
+    private static final Image deleteIcon = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.DELETE_ICON)).toURI().toString());
+    private static final Image reloadIcon = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.LOAD_ICON)).toURI().toString());
+    private static final Image viewIcon = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.VIEW_ICON)).toURI().toString());
     
     public static final int LOAD = 1;
     public static final int VIEW = 2;

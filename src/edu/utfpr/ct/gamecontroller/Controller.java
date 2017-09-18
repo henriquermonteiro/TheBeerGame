@@ -303,6 +303,11 @@ public class Controller implements IControllerHost, IControllerPlayer
 	{
 		return engines.get(gameName).changePlayerForNode(function, "");
 	}
+        
+        @Override
+        public Table getTableData(String gameName){
+            return dataExtractor.getTable(gameName);
+        }
 	
 	public Table getTable(String gameName)
 	{

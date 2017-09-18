@@ -2,12 +2,18 @@
 <%@page import="java.net.*" %>
 <%@page import="org.json.simple.*" %>
 <%@page import="org.json.simple.parser.*" %>
+<%@page import="edu.utfpr.ct.localization.*" %>
 
 <%
 //    System.out.println("Test Game - " + request.getMethod());
     if(session.getAttribute("USER-ID") == null || ((String)session.getAttribute("USER-ID")).isEmpty() || session.getAttribute("LOGGED_GAME") == null || ((String)session.getAttribute("LOGGED_GAME")).isEmpty() ){
         response.sendRedirect("/check_in.jsp");
     }
+    
+    String lang = "default";
+    if(session.getAttribute("PREF-LANG") != null) lang = session.getAttribute("PREF-LANG");
+    
+    LocalizeClient localize = ClientLocalizationManager.getInstance().getClientFor(lang);
     
     /*String recv;
     String recvbuff = "";
@@ -160,60 +166,6 @@
                 state = "r";
             }
 
-            function get_data() {
-                return [['Semana', 'Consumidor', 'Varejista', 'Atacadista', 'Distribuidor', 'Produtor'],
-                    ['Semana  1', 5, 5, 5, 5, 5],
-                    ['Semana  2', 5, 7, 7, 7, 7],
-                    ['Semana  3', 5, 7, 7, 7, 7],
-                    ['Semana  4', 5, 7, 7, 7, 7],
-                    ['Semana  5', 5, 7, 7, 7, 7],
-                    ['Semana  6', 5, 7, 7, 7, 7],
-                    ['Semana  7', 5, 7, 7, 7, 7],
-                    ['Semana  8', 5, 7, 7, 7, 7],
-                    ['Semana  9', 5, 7, 7, 7, 7],
-                    ['Semana 10', 5, 7, 7, 7, 7],
-                    ['Semana 11', 5, 7, 7, 7, 7],
-                    ['Semana 12', 5, 7, 7, 7, 7],
-                    ['Semana 13', 5, 7, 7, 7, 7],
-                    ['Semana 14', 5, 7, 7, 7, 7],
-                    ['Semana 15', 5, 7, 7, 7, 7],
-                    ['Semana 16', 5, 7, 7, 7, 7],
-                    ['Semana 17', 5, 7, 7, 7, 7],
-                    ['Semana 18', 5, 7, 7, 7, 7],
-                    ['Semana 19', 5, 7, 7, 7, 7],
-                    ['Semana 20', 5, 7, 7, 7, 7],
-                    ['Semana 21', 5, 7, 7, 7, 7],
-                    ['Semana 22', 5, 7, 7, 7, 7],
-                    ['Semana 23', 5, 7, 7, 7, 7],
-                    ['Semana 24', 5, 7, 7, 7, 7],
-                    ['Semana 25', 5, 7, 7, 7, 7],
-                    ['Semana 26', 5, 7, 7, 7, 7],
-                    ['Semana 27', 5, 7, 7, 7, 7],
-                    ['Semana 28', 5, 7, 7, 7, 7],
-                    ['Semana 29', 5, 7, 7, 7, 7],
-                    ['Semana 30', 5, 7, 7, 7, 7],
-                    ['Semana 31', 5, 7, 7, 7, 7],
-                    ['Semana 32', 5, 7, 7, 7, 7],
-                    ['Semana 33', 5, 7, 7, 7, 7],
-                    ['Semana 34', 5, 7, 7, 7, 7],
-                    ['Semana 35', 5, 7, 7, 7, 7],
-                    ['Semana 36', 5, 7, 7, 7, 7],
-                    ['Semana 37', 5, 7, 7, 7, 7],
-                    ['Semana 38', 5, 7, 7, 7, 7],
-                    ['Semana 39', 5, 7, 7, 7, 7],
-                    ['Semana 40', 5, 7, 7, 7, 7],
-                    ['Semana 41', 5, 7, 7, 7, 7],
-                    ['Semana 42', 5, 7, 7, 7, 7],
-                    ['Semana 43', 5, 7, 7, 7, 7],
-                    ['Semana 44', 5, 7, 7, 7, 7],
-                    ['Semana 45', 5, 7, 7, 7, 7],
-                    ['Semana 46', 5, 7, 7, 7, 7],
-                    ['Semana 47', 5, 7, 7, 7, 7],
-                    ['Semana 48', 5, 7, 7, 7, 7],
-                    ['Semana 49', 5, 7, 7, 7, 7],
-                    ['Semana 50', 5, 7, 7, 7, 7]];
-            }
-
             function draw_chart() {
                 var options = {
                     title: 'Estoque',
@@ -333,12 +285,12 @@
             function processReport(json_state) {
                 if (state !== "r") {
                     report_data = [['Semana', 'Consumidor', 'Varejista', 'Atacadista', 'Distribuidor', 'Produtor']];
-                    
-                    for(var week in json_state.graph_data){
+
+                    for (var week in json_state.graph_data) {
                         var week_ax = json_state.graph_data[week];
-                        
+
                         var array = new Array(week_ax.week, week_ax.c, week_ax.r, week_ax.w, week_ax.d, week_ax.p);
-                        
+
                         report_data.push(array);
                     }
 
@@ -404,11 +356,11 @@
             <header class="mdl-layout__header">
                 <div class="mdl-layout-icon"> </div>
                 <div class="mdl-layout__header-row">
-                    <span class="mdl-layout__title">Simple Layout</span>
+                    <span class="mdl-layout__title"><%=(localize.getTextForKey(ClientLocalizationKeys.LANG_ID)) %></span>
                 </div>
             </header>
             <div class="mdl-layout__drawer">
-                <span class="mdl-layout__title">Simple Layout</span>
+                <span class="mdl-layout__title"><%=(localize.getTextForKey(ClientLocalizationKeys.LANG_ID)) %></span>
                 <nav class="mdl-navigation">
                     <a class="mdl-navigation__link" href="#">Nav link 1</a>
                     <a class="mdl-navigation__link" href="#">Nav link 2</a>

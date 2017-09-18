@@ -1,5 +1,6 @@
 package edu.utfpr.ct.webclient;
 
+import edu.utfpr.ct.dataextractor.Table;
 import edu.utfpr.ct.datamodel.AbstractNode;
 import edu.utfpr.ct.datamodel.EngineData;
 import edu.utfpr.ct.datamodel.Game;
@@ -36,6 +37,8 @@ public class GameUpdateServlet extends HttpServlet {
 
             String gameName = null;
             String playerName = null;
+            String s_function = null;
+            String s_week = null;
 
             boolean flag = true;
 
@@ -49,6 +52,20 @@ public class GameUpdateServlet extends HttpServlet {
                 flag = false;
             }
 
+            s_function = req.getParameter("table-function");
+            s_week = req.getParameter("table-week");
+
+            int func;
+            int week;
+
+            try {
+                func = Integer.parseInt(s_function);
+                week = Integer.parseInt(s_week);
+            }catch(NumberFormatException numEx){
+                func = -1;
+                week = -1;
+            }
+            
             if (flag) {
                 EngineData g = service.updateData(gameName, playerName);
 
@@ -60,6 +77,29 @@ public class GameUpdateServlet extends HttpServlet {
                         case Engine.RUNNING:
                             json.put("state", "playing");
                             json.put("your_turn", (playerName == null ? false : playerName.equals(g.playerOfTurn)));
+
+                            JSONArray table = new JSONArray();
+                            
+                            for (Table.Line line : service.getTableData(gameName).getNewLines(func, week)) {
+                                JSONObject lineData = new JSONObject();
+                                
+                                lineData.put("funtion", line.function.getPosition());
+                                lineData.put("week", line.week);
+                                lineData.put("current_stock", line.currentStock);
+                                lineData.put("profit", line.profit);
+                                lineData.put("move", line.playerMove);
+                                int k = 0;
+                                for(Integer order : line.order){
+                                    lineData.put("order_"+k, order);
+                                    k++;
+                                }
+                                lineData.put("demand", line.demand);
+                                
+                                table.add(lineData);
+                            }
+                            
+                            json.put("history", table);
+                            
                             break;
                         case Engine.FINISHED:
                             json.put("state", "reporting");
@@ -68,10 +108,10 @@ public class GameUpdateServlet extends HttpServlet {
                             JSONArray stocks = new JSONArray();
 
                             int max_size = ((((Node) g.game.supplyChain[0]).currentStock.size() - 1) / 10) + 1;
-                            
+
                             for (int k = 0; k < ((Node) g.game.supplyChain[0]).playerMove.size(); k++) {
                                 JSONObject weekData = new JSONObject();
-                                
+
                                 String week_text = String.format("%" + max_size + "d", k);
 
 //                                weekData.put("week", k);

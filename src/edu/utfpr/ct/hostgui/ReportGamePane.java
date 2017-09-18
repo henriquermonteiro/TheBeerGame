@@ -3,8 +3,8 @@ package edu.utfpr.ct.hostgui;
 import edu.utfpr.ct.datamodel.AbstractNode;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.datamodel.Node;
-import edu.utfpr.ct.localization.LocalizationKeys;
-import edu.utfpr.ct.localization.Localize;
+import edu.utfpr.ct.localization.HostLocalizationKeys;
+import edu.utfpr.ct.localization.LocalizeHost;
 import java.io.File;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Parent;
@@ -18,7 +18,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 
 public class ReportGamePane extends BorderPane{
-    private static final Image webImage = new Image(new File(Localize.getTextForKey(LocalizationKeys.WEB_ICON)).toURI().toString());
+    private static final Image webImage = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.WEB_ICON)).toURI().toString());
     
     private Game game;
     
@@ -51,7 +51,7 @@ public class ReportGamePane extends BorderPane{
         
         TabPane reports = new TabPane();
         
-        Tab general = new Tab(Localize.getTextForKey(LocalizationKeys.TITLE_REPORT_GENERAL));
+        Tab general = new Tab(LocalizeHost.getTextForKey(HostLocalizationKeys.TITLE_REPORT_GENERAL));
         general.setContent(generalPane());
         general.setClosable(false);
         
@@ -63,16 +63,16 @@ public class ReportGamePane extends BorderPane{
                 
                 switch(((Node) n).function.getPosition()){
                     case 1:
-                        s = Localize.getTextForKey(LocalizationKeys.TITLE_REPORT_RETAILER);
+                        s = LocalizeHost.getTextForKey(HostLocalizationKeys.TITLE_REPORT_RETAILER);
                         break;
                     case 2:
-                        s = Localize.getTextForKey(LocalizationKeys.TITLE_REPORT_WHOLESALER);
+                        s = LocalizeHost.getTextForKey(HostLocalizationKeys.TITLE_REPORT_WHOLESALER);
                         break;
                     case 3:
-                        s = Localize.getTextForKey(LocalizationKeys.TITLE_REPORT_DISTRIBUTOR);
+                        s = LocalizeHost.getTextForKey(HostLocalizationKeys.TITLE_REPORT_DISTRIBUTOR);
                         break;
                     case 4:
-                        s = Localize.getTextForKey(LocalizationKeys.TITLE_REPORT_PRODUCER);
+                        s = LocalizeHost.getTextForKey(HostLocalizationKeys.TITLE_REPORT_PRODUCER);
                         break;
                 }
                 

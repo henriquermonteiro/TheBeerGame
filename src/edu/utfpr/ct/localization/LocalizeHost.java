@@ -8,35 +8,27 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
-public class Localize
+public class LocalizeHost
 {
-	private static Map<String, Localize> localizes;
+	private static LocalizeHost localize;
 
 	private final String language;
 	private HashMap<String, String> stringMapping;
 
-	private Localize(String language)
+	private LocalizeHost()
 	{
-		this.language = language;
+		language = Locale.getDefault().getLanguage();
 		changeLanguage(language);
 	}
 
-	public static Localize getInstance()
+	public static LocalizeHost getInstance()
 	{
-		return getInstance(Locale.getDefault().getLanguage());
-	}
-
-	public static Localize getInstance(String language)
-	{
-		if(localizes == null)
-			localizes = new HashMap<>();
-
-		if(!localizes.containsKey(language))
-			localizes.put(language, new Localize(language));
-
-		return localizes.get(language);
+		if (localize == null) {
+                        localize = new LocalizeHost();
+                }
+ 
+                return localize;
 	}
 
 	public String getTextFor(String keyString)

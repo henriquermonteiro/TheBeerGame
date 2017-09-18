@@ -1,5 +1,6 @@
 package edu.utfpr.ct.webclient;
 
+import edu.utfpr.ct.dataextractor.Table;
 import edu.utfpr.ct.datamodel.EngineData;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.exception.FinalizedGameException;
@@ -203,6 +204,10 @@ public class ActionService {
     
     public EngineData updateData(String gameName, String playerName){
         return controler.getGameData(gameName, playerName);
+    }
+    
+    public Table getTableData(String gameName){
+        return controler.getTableData(gameName);
     }
     
     public Boolean gameHasFinished(String gameName){

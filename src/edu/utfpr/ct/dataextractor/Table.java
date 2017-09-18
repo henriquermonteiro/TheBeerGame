@@ -73,4 +73,8 @@ public class Table
 			this.order = new ArrayList<>();
 		}
 	}
+        
+        public List<Line> getNewLines(int function, int week){
+            return null; //TODO
+        }
 }

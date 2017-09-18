@@ -1,5 +1,6 @@
 package edu.utfpr.ct.interfaces;
 
+import edu.utfpr.ct.dataextractor.Table;
 import edu.utfpr.ct.datamodel.Game;
 
 public interface IControllerHost

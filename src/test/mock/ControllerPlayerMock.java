@@ -5,6 +5,7 @@
  */
 package test.mock;
 
+import edu.utfpr.ct.dataextractor.Table;
 import edu.utfpr.ct.datamodel.EngineData;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.gamecontroller.Engine;
@@ -89,6 +90,11 @@ public class ControllerPlayerMock implements IControllerPlayer {
     @Override
     public int getReportState(String gameName) {
         return 8;
+    }
+
+    @Override
+    public Table getTableData(String gameName) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
