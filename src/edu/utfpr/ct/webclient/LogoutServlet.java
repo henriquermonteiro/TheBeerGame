@@ -1,31 +1,38 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package edu.utfpr.ct.webclient;
 
 import java.io.IOException;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONObject;
-import edu.utfpr.ct.interfaces.IControllerPlayer;
 
+/**
+ *
+ * @author henrique
+ */
 @WebServlet(
-        name = "BeerGamePlayerService-Checkin",
-        urlPatterns = {"/checkin"}
+        name = "Logout-Service",
+        urlPatterns = {"/logout"}
 )
-public class CheckinServlet extends HttpServlet {
+public class LogoutServlet extends HttpServlet{
 
-    public CheckinServlet() {
+    public LogoutServlet() {
         super();
     }
-
+    
     private void answer(HttpServletResponse resp, Boolean OK) throws IOException {
         resp.setContentType("application/json");
 
         JSONObject json = new JSONObject();
 
-        json.put("accepted", OK);
+        json.put("logout", OK);
 
         resp.getOutputStream().write(json.toJSONString().getBytes());
         resp.getOutputStream().flush();
@@ -39,8 +46,8 @@ public class CheckinServlet extends HttpServlet {
             Object obj = getServletContext().getAttribute("action-service");
 
             if (obj instanceof ActionService) {
-                if (((ActionService) obj).isNameAvailable(player)) {
-                    answer(resp, ((ActionService) obj).checkIn(player).equals("")); // -2 significa que o nome está indisponível;
+                if (!((ActionService) obj).isNameAvailable(player)) {
+                    answer(resp, ((ActionService) obj).logout(player)); // -2 significa que o nome está indisponível;
                     return;
                 }
             }
@@ -59,5 +66,4 @@ public class CheckinServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         checkin(req, resp);
     }
-
 }

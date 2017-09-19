@@ -20,7 +20,7 @@ public class Engine
 	public static final int FINISHED = 8;
 
 	private final Set<String> players;
-	private final Table table;
+	private Table table;
 	private Game game;
 	private boolean clientTurn;
 	private IFunction turn;
@@ -30,7 +30,7 @@ public class Engine
 	public Engine()
 	{
 		this.players = new HashSet<>();
-		this.table = new Table(game);
+//		this.table = new Table(game);
 	}
 
 	public Game getGame()
@@ -51,6 +51,8 @@ public class Engine
 		this.game = game;
 		this.turn = function;
 		resetConfigs(clearPlayers);
+                
+		this.table = new Table(game);
 	}
 
 	public boolean isClientTurn()
@@ -219,6 +221,8 @@ public class Engine
 				game.supplyChain[position] = travellingTime;
 			}
 		}
+                
+                table.buildTable();
 	}
 
 	public Table getTable()

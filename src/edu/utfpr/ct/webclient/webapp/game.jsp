@@ -407,118 +407,89 @@
                     </div>
 
                     <div id="game-panel" class="hidden">
-                        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-tabs">
-                            <header class="mdl-layout__header tab-smaller">
-                                <!-- Tabs -->
-                                <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
-                                    <!--a href="#fixed-tab-1" class="mdl-layout__tab">Jogo</a-->
-                                    <a href="#fixed-tab-2" class="mdl-layout__tab is-active">Detalhes</a>
-                                </div>
-                            </header>
-                            <main class="mdl-layout__content">
-                                <section class="mdl-layout__tab-panel hidden" id="fixed-tab-1">
-                                    <div class="page-content">
-                                        <div class="game-card mdl-card mdl-shadow--3dp">
-                                            <div class="mdl-card__media">
-                                                <div class="hidden">
-                                                    <img id="ind" src="resources/Industry.png">
-                                                    <img id="dis" src="resources/distributor.png">
-                                                    <img id="who" src="resources/wholesaler.png">
-                                                    <img id="ret" src="resources/retailer.png">
-                                                </div>
-                                                <canvas id="game_canvas" width="480" height="480">
-                                                </canvas>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </section>
-                                <section class="mdl-layout__tab-panel  is-active" id="fixed-tab-2">
-                                    <div class="table-card mdl-card mdl-shadow--6dp mdl-card--horizontal">
-                                        <div class="mdl-card__supporting-text  mdl-card--border">
-                                            <span>Semana </span><span id="curweek">k</span>/<span id="totweek">L</span>
-                                        </div>
-                                        <div class="mdl-card__media mdl-card--border">
+                        <div class="table-card mdl-card mdl-shadow--6dp mdl-card--horizontal">
+                            <div class="mdl-card__supporting-text  mdl-card--border">
+                                <span>Semana </span><span id="curweek">k</span>/<span id="totweek">L</span>
+                            </div>
+                            <div class="mdl-card__media mdl-card--border">
+                                <table>
+                                    <tr>
+                                        <th>Retailer
+                                        <th>Wholesaler
+                                        <th>Distributor
+                                        <th>Producer
+                                    </tr>
+                                    <tr id="image">
+                                        <td><img src="resources\retailer.png" alt="Retailer">
+                                        <td><img src="resources\wholesaler.png" alt="Wholesaler">
+                                        <td><img src="resources\distributor.png" alt="Distributor">
+                                        <td><img src="resources\Industry.png" alt="Producer">
+
+                                    <tr id="name">
+                                        <td id="retailer"><b>Nome: </b><span id="RETAILER_name2">Name 1</span>
+                                        <td id="wholesaler"><b>Nome: </b><span id="WHOLESALER_name2">Name 2</span>
+                                        <td id="distributor"><b>Nome: </b><span id="DISTRIBUTOR_name2">Name 3</span>
+                                        <td id="producer"><b>Nome: </b><span id="PRODUCER_name2">Name 4</span>
+
+                                    <tr id="profit">
+                                        <td id="retailer"><b>Custo: </b><span id="RETAILER_cost">0.00</span>
+                                        <td id="wholesaler"><b>Custo: </b><span id="WHOLESALER_cost">0.00</span>
+                                        <td id="distributor"><b>Custo: </b><span id="DISTRIBUTOR_cost">0.00</span>
+                                        <td id="producer"><b>Custo: </b><span id="PRODUCER_cost">0.00</span>
+
+                                    <tr id="stock">
+                                        <td id="retailer"><b>Estoque: </b><span id="RETAILER_stock">16</span>
+                                        <td id="wholesaler"><b>Estoque: </b><span id="WHOLESALER_stock">16</span>
+                                        <td id="distributor"><b>Estoque: </b><span id="DISTRIBUTOR_stock">16</span>
+                                        <td id="producer"><b>Estoque: </b><span id="PRODUCER_stock">16</span>
+                                    <tr id="incoming-order">
+                                        <td id="retailer">
                                             <table>
-                                                <tr>
-                                                    <th>Retailer
-                                                    <th>Wholesaler
-                                                    <th>Distributor
-                                                    <th>Producer
-                                                </tr>
-                                                <tr id="image">
-                                                    <td><img src="resources\retailer.png" alt="Retailer">
-                                                    <td><img src="resources\wholesaler.png" alt="Wholesaler">
-                                                    <td><img src="resources\distributor.png" alt="Distributor">
-                                                    <td><img src="resources\Industry.png" alt="Producer">
-
-                                                <tr id="name">
-                                                    <td id="retailer"><b>Nome: </b><span id="RETAILER_name2">Name 1</span>
-                                                    <td id="wholesaler"><b>Nome: </b><span id="WHOLESALER_name2">Name 2</span>
-                                                    <td id="distributor"><b>Nome: </b><span id="DISTRIBUTOR_name2">Name 3</span>
-                                                    <td id="producer"><b>Nome: </b><span id="PRODUCER_name2">Name 4</span>
-
-                                                <tr id="profit">
-                                                    <td id="retailer"><b>Custo: </b><span id="RETAILER_cost">0.00</span>
-                                                    <td id="wholesaler"><b>Custo: </b><span id="WHOLESALER_cost">0.00</span>
-                                                    <td id="distributor"><b>Custo: </b><span id="DISTRIBUTOR_cost">0.00</span>
-                                                    <td id="producer"><b>Custo: </b><span id="PRODUCER_cost">0.00</span>
-
-                                                <tr id="stock">
-                                                    <td id="retailer"><b>Estoque: </b><span id="RETAILER_stock">16</span>
-                                                    <td id="wholesaler"><b>Estoque: </b><span id="WHOLESALER_stock">16</span>
-                                                    <td id="distributor"><b>Estoque: </b><span id="DISTRIBUTOR_stock">16</span>
-                                                    <td id="producer"><b>Estoque: </b><span id="PRODUCER_stock">16</span>
-                                                <tr id="incoming-order">
-                                                    <td id="retailer">
-                                                        <table>
-                                                            <tr> <td>? <td id="RETAILER_inc_1">4
-                                                            <tr> <td>  <td id="RETAILER_inc_2">&nbsp</td>
-                                                        </table>
-
-                                                    <td id="wholesaler">
-                                                        <table>
-                                                            <tr> <td>? <td id="WHOLESALER_inc_1">4
-                                                            <tr> <td>? <td id="WHOLESALER_inc_2">4
-                                                        </table>
-
-                                                    <td id="distributor">
-                                                        <table>
-                                                            <tr> <td>? <td id="DISTRIBUTOR_inc_1">4
-                                                            <tr> <td>? <td id="DISTRIBUTOR_inc_2">4
-                                                        </table>
-
-                                                    <td id="producer">
-                                                        <table>
-                                                            <tr> <td>? <td id="PRODUCER_inc_1">4
-                                                            <tr> <td>? <td id="PRODUCER_inc_2">4
-                                                        </table>
+                                                <tr> <td>? <td id="RETAILER_inc_1">4
+                                                <tr> <td>  <td id="RETAILER_inc_2">&nbsp</td>
                                             </table>
-                                        </div>
-                                        <div class="mdl-card__supporting-text  mdl-card--border">
-                                            <span>Histórico</span>
-                                        </div>
-                                        <div class="mdl-card__media mdl-card--border">
-                                            <table id="history">
-                                                <tr>
-                                                    <th>Function
-                                                    <th>Week
-                                                    <th>Stock
-                                                    <th>Profit
-                                                    <th colspan="2">Incoming Order
-                                                    <th>Demand
-                                                <tr>
-                                                    <td>Wholesaler
-                                                    <td>1
-                                                    <td>16
-                                                    <td>0.00
-                                                    <td>4
-                                                    <td>10
-                                                    <td>8
+
+                                        <td id="wholesaler">
+                                            <table>
+                                                <tr> <td>? <td id="WHOLESALER_inc_1">4
+                                                <tr> <td>? <td id="WHOLESALER_inc_2">4
                                             </table>
-                                        </div>
-                                    </div>
-                                </section>
-                            </main>
+
+                                        <td id="distributor">
+                                            <table>
+                                                <tr> <td>? <td id="DISTRIBUTOR_inc_1">4
+                                                <tr> <td>? <td id="DISTRIBUTOR_inc_2">4
+                                            </table>
+
+                                        <td id="producer">
+                                            <table>
+                                                <tr> <td>? <td id="PRODUCER_inc_1">4
+                                                <tr> <td>? <td id="PRODUCER_inc_2">4
+                                            </table>
+                                </table>
+                            </div>
+                            <div class="mdl-card__supporting-text  mdl-card--border">
+                                <span>Histórico</span>
+                            </div>
+                            <div class="mdl-card__media mdl-card--border">
+                                <table id="history">
+                                    <tr>
+                                        <th>Function
+                                        <th>Week
+                                        <th>Stock
+                                        <th>Profit
+                                        <th colspan="2">Incoming Order
+                                        <th>Demand
+                                    <tr>
+                                        <td>Wholesaler
+                                        <td>1
+                                        <td>16
+                                        <td>0.00
+                                        <td>4
+                                        <td>10
+                                        <td>8
+                                </table>
+                            </div>
                         </div>
                         <div class="control-panel page-content">
                             <div class="half-oval-shaped drop-shadow">
@@ -599,7 +570,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </main>
         </div>

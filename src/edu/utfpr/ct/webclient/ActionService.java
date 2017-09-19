@@ -3,7 +3,6 @@ package edu.utfpr.ct.webclient;
 import edu.utfpr.ct.dataextractor.Table;
 import edu.utfpr.ct.datamodel.EngineData;
 import edu.utfpr.ct.datamodel.Game;
-import edu.utfpr.ct.exception.FinalizedGameException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -20,7 +19,6 @@ import org.apache.catalina.webresources.EmptyResourceSet;
 import org.apache.catalina.webresources.StandardRoot;
 import org.apache.tomcat.util.scan.Constants;
 import org.apache.tomcat.util.scan.StandardJarScanFilter;
-import test.mock.ControllerPlayerMock;
 import edu.utfpr.ct.interfaces.IControllerPlayer;
 
 public class ActionService {
@@ -50,58 +48,6 @@ public class ActionService {
         } catch (URISyntaxException ex) {
             throw new RuntimeException(ex);
         }
-    }
-
-    public static void main(String[] args) throws Exception {
-        new ActionService(new ControllerPlayerMock());
-//        File root = getRootFolder();
-//        System.setProperty("org.apache.catalina.startup.EXIT_ON_INIT_FAILURE", "true");
-//        Tomcat tomcat = new Tomcat();
-//        Path tempPath = Files.createTempDirectory("tomcat-base-dir");
-//        tomcat.setBaseDir(tempPath.toString());
-//        
-//        //The port that we should run on can be set into an environment variable
-//        //Look for that variable and default to 8080 if it isn't there.
-//        String webPort = System.getenv("PORT");
-//        if (webPort == null || webPort.isEmpty()) {
-//            webPort = "8081";
-//        }
-//
-//        tomcat.setPort(Integer.valueOf(webPort));
-//        File webContentFolder = new File(root.getAbsolutePath(), "src/edu/utfpr/ct/webclient/webapp/");
-//        if (!webContentFolder.exists()) {
-//            webContentFolder = Files.createTempDirectory("default-doc-base").toFile();
-//        }
-//        StandardContext ctx = (StandardContext) tomcat.addWebapp("", webContentFolder.getAbsolutePath());
-//        //Set execution independent of current thread context classloader (compatibility with exec:java mojo)
-//        ctx.setParentClassLoader(ActionService.class.getClassLoader());
-//
-//        //Disable TLD scanning by default
-//        if (System.getProperty(Constants.SKIP_JARS_PROPERTY) == null && System.getProperty(Constants.SKIP_JARS_PROPERTY) == null) {
-//            System.out.println("disabling TLD scanning");
-//            StandardJarScanFilter jarScanFilter = (StandardJarScanFilter) ctx.getJarScanner().getJarScanFilter();
-//            jarScanFilter.setTldSkip("*");
-//        }
-//
-//        System.out.println("configuring app with basedir: " + webContentFolder.getAbsolutePath());
-//
-//        // Declare an alternative location for your "WEB-INF/classes" dir
-//        // Servlet 3.0 annotation will work
-//        File additionWebInfClassesFolder = new File(root.getAbsolutePath(), "build/classes");
-//        WebResourceRoot resources = new StandardRoot(ctx);
-//
-//        WebResourceSet resourceSet;
-//        if (additionWebInfClassesFolder.exists()) {
-//            resourceSet = new DirResourceSet(resources, "/WEB-INF/classes", additionWebInfClassesFolder.getAbsolutePath(), "/");
-//            System.out.println("loading WEB-INF resources from as '" + additionWebInfClassesFolder.getAbsolutePath() + "'");
-//        } else {
-//            resourceSet = new EmptyResourceSet(resources);
-//        }
-//        resources.addPreResources(resourceSet);
-//        ctx.setResources(resources);
-//
-//        tomcat.start();
-//        tomcat.getServer().await();
     }
 
     public ActionService(IControllerPlayer controler) throws ServletException, LifecycleException, IOException {
@@ -216,5 +162,13 @@ public class ActionService {
         if(ret == 1 || ret == 2) return false;
         
         return (ret == -1 ? true : null);
+    }
+
+    public boolean isNameAvailable(String player) {
+        return controler.isNameAvailable(player);
+    }
+
+    public boolean logout(String player) {
+        return controler.logout(player);
     }
 }

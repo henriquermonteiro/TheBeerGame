@@ -11,7 +11,7 @@ import java.util.List;
 public class Table
 {
 	private final Game game;
-	private final AbstractNode[] supplyChain;
+	private AbstractNode[] supplyChain;
 	private final List<Integer> currentWeek;
 	private final List<Line> lines;
 
@@ -19,18 +19,20 @@ public class Table
 	{
 		this.game = game;
 		this.currentWeek = new ArrayList<>();
-		this.supplyChain = game.supplyChain;
 		this.lines = new ArrayList<>();
-
-		for(AbstractNode abstractNode : supplyChain)
-			if(!(abstractNode instanceof TravellingTime))
-				currentWeek.add(0);
 	}
 
 	public List<Line> getLines()
 	{
 		return lines;
 	}
+        
+        public void buildTable(){
+		this.supplyChain = game.supplyChain;
+                for(AbstractNode abstractNode : supplyChain)
+                            if(!(abstractNode instanceof TravellingTime))
+                                    currentWeek.add(0);
+        }
 
 	public void updateLines()
 	{

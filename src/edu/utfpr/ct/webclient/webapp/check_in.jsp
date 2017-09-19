@@ -2,11 +2,20 @@
 <%@page import="java.net.*" %>
 <%@page import="org.json.simple.*" %>
 <%@page import="org.json.simple.parser.*" %>
+<%@page import="edu.utfpr.ct.localization.*" %>
+
 <%
     //System.out.println("Test - " + request.getMethod());
     if(session.getAttribute("USER-ID") != null){
         response.sendRedirect("/choose_room.jsp");
     }
+    
+    String lang = "default";
+    if(session.getAttribute("PREF-LANG") != null){ 
+        lang = (String) session.getAttribute("PREF-LANG");
+    }
+    
+    LocalizeClient localize = ClientLocalizationManager.getInstance().getClientFor(lang);
     
     String hidden = (request.getParameter("warning") != null ? "" : " hidden");
     
@@ -75,37 +84,19 @@
             }
         </script>
     </head>
-    <body onload="bubbles();">
-        <div class="mdl-layout mdl-js-layout">
-            <header class="mdl-layout__header">
-                <div class="mdl-layout-icon"> </div>
-                <div class="mdl-layout__header-row">
-                    <span class="mdl-layout__title">Simple Layout</span>
-                </div>
-            </header>
-            <div class="mdl-layout__drawer">
-                <span class="mdl-layout__title">Simple Layout</span>
-                <nav class="mdl-navigation">
-                    <a class="mdl-navigation__link" href="#">Nav link 1</a>
-                    <a class="mdl-navigation__link" href="#">Nav link 2</a>
-                    <a class="mdl-navigation__link" href="#">Nav link 3</a>
-                </nav>
-            </div>
-            <main class="mdl-layout__content">
-                <div id="bub_back" class="bubbles"></div>
-
+        <jsp:include page="resources/body_begin.jsp"/>
                 <div class="center-content">
                     <div class="login-card mdl-card mdl-shadow--2dp">
                         <div class="mdl-card__title mdl-card--expand">
-                            <h2 class="mdl-card__title-text">JOGO DA CERVEJA!</h2>
+                            <h2 class="mdl-card__title-text"><%=(localize.getTextForKey(ClientLocalizationKeys.CHECKIN_TITLE))%></h2>
                         </div>
                         <div class="mdl-card__supporting-text">
                             <form name="login" action="/check_in.jsp" onsubmit="validateForm()" method="POST">
-                                <span id="inv_name" class="warning<%=hidden %>">O nome já está sendo usado.</span>
+                                <span id="inv_name" class="warning<%=hidden %>"><%=(localize.getTextForKey(ClientLocalizationKeys.CHECKIN_WARNING))%></span>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                     <input name="nickname" class="mdl-textfield__input" type="text" pattern="-?[A-Z,a-z,0-9]{6,36}?" id="sample4">
-                                    <label class="mdl-textfield__label" for="sample4">Apelido...</label>
-                                    <span class="mdl-textfield__error">Não é um nome válido!</span>
+                                    <label class="mdl-textfield__label" for="sample4"><%=(localize.getTextForKey(ClientLocalizationKeys.CHECKIN_TEXT_LABEL))%></label>
+                                    <span class="mdl-textfield__error"><%=(localize.getTextForKey(ClientLocalizationKeys.CHECKIN_TEXT_ERROR))%></span>
                                 </div>
                             </form>
                         </div>
@@ -114,7 +105,7 @@
                         </div-->
                         <div class="mdl-card__actions">
                             <button onclick="submitForm()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
-                                Entrar
+                                <%=(localize.getTextForKey(ClientLocalizationKeys.CHECKIN_SUBMIT))%>
                             </button>
                         </div>
                     </div>

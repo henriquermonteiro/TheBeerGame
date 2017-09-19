@@ -20,8 +20,8 @@ public class TheBeerGame
 //		new Demo().testGameOperations();
 //		new Demo().testLoggerOperations();
 
-		new ReportTest().test();
-		//new ActionService(Controller.getController());
-		//new StartFrame(Controller.getController()).runGUI();
+//		new ReportTest().test();
+		new ActionService(Controller.getController());
+		new StartFrame(Controller.getController()).runGUI();
 	}
 }

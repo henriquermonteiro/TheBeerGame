@@ -94,4 +94,8 @@ public interface IControllerPlayer
 	public int getReportState(String gameName);
         
         public Table getTableData(String gameName);
+        
+        public boolean isNameAvailable(String playerName);
+
+        public boolean logout(String player);
 }

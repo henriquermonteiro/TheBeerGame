@@ -21,6 +21,7 @@ import edu.utfpr.ct.interfaces.IControllerHost;
 import edu.utfpr.ct.interfaces.ILogger;
 import java.util.Arrays;
 import edu.utfpr.ct.interfaces.IControllerPlayer;
+import java.util.HashSet;
 
 public class Controller implements IControllerHost, IControllerPlayer
 {
@@ -30,6 +31,7 @@ public class Controller implements IControllerHost, IControllerPlayer
 	private final IReport reportManager;
 	private final ILogger logger;
 	private final DataExtractor dataExtractor;
+        private final HashSet<String> players;
 
 	private StartFrame hostGUI;
 
@@ -40,6 +42,7 @@ public class Controller implements IControllerHost, IControllerPlayer
 		this.reportManager = new ReportManager();
 		this.logger = Logger.getLogger();
 		this.dataExtractor = DataExtractor.getDataExtractor();
+                this.players = new HashSet<>();
 
 		loadResources();
 	}
@@ -65,6 +68,7 @@ public class Controller implements IControllerHost, IControllerPlayer
 		{
 			engine = new Engine();
 			engine.setGame(game, Function.RETAILER);
+                        engine.buildGame();
 			engine.rebuildOrders();
 
 			if(engine.getState() == Engine.FINISHED)
@@ -346,11 +350,25 @@ public class Controller implements IControllerHost, IControllerPlayer
 
 		return qty;
 	}
+        
+        @Override
+        public boolean isNameAvailable(String playerName){
+            return !players.contains(playerName);
+        }
+        
+        @Override
+        public boolean logout(String playerName){
+            return players.remove(playerName);
+        }
 
 	/* IControllerPlayer2 */
 	@Override
 	public String checkIn(String playerName)
 	{
+                if(!players.contains(playerName)){
+                    players.add(playerName);
+                }
+                
 		for(Engine engine : engines.values())
 		{
 			if(Arrays.stream(engine.getPlayers()).anyMatch(playerName::equals))
