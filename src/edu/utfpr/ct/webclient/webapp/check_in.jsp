@@ -5,7 +5,6 @@
 <%@page import="edu.utfpr.ct.localization.*" %>
 
 <%
-    //System.out.println("Test - " + request.getMethod());
     if(session.getAttribute("USER-ID") != null){
         response.sendRedirect("/choose_room.jsp");
     }
@@ -43,25 +42,10 @@
             session.setAttribute("USER-ID", nick);
             response.sendRedirect("/choose_room.jsp");
         }
-        
-        //if(nick != null && nick != ""){
-            //System.out.println("o/ " + nick);
-            //session.setAttribute("USER-ID", nick);
-            //System.out.println("\\o " + session.getAttribute("USER-ID"));
-            //response.sendRedirect("/select-room.jsp");
-        //}
     }
 %>
-<!DOCTYPE html>
-<html>
-    <head>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-        <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.amber-blue.min.css" />
-        <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-        <meta charset="utf-8"/>
-        <link rel="stylesheet" type="text/css" href="bub.css"/>
-        <link rel="stylesheet" type="text/css" href="login.css"/>
-        <script src="bub.js"></script>
+<jsp:include page="resources/head_begin.jsp"/>
+<link rel="stylesheet" type="text/css" href="login.css"/>
         <script type="text/javascript">
             function validateForm(){
                 var input = document.getElementById("sample4");
@@ -83,7 +67,7 @@
                 }
             }
         </script>
-    </head>
+        <jsp:include page="resources/head_finish.jsp"/>
         <jsp:include page="resources/body_begin.jsp"/>
                 <div class="center-content">
                     <div class="login-card mdl-card mdl-shadow--2dp">
@@ -100,9 +84,6 @@
                                 </div>
                             </form>
                         </div>
-                        <!--div class="mdl-card__supporting-text">
-                            <a href="/choose_room.jsp?guest">Entrar como convidado</a>
-                        </div-->
                         <div class="mdl-card__actions">
                             <button onclick="submitForm()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
                                 <%=(localize.getTextForKey(ClientLocalizationKeys.CHECKIN_SUBMIT))%>
@@ -110,8 +91,4 @@
                         </div>
                     </div>
                 </div>
-            </main>
-        </div>
-    </body>
-
-</html>
+        <jsp:include page="resources/body_finish.jsp" />

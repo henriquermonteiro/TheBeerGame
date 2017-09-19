@@ -22,4 +22,9 @@ public class ClientLocalizationKeys {
     public static final String CHECKIN_SUBMIT = "CHECKIN-ENTER-BUTTON";
     
     public static final String CHOOSE_SUBMIT = "CHOOSE-ENTER-BUTTON";
+    public static final String CHOOSE_PW_TEXT = "CHOOSE-PASSWORD-TEXT";
+    public static final String CHOOSE_PW_LABEL = "CHOOSE-PASSWORD-LABEL";
+    public static final String CHOOSE_PW_WARNING = "CHOOSE-PASSWORD-WARNING";
+    public static final String CHOOSE_PW_ENTER = "CHOOSE-PASSWORD-ENTER";
+    public static final String CHOOSE_PW_CLOSE = "CHOOSE-PASSWORD-CLOSE";
 }

@@ -11,7 +11,7 @@
     
     LocalizeClient localize = ClientLocalizationManager.getInstance().getClientFor(lang);
 %>
-    <body onload="bubbles();">
+    <% if(!"true".equals(request.getParameter("hide_body"))){ %><body onload="bubbles();"><% }%>
         <div class="mdl-layout mdl-js-layout">
             <header class="mdl-layout__header">
                 <div class="mdl-layout-icon"> </div>

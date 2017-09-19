@@ -5,41 +5,20 @@
 <%@page import="edu.utfpr.ct.localization.*" %>
 
 <%
-//    System.out.println("Test Game - " + request.getMethod());
     if(session.getAttribute("USER-ID") == null || ((String)session.getAttribute("USER-ID")).isEmpty() || session.getAttribute("LOGGED_GAME") == null || ((String)session.getAttribute("LOGGED_GAME")).isEmpty() ){
         response.sendRedirect("/check_in.jsp");
     }
     
     String lang = "default";
-    if(session.getAttribute("PREF-LANG") != null) lang = session.getAttribute("PREF-LANG");
+    if(session.getAttribute("PREF-LANG") != null){ 
+        lang = (String) session.getAttribute("PREF-LANG");
+    }
     
     LocalizeClient localize = ClientLocalizationManager.getInstance().getClientFor(lang);
-    
-    /*String recv;
-    String recvbuff = "";
-    URL checkin_json = new URL(request.getScheme(), request.getServerName(), request.getServerPort(), "/update.jsp");
-    HttpURLConnection urlcon = (HttpURLConnection)checkin_json.openConnection();
-    urlcon.setRequestMethod("POST");
-    BufferedReader buffread = new BufferedReader(new InputStreamReader(urlcon.getInputStream()));
-
-    while ((recv = buffread.readLine()) != null)
-        recvbuff += recv;
-    buffread.close();
-        
-    JSONParser parser = new JSONParser();
-    JSONObject json = (JSONObject) parser.parse(recvbuff);
-    JSONArray list = (JSONArray)json.get("game_state");*/
+ 
 %>
-<!DOCTYPE html>
-<html>
-    <head>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-        <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.amber-blue.min.css" />
-        <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-        <meta charset="utf-8"/>
-        <link rel="stylesheet" type="text/css" href="bub.css"/>
+<jsp:include page="resources/head_begin.jsp"/>
         <link rel="stylesheet" type="text/css" href="game.css"/>
-        <script src="bub.js"></script>
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
         <script>
             google.charts.load('current', {'packages': ['corechart']});
@@ -350,231 +329,211 @@
             }
 
         </script>
-    </head>
-    <body onload="initialize();">
-        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-            <header class="mdl-layout__header">
-                <div class="mdl-layout-icon"> </div>
-                <div class="mdl-layout__header-row">
-                    <span class="mdl-layout__title"><%=(localize.getTextForKey(ClientLocalizationKeys.LANG_ID)) %></span>
+        <jsp:include page="resources/head_finish.jsp"/>
+        <body onload="initialize();">
+        <jsp:include page="resources/body_begin.jsp">
+            <jsp:param name="hide_body" value="true"/>
+        </jsp:include>
+
+    <div class="center-content">
+        <div id="waiting">
+            <div class="wait-card mdl-card mdl-shadow--2dp">
+                <div class="mdl-card__title mdl-card--expand">
+                    <h2 class="mdl-card__title-text">Esperando Jogadores</h2>
                 </div>
-            </header>
-            <div class="mdl-layout__drawer">
-                <span class="mdl-layout__title"><%=(localize.getTextForKey(ClientLocalizationKeys.LANG_ID)) %></span>
-                <nav class="mdl-navigation">
-                    <a class="mdl-navigation__link" href="#">Nav link 1</a>
-                    <a class="mdl-navigation__link" href="#">Nav link 2</a>
-                    <a class="mdl-navigation__link" href="#">Nav link 3</a>
-                </nav>
+                <div class="mdl-card__media">
+                    <div class="table">
+                        <div class="row">
+                            <div class="cell">
+                                <img id="PRODUCER_img" src="resources/Industry.png" style="width: 120px; height: 120px;">
+                                <p id="PRODUCER_name"></p>
+                            </div>
+                            <div class="cell">
+                                <img id="DISTRIBUTOR_img" src="resources/distributor.png" style="width: 120px; height: 120px;">
+                                <p id="DISTRIBUTOR_name"></p>
+                            </div>
+                            <div class="cell">
+                                <img id="WHOLESALER_img" src="resources/wholesaler.png" style="width: 120px; height: 120px;">
+                                <p id="WHOLESALER_name"></p>
+                            </div>
+                            <div class="cell">
+                                <img id="RETAILER_img" src="resources/retailer.png" style="width: 120px; height: 120px;">
+                                <p id="RETAILER_name"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="waiting-spinner">
+                        <div class="spinner-sizer">
+                            <div class="mdl-spinner mdl-js-spinner is-active"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <main class="mdl-layout__content">
-                <div id="bub_back" class="bubbles"></div>
-
-                <div class="center-content">
-                    <div id="waiting">
-                        <div class="wait-card mdl-card mdl-shadow--2dp">
-                            <div class="mdl-card__title mdl-card--expand">
-                                <h2 class="mdl-card__title-text">Esperando Jogadores</h2>
-                            </div>
-                            <div class="mdl-card__media">
-                                <div class="table">
-                                    <div class="row">
-                                        <div class="cell">
-                                            <img id="PRODUCER_img" src="resources/Industry.png" style="width: 120px; height: 120px;">
-                                            <p id="PRODUCER_name"></p>
-                                        </div>
-                                        <div class="cell">
-                                            <img id="DISTRIBUTOR_img" src="resources/distributor.png" style="width: 120px; height: 120px;">
-                                            <p id="DISTRIBUTOR_name"></p>
-                                        </div>
-                                        <div class="cell">
-                                            <img id="WHOLESALER_img" src="resources/wholesaler.png" style="width: 120px; height: 120px;">
-                                            <p id="WHOLESALER_name"></p>
-                                        </div>
-                                        <div class="cell">
-                                            <img id="RETAILER_img" src="resources/retailer.png" style="width: 120px; height: 120px;">
-                                            <p id="RETAILER_name"></p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="waiting-spinner">
-                                    <div class="spinner-sizer">
-                                        <div class="mdl-spinner mdl-js-spinner is-active"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="game-panel" class="hidden">
-                        <div class="table-card mdl-card mdl-shadow--6dp mdl-card--horizontal">
-                            <div class="mdl-card__supporting-text  mdl-card--border">
-                                <span>Semana </span><span id="curweek">k</span>/<span id="totweek">L</span>
-                            </div>
-                            <div class="mdl-card__media mdl-card--border">
-                                <table>
-                                    <tr>
-                                        <th>Retailer
-                                        <th>Wholesaler
-                                        <th>Distributor
-                                        <th>Producer
-                                    </tr>
-                                    <tr id="image">
-                                        <td><img src="resources\retailer.png" alt="Retailer">
-                                        <td><img src="resources\wholesaler.png" alt="Wholesaler">
-                                        <td><img src="resources\distributor.png" alt="Distributor">
-                                        <td><img src="resources\Industry.png" alt="Producer">
-
-                                    <tr id="name">
-                                        <td id="retailer"><b>Nome: </b><span id="RETAILER_name2">Name 1</span>
-                                        <td id="wholesaler"><b>Nome: </b><span id="WHOLESALER_name2">Name 2</span>
-                                        <td id="distributor"><b>Nome: </b><span id="DISTRIBUTOR_name2">Name 3</span>
-                                        <td id="producer"><b>Nome: </b><span id="PRODUCER_name2">Name 4</span>
-
-                                    <tr id="profit">
-                                        <td id="retailer"><b>Custo: </b><span id="RETAILER_cost">0.00</span>
-                                        <td id="wholesaler"><b>Custo: </b><span id="WHOLESALER_cost">0.00</span>
-                                        <td id="distributor"><b>Custo: </b><span id="DISTRIBUTOR_cost">0.00</span>
-                                        <td id="producer"><b>Custo: </b><span id="PRODUCER_cost">0.00</span>
-
-                                    <tr id="stock">
-                                        <td id="retailer"><b>Estoque: </b><span id="RETAILER_stock">16</span>
-                                        <td id="wholesaler"><b>Estoque: </b><span id="WHOLESALER_stock">16</span>
-                                        <td id="distributor"><b>Estoque: </b><span id="DISTRIBUTOR_stock">16</span>
-                                        <td id="producer"><b>Estoque: </b><span id="PRODUCER_stock">16</span>
-                                    <tr id="incoming-order">
-                                        <td id="retailer">
-                                            <table>
-                                                <tr> <td>? <td id="RETAILER_inc_1">4
-                                                <tr> <td>  <td id="RETAILER_inc_2">&nbsp</td>
-                                            </table>
-
-                                        <td id="wholesaler">
-                                            <table>
-                                                <tr> <td>? <td id="WHOLESALER_inc_1">4
-                                                <tr> <td>? <td id="WHOLESALER_inc_2">4
-                                            </table>
-
-                                        <td id="distributor">
-                                            <table>
-                                                <tr> <td>? <td id="DISTRIBUTOR_inc_1">4
-                                                <tr> <td>? <td id="DISTRIBUTOR_inc_2">4
-                                            </table>
-
-                                        <td id="producer">
-                                            <table>
-                                                <tr> <td>? <td id="PRODUCER_inc_1">4
-                                                <tr> <td>? <td id="PRODUCER_inc_2">4
-                                            </table>
-                                </table>
-                            </div>
-                            <div class="mdl-card__supporting-text  mdl-card--border">
-                                <span>Histórico</span>
-                            </div>
-                            <div class="mdl-card__media mdl-card--border">
-                                <table id="history">
-                                    <tr>
-                                        <th>Function
-                                        <th>Week
-                                        <th>Stock
-                                        <th>Profit
-                                        <th colspan="2">Incoming Order
-                                        <th>Demand
-                                    <tr>
-                                        <td>Wholesaler
-                                        <td>1
-                                        <td>16
-                                        <td>0.00
-                                        <td>4
-                                        <td>10
-                                        <td>8
-                                </table>
-                            </div>
-                        </div>
-                        <div class="control-panel page-content">
-                            <div class="half-oval-shaped drop-shadow">
-                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <input class="mdl-textfield__input" type="text" pattern="-?[0-9]{1,9}?" id="order__input">
-                                    <label class="mdl-textfield__label" for="order_input" id="order__label">Pedido</label>
-                                    <span class="mdl-textfield__error">Não é um pedido válido!</span>
-                                </div>
-                                <span style="display: inline-block;">
-                                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" id="order__button" onclick="send_request();">
-                                        Enviar Pedido
-                                    </button>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="report-panel" class="hidden">
-                        <div class="mdl-card mdl-shadow--6dp mdl-card--horizontal">
-                            <div class="mdl-card__supporting-text mdl-card--border">
-                                <p style="display: table; width: 100%;">
-                                    <label style="display: table-row; font-size: 22px;"><b>Nome: </b><span id="rep_name">Sala B-204</span></label>
-                                    <label style="display: table-row;"><b>Tipo: </b><span id="rep_type">Não Informada</span></label>
-                                </p>
-                            </div>
-                            <div class="mdl-card__supporting-text mdl-card--border">
-                                <p style="display: table; width: 100%;">
-                                    <label style="display: table-cell;"><b>Custo Armazenamento: </b><span id="rep_stockcost">0,5</span></label>
-                                    <label style="display: table-cell;"><b>Custo de Não Entrega: </b><span id="rep_missingcost">1,0</span></label>
-                                    <label style="display: table-cell;"><b>Lucro Sobre Venda: </b><span id="rep_saleprofit">1,0</span></label>
-                                </p>
-                            </div>
-                            <div class="mdl-card__supporting-text mdl-card--border">
-                                <p style="display: table; width: 100%;">
-                                    <label style="display: table-cell;"><b>Tempo de Entrega: </b><span id="rep_delay">2</span></label>
-                                    <label style="display: table-cell;"><b>Total de Semanas: </b><span id="rep_realduration">50</span></label>
-                                    <label style="display: table-cell;"><b>Semanas Informadas: </b><span id="rep_infduration">70</span></label>
-                                </p>
-                            </div>
-                            <div class="mdl-card__supporting-text mdl-card--border">
-                                <table>
-                                    <tr>
-                                        <th>Retailer
-                                        <th>Wholesaler
-                                        <th>Distributor
-                                        <th>Producer
-                                    </tr>
-                                    <tr id="image">
-                                        <td><img src="resources\retailer.png" alt="Retailer">
-                                        <td><img src="resources\wholesaler.png" alt="Wholesaler">
-                                        <td><img src="resources\distributor.png" alt="Distributor">
-                                        <td><img src="resources\Industry.png" alt="Producer">
-
-                                    <tr id="name">
-                                        <td id="retailer"><b>Nome: </b><span id="rep_RETAILER_name">Name 1</span>
-                                        <td id="wholesaler"><b>Nome: </b><span id="rep_WHOLESALER_name">Name 2</span>
-                                        <td id="distributor"><b>Nome: </b><span id="rep_DISTRIBUTOR_name">Name 3</span>
-                                        <td id="producer"><b>Nome: </b><span id="rep_PRODUCER_name">Name 4</span>
-
-                                    <tr id="profit">
-                                        <td id="retailer"><b>Custo: </b><span id="rep_RETAILER_cost">0.00</span>
-                                        <td id="wholesaler"><b>Custo: </b><span id="rep_WHOLESALER_cost">0.00</span>
-                                        <td id="distributor"><b>Custo: </b><span id="rep_DISTRIBUTOR_cost">0.00</span>
-                                        <td id="producer"><b>Custo: </b><span id="rep_PRODUCER_cost">0.00</span>
-
-                                    <tr id="stock">
-                                        <td id="retailer"><b>Estoque: </b><span id="rep_RETAILER_stock">16</span>
-                                        <td id="wholesaler"><b>Estoque: </b><span id="rep_WHOLESALER_stock">16</span>
-                                        <td id="distributor"><b>Estoque: </b><span id="rep_DISTRIBUTOR_stock">16</span>
-                                        <td id="producer"><b>Estoque: </b><span id="rep_PRODUCER_stock">16</span>
-                                </table>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="graph-card mdl-card mdl-shadow--6dp mdl-card--horizontal">
-                            <div class="mdl-card__media" id="graph-content">
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </main>
         </div>
 
-        <!--script>goto_report();</script-->
-    </body>
+        <div id="game-panel" class="hidden">
+            <div class="table-card mdl-card mdl-shadow--6dp mdl-card--horizontal">
+                <div class="mdl-card__supporting-text  mdl-card--border">
+                    <span>Semana </span><span id="curweek">k</span>/<span id="totweek">L</span>
+                </div>
+                <div class="mdl-card__media mdl-card--border">
+                    <table>
+                        <tr>
+                            <th>Retailer
+                            <th>Wholesaler
+                            <th>Distributor
+                            <th>Producer
+                        </tr>
+                        <tr id="image">
+                            <td><img src="resources\retailer.png" alt="Retailer">
+                            <td><img src="resources\wholesaler.png" alt="Wholesaler">
+                            <td><img src="resources\distributor.png" alt="Distributor">
+                            <td><img src="resources\Industry.png" alt="Producer">
 
-</html>
+                        <tr id="name">
+                            <td id="retailer"><b>Nome: </b><span id="RETAILER_name2">Name 1</span>
+                            <td id="wholesaler"><b>Nome: </b><span id="WHOLESALER_name2">Name 2</span>
+                            <td id="distributor"><b>Nome: </b><span id="DISTRIBUTOR_name2">Name 3</span>
+                            <td id="producer"><b>Nome: </b><span id="PRODUCER_name2">Name 4</span>
+
+                        <tr id="profit">
+                            <td id="retailer"><b>Custo: </b><span id="RETAILER_cost">0.00</span>
+                            <td id="wholesaler"><b>Custo: </b><span id="WHOLESALER_cost">0.00</span>
+                            <td id="distributor"><b>Custo: </b><span id="DISTRIBUTOR_cost">0.00</span>
+                            <td id="producer"><b>Custo: </b><span id="PRODUCER_cost">0.00</span>
+
+                        <tr id="stock">
+                            <td id="retailer"><b>Estoque: </b><span id="RETAILER_stock">16</span>
+                            <td id="wholesaler"><b>Estoque: </b><span id="WHOLESALER_stock">16</span>
+                            <td id="distributor"><b>Estoque: </b><span id="DISTRIBUTOR_stock">16</span>
+                            <td id="producer"><b>Estoque: </b><span id="PRODUCER_stock">16</span>
+                        <tr id="incoming-order">
+                            <td id="retailer">
+                                <table>
+                                    <tr> <td>? <td id="RETAILER_inc_1">4
+                                    <tr> <td>  <td id="RETAILER_inc_2">&nbsp</td>
+                                </table>
+
+                            <td id="wholesaler">
+                                <table>
+                                    <tr> <td>? <td id="WHOLESALER_inc_1">4
+                                    <tr> <td>? <td id="WHOLESALER_inc_2">4
+                                </table>
+
+                            <td id="distributor">
+                                <table>
+                                    <tr> <td>? <td id="DISTRIBUTOR_inc_1">4
+                                    <tr> <td>? <td id="DISTRIBUTOR_inc_2">4
+                                </table>
+
+                            <td id="producer">
+                                <table>
+                                    <tr> <td>? <td id="PRODUCER_inc_1">4
+                                    <tr> <td>? <td id="PRODUCER_inc_2">4
+                                </table>
+                    </table>
+                </div>
+                <div class="mdl-card__supporting-text  mdl-card--border">
+                    <span>Histórico</span>
+                </div>
+                <div class="mdl-card__media mdl-card--border">
+                    <table id="history">
+                        <tr>
+                            <th>Function
+                            <th>Week
+                            <th>Stock
+                            <th>Profit
+                            <th colspan="2">Incoming Order
+                            <th>Demand
+                        <tr>
+                            <td>Wholesaler
+                            <td>1
+                            <td>16
+                            <td>0.00
+                            <td>4
+                            <td>10
+                            <td>8
+                    </table>
+                </div>
+            </div>
+            <div class="control-panel page-content">
+                <div class="half-oval-shaped drop-shadow">
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" pattern="-?[0-9]{1,9}?" id="order__input">
+                        <label class="mdl-textfield__label" for="order_input" id="order__label">Pedido</label>
+                        <span class="mdl-textfield__error">Não é um pedido válido!</span>
+                    </div>
+                    <span style="display: inline-block;">
+                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" id="order__button" onclick="send_request();">
+                            Enviar Pedido
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div id="report-panel" class="hidden">
+            <div class="mdl-card mdl-shadow--6dp mdl-card--horizontal">
+                <div class="mdl-card__supporting-text mdl-card--border">
+                    <p style="display: table; width: 100%;">
+                        <label style="display: table-row; font-size: 22px;"><b>Nome: </b><span id="rep_name">Sala B-204</span></label>
+                        <label style="display: table-row;"><b>Tipo: </b><span id="rep_type">Não Informada</span></label>
+                    </p>
+                </div>
+                <div class="mdl-card__supporting-text mdl-card--border">
+                    <p style="display: table; width: 100%;">
+                        <label style="display: table-cell;"><b>Custo Armazenamento: </b><span id="rep_stockcost">0,5</span></label>
+                        <label style="display: table-cell;"><b>Custo de Não Entrega: </b><span id="rep_missingcost">1,0</span></label>
+                        <label style="display: table-cell;"><b>Lucro Sobre Venda: </b><span id="rep_saleprofit">1,0</span></label>
+                    </p>
+                </div>
+                <div class="mdl-card__supporting-text mdl-card--border">
+                    <p style="display: table; width: 100%;">
+                        <label style="display: table-cell;"><b>Tempo de Entrega: </b><span id="rep_delay">2</span></label>
+                        <label style="display: table-cell;"><b>Total de Semanas: </b><span id="rep_realduration">50</span></label>
+                        <label style="display: table-cell;"><b>Semanas Informadas: </b><span id="rep_infduration">70</span></label>
+                    </p>
+                </div>
+                <div class="mdl-card__supporting-text mdl-card--border">
+                    <table>
+                        <tr>
+                            <th>Retailer
+                            <th>Wholesaler
+                            <th>Distributor
+                            <th>Producer
+                        </tr>
+                        <tr id="image">
+                            <td><img src="resources\retailer.png" alt="Retailer">
+                            <td><img src="resources\wholesaler.png" alt="Wholesaler">
+                            <td><img src="resources\distributor.png" alt="Distributor">
+                            <td><img src="resources\Industry.png" alt="Producer">
+
+                        <tr id="name">
+                            <td id="retailer"><b>Nome: </b><span id="rep_RETAILER_name">Name 1</span>
+                            <td id="wholesaler"><b>Nome: </b><span id="rep_WHOLESALER_name">Name 2</span>
+                            <td id="distributor"><b>Nome: </b><span id="rep_DISTRIBUTOR_name">Name 3</span>
+                            <td id="producer"><b>Nome: </b><span id="rep_PRODUCER_name">Name 4</span>
+
+                        <tr id="profit">
+                            <td id="retailer"><b>Custo: </b><span id="rep_RETAILER_cost">0.00</span>
+                            <td id="wholesaler"><b>Custo: </b><span id="rep_WHOLESALER_cost">0.00</span>
+                            <td id="distributor"><b>Custo: </b><span id="rep_DISTRIBUTOR_cost">0.00</span>
+                            <td id="producer"><b>Custo: </b><span id="rep_PRODUCER_cost">0.00</span>
+
+                        <tr id="stock">
+                            <td id="retailer"><b>Estoque: </b><span id="rep_RETAILER_stock">16</span>
+                            <td id="wholesaler"><b>Estoque: </b><span id="rep_WHOLESALER_stock">16</span>
+                            <td id="distributor"><b>Estoque: </b><span id="rep_DISTRIBUTOR_stock">16</span>
+                            <td id="producer"><b>Estoque: </b><span id="rep_PRODUCER_stock">16</span>
+                    </table>
+                    </table>
+                </div>
+            </div>
+            <div class="graph-card mdl-card mdl-shadow--6dp mdl-card--horizontal">
+                <div class="mdl-card__media" id="graph-content">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <jsp:include page="resources/body_finish.jsp" />
