@@ -44,7 +44,12 @@ public class ClientLocalizationKeys {
     public static final String GAME_TABLE_STOCK = "GAME-TABLE-STOCK";
     public static final String GAME_TABLE_PROFIT = "GAME-TABLE-PROFIT";
     public static final String GAME_TABLE_INCORDER = "GAME-TABLE-INCOMMINGORDER";
-    public static final String GAME_TABLE_DEMAND = "GAME-TABLE-DEMAND";
+    public static final String GAME_TABLE_REQUEST = "GAME-TABLE-REQUEST";
+    public static final String GAME_TABLE_FUNC_CON = "GAME-TABLE-FUNC-CONSUMER";
+    public static final String GAME_TABLE_FUNC_RET = "GAME-TABLE-FUNC-RETAILER";
+    public static final String GAME_TABLE_FUNC_WHO = "GAME-TABLE-FUNC-WHOLESALER";
+    public static final String GAME_TABLE_FUNC_DIS = "GAME-TABLE-FUNC-DISTRIBUTOR";
+    public static final String GAME_TABLE_FUNC_PRO = "GAME-TABLE-FUNC-PRODUCER";
     public static final String GAME_CONTROL_LABEL_ALLOW = "GAME-CONTROL-LABEL-ALLOW";
     public static final String GAME_CONTROL_LABEL_BLOCK = "GAME-CONTROL-LABEL-BLOCK";
     public static final String GAME_CONTROL_BUTTON = "GAME-CONTROL-BUTTON";

@@ -7,7 +7,6 @@ import edu.utfpr.ct.datamodel.EngineData;
 import edu.utfpr.ct.datamodel.Function;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.datamodel.Node;
-import edu.utfpr.ct.datamodel.TravellingTime;
 import edu.utfpr.ct.hostgui.StartFrame;
 import edu.utfpr.ct.interfaces.IFunction;
 import edu.utfpr.ct.interfaces.IReport;
@@ -30,7 +29,6 @@ public class Controller implements IControllerHost, IControllerPlayer
 	private final Map<Game, Boolean> reports;
 	private final IReport reportManager;
 	private final ILogger logger;
-	private final DataExtractor dataExtractor;
         private final HashSet<String> players;
 
 	private StartFrame hostGUI;
@@ -41,7 +39,6 @@ public class Controller implements IControllerHost, IControllerPlayer
 		this.reports = new HashMap<>();
 		this.reportManager = new ReportManager();
 		this.logger = Logger.getLogger();
-		this.dataExtractor = DataExtractor.getDataExtractor();
                 this.players = new HashSet<>();
 
 		loadResources();
@@ -68,7 +65,6 @@ public class Controller implements IControllerHost, IControllerPlayer
 		{
 			engine = new Engine();
 			engine.setGame(game, Function.RETAILER);
-                        engine.buildGame();
 			engine.rebuildOrders();
 
 			if(engine.getState() == Engine.FINISHED)
@@ -310,7 +306,7 @@ public class Controller implements IControllerHost, IControllerPlayer
         
         @Override
         public Table getTableData(String gameName){
-            return dataExtractor.getTable(gameName);
+            return getTable(gameName);
         }
 	
 	public Table getTable(String gameName)

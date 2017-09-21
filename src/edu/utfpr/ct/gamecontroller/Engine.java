@@ -30,7 +30,6 @@ public class Engine
 	public Engine()
 	{
 		this.players = new HashSet<>();
-//		this.table = new Table(game);
 	}
 
 	public Game getGame()
@@ -52,7 +51,7 @@ public class Engine
 		this.turn = function;
 		resetConfigs(clearPlayers);
                 
-		this.table = new Table(game);
+//		this.table = new Table(game);
 	}
 
 	public boolean isClientTurn()
@@ -222,11 +221,15 @@ public class Engine
 			}
 		}
                 
-                table.buildTable();
+//                table.buildTable();
 	}
 
 	public Table getTable()
 	{
+                if(table == null){
+                    table = new Table(game);
+                }
+                
 		return table;
 	}
 	
@@ -254,24 +257,32 @@ public class Engine
 				if(i == node.playerMove.size())
 				{
 					state = SETUP;
+                                        getTable().updateLines();
 					return;
 				}
 
-				makeOrder(node.playerMove.get(i));
+				makeOrder(node.playerMove.get(i), false);
 //                nextTurn();
 			}
 		}
+                
+                getTable().updateLines();
 
 		state = FINISHED;
 	}
+        
+        public int makeOrder(int order){
+            return makeOrder(order, true);
+        }
 
 	/**
 	 * Makes all the order placed go from one Node to the other.
 	 *
 	 * @param order
+     * @param updateTable
 	 * @return
 	 */
-	public int makeOrder(int order)
+	public int makeOrder(int order, boolean updateTable)
 	{
 		int posCurrentNode, qty;
 		Node node;
@@ -287,7 +298,7 @@ public class Engine
 			node = (Node) game.supplyChain[posCurrentNode];
 			qty = makeOrderRecursion(posCurrentNode + 1, order);
 			node.currentStock.add(node.getLastStock() + qty);
-			table.updateLines();
+			if(updateTable)getTable().updateLines();
 		}
 		nextTurn();
 

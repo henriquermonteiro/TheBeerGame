@@ -3,9 +3,7 @@ package edu.utfpr.ct.webclient;
 import edu.utfpr.ct.dataextractor.Table;
 import edu.utfpr.ct.datamodel.AbstractNode;
 import edu.utfpr.ct.datamodel.EngineData;
-import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.datamodel.Node;
-import edu.utfpr.ct.datamodel.TravellingTime;
 import edu.utfpr.ct.gamecontroller.Engine;
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -80,20 +78,20 @@ public class GameUpdateServlet extends HttpServlet {
 
                             JSONArray table = new JSONArray();
                             
-                            for (Table.Line line : service.getTableData(gameName).getNewLines(func, week)) {
+                            for (Table.Line line : service.getTableData(gameName).getNewLines(playerName, func, week)) {
                                 JSONObject lineData = new JSONObject();
                                 
-                                lineData.put("funtion", line.function.getPosition());
+                                lineData.put("function", line.function);
                                 lineData.put("week", line.week);
                                 lineData.put("current_stock", line.currentStock);
                                 lineData.put("profit", line.profit);
                                 lineData.put("move", line.playerMove);
-                                int k = 0;
-                                for(Integer order : line.order){
-                                    lineData.put("order_"+k, order);
-                                    k++;
+                                
+                                JSONArray orders = new JSONArray();
+                                for(Integer order : line.incomingOrder){
+                                    orders.add(order);
                                 }
-                                lineData.put("demand", line.demand);
+                                lineData.put("order", orders);
                                 
                                 table.add(lineData);
                             }

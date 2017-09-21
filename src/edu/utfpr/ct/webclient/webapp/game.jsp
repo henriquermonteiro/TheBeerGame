@@ -27,6 +27,8 @@
             var ready_to_draw = false;
 
             var state = "w";
+            var _func = 0;
+            var _week = -1;
             var update_interval;
             var report_data;
 
@@ -82,25 +84,56 @@
                 jsonHttp.send("move=" + move);
             }
 
-            function add_history_info(func, week, stock, profit, order1, order2, demand) {
+            function add_history_info(func, week, stock, profit, orders, move) {
                 var history = document.getElementById("history");
+                
+                _func = func;
+                _week = week;
 
+                var k = 0;
                 var row = history.insertRow(1);
-                var cell1 = row.insertCell(0);
-                var cell2 = row.insertCell(1);
-                var cell3 = row.insertCell(2);
-                var cell4 = row.insertCell(3);
-                var cell5 = row.insertCell(4);
-                var cell6 = row.insertCell(5);
-                var cell7 = row.insertCell(6);
-
-                cell1.innerHTML = func;
-                cell2.innerHTML = week;
-                cell3.innerHTML = stock;
-                cell4.innerHTML = profit;
-                cell5.innerHTML = order1;
-                cell6.innerHTML = order2;
-                cell7.innerHTML = demand;
+                var cell = row.insertCell(k++);
+                if(func === 0){
+                    cell.innerHTML = "<%=(localize.getTextForKey(ClientLocalizationKeys.GAME_TABLE_FUNC_CON)) %>";
+                } else if (func === 1){
+                    cell.innerHTML = "<%=(localize.getTextForKey(ClientLocalizationKeys.GAME_TABLE_FUNC_RET)) %>";
+                } else if (func === 2){
+                    cell.innerHTML = "<%=(localize.getTextForKey(ClientLocalizationKeys.GAME_TABLE_FUNC_WHO)) %>";
+                } else if (func === 3){
+                    cell.innerHTML = "<%=(localize.getTextForKey(ClientLocalizationKeys.GAME_TABLE_FUNC_DIS)) %>";
+                } else if (func === 4){
+                    cell.innerHTML = "<%=(localize.getTextForKey(ClientLocalizationKeys.GAME_TABLE_FUNC_PRO)) %>";
+                }
+                    
+                
+                var cell = row.insertCell(k++);
+                cell.innerHTML = week;
+                
+                var cell = row.insertCell(k++);
+                if(func === 0){
+                    cell.innerHTML = "---";
+                }else{
+                    cell.innerHTML = stock;
+                }
+                
+                var cell = row.insertCell(k++);
+                if(func === 0){
+                    cell.innerHTML = "---";
+                }else{
+                    cell.innerHTML = profit;
+                }
+                
+                for( var ord in orders){
+                    cell = row.insertCell(k++);
+                    if(func === 0){
+                        cell.innerHTML = "---";
+                    }else{
+                        cell.innerHTML = orders[ord];
+                    }
+                }
+                
+                var cell = row.insertCell(k++);
+                cell.innerHTML = move;
             }
 
             function start_game() {
@@ -259,6 +292,17 @@
                         document.getElementById(func + "_inc_" + dist).innerHTML = json_state.players[player].incoming[inc].value;
                     }
                 }
+                
+                for(var line in json_state.history) {
+                    add_history_info(
+                        json_state.history[line].function,
+                        json_state.history[line].week,
+                        json_state.history[line].current_stock,
+                        json_state.history[line].profit,
+                        json_state.history[line].order,
+                        json_state.history[line].move
+                    );
+                }
             }
 
             function processReport(json_state) {
@@ -303,6 +347,7 @@
             function updatePage() {
                 var jsonHttp = new XMLHttpRequest();
                 jsonHttp.open("POST", "/update.jsp", false);
+                jsonHttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
                 jsonHttp.onreadystatechange = function () {
                     var json = JSON.parse(jsonHttp.responseText);
@@ -324,7 +369,7 @@
                     }
                 };
 
-                jsonHttp.send(null);
+                jsonHttp.send("function=" + _func + "&week=" + _week);
             }
 
             function initialize() {
@@ -448,15 +493,7 @@
                             <th><%=(localize.getTextForKey(ClientLocalizationKeys.GAME_TABLE_STOCK)) %>
                             <th><%=(localize.getTextForKey(ClientLocalizationKeys.GAME_TABLE_PROFIT)) %>
                             <th colspan="2"><%=(localize.getTextForKey(ClientLocalizationKeys.GAME_TABLE_INCORDER)) %>
-                            <th><%=(localize.getTextForKey(ClientLocalizationKeys.GAME_TABLE_DEMAND)) %>
-                        <tr>
-                            <td>Wholesaler
-                            <td>1
-                            <td>16
-                            <td>0.00
-                            <td>4
-                            <td>10
-                            <td>8
+                            <th><%=(localize.getTextForKey(ClientLocalizationKeys.GAME_TABLE_REQUEST)) %>
                     </table>
                 </div>
             </div>
