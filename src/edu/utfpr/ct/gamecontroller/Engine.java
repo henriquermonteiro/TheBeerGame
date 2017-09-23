@@ -20,7 +20,7 @@ public class Engine
 	public static final int FINISHED = 8;
 
 	private final Set<String> players;
-	private Table table;
+	private final Table table;
 	private Game game;
 	private boolean clientTurn;
 	private IFunction turn;
@@ -30,6 +30,7 @@ public class Engine
 	public Engine()
 	{
 		this.players = new HashSet<>();
+		this.table = new Table(game);
 	}
 
 	public Game getGame()
@@ -222,9 +223,6 @@ public class Engine
 
 	public Table getTable()
 	{
-		if(table == null)
-			table = new Table(game);
-		
 		return table;
 	}
 	
