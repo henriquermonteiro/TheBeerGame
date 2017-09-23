@@ -78,7 +78,7 @@
                             <form name="login" action="/check_in.jsp" onsubmit="validateForm()" method="POST">
                                 <span id="inv_name" class="warning<%=hidden %>"><%=(localize.getTextForKey(ClientLocalizationKeys.CHECKIN_WARNING))%></span>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <input name="nickname" class="mdl-textfield__input" type="text" pattern="-?[A-Z,a-z,0-9]{6,36}?" id="sample4">
+                                    <input name="nickname" class="mdl-textfield__input" type="text" pattern="[A-Z,a-z,0-9]{6,36}" id="sample4">
                                     <label class="mdl-textfield__label" for="sample4"><%=(localize.getTextForKey(ClientLocalizationKeys.CHECKIN_TEXT_LABEL))%></label>
                                     <span class="mdl-textfield__error"><%=(localize.getTextForKey(ClientLocalizationKeys.CHECKIN_TEXT_ERROR))%></span>
                                 </div>

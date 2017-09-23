@@ -133,7 +133,7 @@
                 </p>
                 <form method="post" action="">
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" pattern="-?[A-Z,a-z,0-9]?" id="password">
+                        <input class="mdl-textfield__input" type="text" pattern="[A-Z,a-z,0-9]" id="password">
                         <label class="mdl-textfield__label" for="password"><%=(localize.getTextForKey(ClientLocalizationKeys.CHOOSE_PW_LABEL)) %></label>
                     </div>
                     <span id="warning_pw" class="warning hidden"><%=(localize.getTextForKey(ClientLocalizationKeys.CHOOSE_PW_WARNING)) %></span>

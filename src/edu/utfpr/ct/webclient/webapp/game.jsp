@@ -500,7 +500,7 @@
             <div class="control-panel page-content">
                 <div class="half-oval-shaped drop-shadow">
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" pattern="-?[0-9]{1,9}?" id="order__input">
+                        <input class="mdl-textfield__input" type="text" pattern="[0-9]{1,9}" id="order__input">
                         <label class="mdl-textfield__label" for="order_input" id="order__label"><%=(localize.getTextForKey(ClientLocalizationKeys.GAME_CONTROL_LABEL_ALLOW)) %></label>
                         <span class="mdl-textfield__error"><%=(localize.getTextForKey(ClientLocalizationKeys.GAME_CONTROL_ERROR)) %></span>
                     </div>
