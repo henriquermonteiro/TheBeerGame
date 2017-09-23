@@ -140,7 +140,7 @@
 }
 
 #game-panel > .control-panel{
-  position: absolute;
+  position: fixed;
   bottom: 0;
   margin-left: -325px;
   display: inline-block;

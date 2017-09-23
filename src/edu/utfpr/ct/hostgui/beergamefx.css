@@ -1,0 +1,159 @@
+.transparent{
+    -fx-background-color: transparent;
+}
+
+.transparent > .viewport{
+    -fx-border-color: #003399; 
+    -fx-border-radius: 10;
+}
+
+.left > .viewport {
+    -fx-border-color: #003399; 
+    -fx-border-radius: 8 0 0 8;
+    -fx-background-radius: 8 0 0 8;
+}
+
+.right > .viewport {
+    -fx-border-color: #003399; 
+    -fx-border-radius: 0 8 8 0;
+    -fx-background-radius: 0 8 8 0;
+}
+
+
+.transparent > .tab-content-area{
+    -fx-background-color: transparent;
+    -fx-border-color: #777777; 
+    -fx-border-radius: 8 8 0 0;
+    -fx-border-width: 2px;
+}
+
+.padded-10{
+    -fx-padding: 10;
+}
+
+.shadowed-1{
+    -fx-effect: dropshadow(gaussian, black, 10, 0, 3, 3);
+}
+
+.tab-pane, .tab-pane.floating {
+    -fx-tab-min-width: 80px;
+    -fx-tab-max-width: 120px;
+    -fx-tab-max-height: 30px;
+    -fx-tab-min-height: 30px;
+}
+
+.main-tabs > .tab-header-area .icon {
+    -fx-icon-size: 30px;
+    -fx-fill: white;
+}
+
+.main-tabs > .tab-header-area .tab {
+    -fx-tab-background: #FFC107;
+    -fx-background-color: -fx-tab-background;
+    -fx-background-radius: 8 8 0 0;
+    -fx-border-radius: 8 8 0 0;
+    -fx-border-color: #7a7a7a;
+    -fx-border-style: solid inside;
+    -fx-border-width: 2 2 0 2;
+}
+
+.main-tabs > .tab-header-area .tab-label{
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+.main-tabs > .tab-header-area .tab:hover{
+    -fx-background-color: derive(-fx-tab-background, 20%);
+}
+
+.main-tabs > .tab-header-area .tab:selected{
+    -fx-border-color: cornflowerblue;
+    -fx-border-width: 3 3 0 3;
+    -fx-background-color: derive(-fx-tab-background, -5%);
+}
+
+.tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
+    -fx-border-color: transparent;
+}
+
+.ip-info {
+    -fx-background-color: #FFC107;
+    -fx-min-height: 30px;
+    -fx-background-radius: 3px;
+    -fx-border-color: #777;
+    -fx-border-width: 2px;
+    -fx-border-radius: 3px;
+    -fx-border-style: solid inside;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.ip-info > .label{
+    -fx-text-fill: white;
+}
+
+.game-load{
+    -fx-background-color: palegoldenrod;
+    -fx-background-radius: 10;
+    -fx-min-width: 200px;
+    -fx-max-width: 200px;
+    -fx-min-height: 80px;
+    -fx-max-height: 80px;
+    -fx-vgap: 18px;
+    -fx-border-color: #777;
+    -fx-border-radius: 10;
+    -fx-border-style: solid outside;
+    -fx-border-width: 2;
+}
+
+.game-load .icon{
+    -fx-icon-size: 30px;
+    -fx-fill: white;
+}
+
+.game-load > .button{
+    -fx-background-button-color: azure;
+    -fx-max-width: 100px;
+    -fx-min-width: 100px;
+    -fx-max-height: 30px;
+    -fx-min-height: 30px;
+    -fx-border-color: #777;
+    -fx-border-width: 1 2 2 2;
+    -fx-border-style: solid outside;
+    -fx-background-color: -fx-background-button-color;
+}
+
+.game-load > .button:hover{
+    -fx-background-color: derive(-fx-background-button-color, 20%);
+}
+
+.game-load > .button:pressed{
+    -fx-background-color: derive(-fx-background-button-color, -20%);
+}
+
+.game-load > .button.left{
+    -fx-background-radius: 0 0 0 10;    
+    -fx-border-radius: 0 0 0 10;
+}
+
+.game-load > .button.right{
+    -fx-background-radius: 0 0 10 0;
+    -fx-border-radius: 0 0 10 0;
+}
+
+.game-load > .button.load{
+    -fx-background-button-color: #00cc33;
+}
+
+.game-load > .button.remove{
+    -fx-background-button-color: #ff6666;
+}
+
+.game-load > .label{
+    -fx-alignment: BOTTOM_CENTER;
+    -fx-min-width: 150px;
+    -fx-min-height: 60px;
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4A4A4A;
+}

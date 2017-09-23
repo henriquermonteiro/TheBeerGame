@@ -1,5 +1,6 @@
 package edu.utfpr.ct.interfaces;
 
+import edu.utfpr.ct.dataextractor.Table;
 import edu.utfpr.ct.datamodel.EngineData;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.exception.FinalizedGameException;
@@ -91,4 +92,10 @@ public interface IControllerPlayer
         public int getGameState(String gameName);
 	
 	public int getReportState(String gameName);
+        
+        public Table getTableData(String gameName);
+        
+        public boolean isNameAvailable(String playerName);
+
+        public boolean logout(String player);
 }

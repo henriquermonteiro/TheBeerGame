@@ -2,32 +2,29 @@ package edu.utfpr.ct.hostgui;
 
 import edu.utfpr.ct.datamodel.Function;
 import edu.utfpr.ct.datamodel.Game;
-import edu.utfpr.ct.interfaces.IFunction;
-import edu.utfpr.ct.localization.LocalizationKeys;
-import edu.utfpr.ct.localization.Localize;
-import java.io.File;
 import java.util.HashMap;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import edu.utfpr.ct.interfaces.IControllerHost;
+import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
+import jiconfont.icons.GoogleMaterialDesignIcons;
+import jiconfont.javafx.IconNode;
 
 public class MainScene extends BorderPane {
 
-    private TabPane tabPane;
+    private final TabPane tabPane;
 
-    private static final Image homeIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.HOME_ICON)).toURI().toString());
-    private static final Image addIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.PLUS_ICON)).toURI().toString());
-
-    private IControllerHost control;
+    private final IControllerHost control;
     
-    private LoaderPane loaderPane;
-    private HashMap<String, GamePane> games;
+    private final LoaderPane loaderPane;
+    private final HashMap<String, GamePane> games;
 
     public MainScene(IControllerHost control) {
         this.control = control;
+        
+        getStyleClass().add("transparent");
         
         games = new HashMap<>();
 
@@ -35,28 +32,33 @@ public class MainScene extends BorderPane {
         
         Tab homeTab = new Tab();
 
-        ImageView iView = new ImageView(homeIcon);
-        homeTab.setGraphic(iView);
+        IconNode home = new IconNode(GoogleMaterialDesignIcons.HOME);
+        home.getStyleClass().addAll("icon");
+        homeTab.setGraphic(home);
         homeTab.setClosable(false);
         homeTab.setContent(loaderPane);
+        homeTab.setTooltip(new Tooltip("Tela inicial"));
 
         Tab addGameTab = new Tab();
 
         addGameTab.setClosable(false);
-        addGameTab.setGraphic(new ImageView(addIcon));
+        IconNode add = new IconNode(GoogleMaterialDesignIcons.ADD_CIRCLE_OUTLINE);
+        add.getStyleClass().addAll("icon");
+        addGameTab.setGraphic(add);
         addGameTab.setContent(new CreateGamePane(this));
+        addGameTab.setTooltip(new Tooltip("Criar novo jogo"));
 
         tabPane = new TabPane(homeTab, addGameTab);
+        tabPane.getStyleClass().addAll("main-tabs");
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.SELECTED_TAB);
         tabPane.getStyleClass().add(TabPane.STYLE_CLASS_FLOATING);
+        tabPane.getStyleClass().add("transparent");
+        
+        BorderPane top = new BorderPane(new Label("Endereço para jogadores: 127.0.0.1:8081"));
+        top.getStyleClass().addAll("ip-info");
+        this.setTop(top);
 
         this.setCenter(tabPane);
-
-//        Game g = new Game();
-//        g.gameID = 1;
-//
-//        createGame(g);
-//        restoreReport("yak");
     }
 
     public void makeGameTab(Game game) {

@@ -6,8 +6,8 @@ import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.datamodel.SupplyChainTypes;
 import edu.utfpr.ct.hostgui.utils.BorderedTitledPane;
 import edu.utfpr.ct.hostgui.utils.NumberChooserFX;
-import edu.utfpr.ct.localization.LocalizationKeys;
-import edu.utfpr.ct.localization.Localize;
+import edu.utfpr.ct.localization.HostLocalizationKeys;
+import edu.utfpr.ct.localization.LocalizeHost;
 import java.io.File;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -57,14 +57,14 @@ import javafx.scene.text.TextAlignment;
 
 public class CreateGamePane extends BorderPane {
 
-    private static final Image rIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.RETAILER_ICON)).toURI().toString());
-    private static final Image wIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.WHOLESALER_ICON)).toURI().toString());
-    private static final Image dIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.DISTRIBUTOR_ICON)).toURI().toString());
-    private static final Image pIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.PRODUCER_ICON)).toURI().toString());
+    private static final Image rIcon = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.RETAILER_ICON)).toURI().toString());
+    private static final Image wIcon = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.WHOLESALER_ICON)).toURI().toString());
+    private static final Image dIcon = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.DISTRIBUTOR_ICON)).toURI().toString());
+    private static final Image pIcon = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.PRODUCER_ICON)).toURI().toString());
 
-    private static final Image checkIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.CONFIRM_ICON)).toURI().toString());
-    private static final Image cancelIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.CANCEL_ICON)).toURI().toString());
-    private static final Image advancedIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.ADVANCED_ICON)).toURI().toString());
+    private static final Image checkIcon = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.CONFIRM_ICON)).toURI().toString());
+    private static final Image cancelIcon = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.CANCEL_ICON)).toURI().toString());
+    private static final Image advancedIcon = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.ADVANCED_ICON)).toURI().toString());
 
     private TextField nameField;
     private CheckBox informedSupplyChain;
@@ -129,7 +129,7 @@ public class CreateGamePane extends BorderPane {
             for (int k = 0; k < parameterDef.length; k += 3) {
                 VBox v = new VBox(3.0);
                 
-                Label l = new Label(Localize.getTextForKey((String) parameterDef[k]));
+                Label l = new Label(LocalizeHost.getTextForKey((String) parameterDef[k]));
                 v.getChildren().add(l);
 
                 if (parameterDef[k + 1] == Integer.class) {
@@ -420,8 +420,8 @@ public class CreateGamePane extends BorderPane {
     
     private void createSimpleContent() {
         simpleName = new TextField();
-        simpleInformedSupplyChain = new CheckBox(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_INFORMED_SC));
-        simpleUsePassword = new CheckBox(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_PASSWORD_CHECK));
+        simpleInformedSupplyChain = new CheckBox(LocalizeHost.getTextForKey(HostLocalizationKeys.LABEL_CREATEGAME_INFORMED_SC));
+        simpleUsePassword = new CheckBox(LocalizeHost.getTextForKey(HostLocalizationKeys.LABEL_CREATEGAME_PASSWORD_CHECK));
         simplePassword = new TextField();
         simpleDemandChart = new LineChart(new NumberAxis(), new NumberAxis());
         simpleChainCanvas = new Canvas() {
@@ -431,8 +431,8 @@ public class CreateGamePane extends BorderPane {
             }
         };
         
-        simpleName.setPromptText(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_NAME));
-        simplePassword.setPromptText(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_PASSWORD_FIELD));
+        simpleName.setPromptText(LocalizeHost.getTextForKey(HostLocalizationKeys.LABEL_CREATEGAME_NAME));
+        simplePassword.setPromptText(LocalizeHost.getTextForKey(HostLocalizationKeys.LABEL_CREATEGAME_PASSWORD_FIELD));
         simplePassword.setDisable(true);
         
         simpleUsePassword.setOnAction(new EventHandler<ActionEvent>() {
@@ -554,18 +554,18 @@ public class CreateGamePane extends BorderPane {
         grid1.setVgap(10.0);
 
         nameField = new TextField();
-        nameField.setPromptText(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_NAME));
+        nameField.setPromptText(LocalizeHost.getTextForKey(HostLocalizationKeys.LABEL_CREATEGAME_NAME));
         
         grid1.add(nameField, 0, 0);
 
-        informedSupplyChain = new CheckBox(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_INFORMED_SC));
+        informedSupplyChain = new CheckBox(LocalizeHost.getTextForKey(HostLocalizationKeys.LABEL_CREATEGAME_INFORMED_SC));
 
         grid1.add(informedSupplyChain, 0, 1);
 
-        usePassword = new CheckBox(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_PASSWORD_CHECK));
+        usePassword = new CheckBox(LocalizeHost.getTextForKey(HostLocalizationKeys.LABEL_CREATEGAME_PASSWORD_CHECK));
 
         password = new PasswordField();
-        password.setPromptText(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_PASSWORD_FIELD));
+        password.setPromptText(LocalizeHost.getTextForKey(HostLocalizationKeys.LABEL_CREATEGAME_PASSWORD_FIELD));
         password.setDisable(true);
 
         usePassword.setOnAction(new EventHandler<ActionEvent>() {
@@ -608,7 +608,7 @@ public class CreateGamePane extends BorderPane {
         GridPane grid2 = new GridPane();
         grid2.setPadding(new Insets(2.0));
 
-        Label l = new Label(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_MISSINGUC));
+        Label l = new Label(LocalizeHost.getTextForKey(HostLocalizationKeys.LABEL_CREATEGAME_MISSINGUC));
 
         GridPane.setConstraints(l, 0, 0, 1, 1, HPos.RIGHT, VPos.CENTER);
         grid2.add(l, 0, 0);
@@ -617,7 +617,7 @@ public class CreateGamePane extends BorderPane {
 
         grid2.add(missingUnitCost, 1, 0);
 
-        l = new Label(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_STOCKUC));
+        l = new Label(LocalizeHost.getTextForKey(HostLocalizationKeys.LABEL_CREATEGAME_STOCKUC));
 
         GridPane.setConstraints(l, 0, 1, 1, 1, HPos.RIGHT, VPos.CENTER);
         grid2.add(l, 0, 1);
@@ -626,7 +626,7 @@ public class CreateGamePane extends BorderPane {
 
         grid2.add(stockUnitCost, 1, 1);
 
-        l = new Label(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_SELLINGP));
+        l = new Label(LocalizeHost.getTextForKey(HostLocalizationKeys.LABEL_CREATEGAME_SELLINGP));
 
         GridPane.setConstraints(l, 0, 2, 1, 1, HPos.RIGHT, VPos.CENTER);
         grid2.add(l, 0, 2);
@@ -635,7 +635,7 @@ public class CreateGamePane extends BorderPane {
 
         grid2.add(sellingUnitProffit, 1, 2);
 
-        l = new Label(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_REAL_DURATION));
+        l = new Label(LocalizeHost.getTextForKey(HostLocalizationKeys.LABEL_CREATEGAME_REAL_DURATION));
 
         GridPane.setConstraints(l, 0, 3, 1, 1, HPos.RIGHT, VPos.CENTER);
         grid2.add(l, 0, 3);
@@ -650,7 +650,7 @@ public class CreateGamePane extends BorderPane {
 
         grid2.add(realDuration, 1, 3);
 
-        l = new Label(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_INF_DURATION));
+        l = new Label(LocalizeHost.getTextForKey(HostLocalizationKeys.LABEL_CREATEGAME_INF_DURATION));
 
         GridPane.setConstraints(l, 0, 4, 1, 1, HPos.RIGHT, VPos.CENTER);
         grid2.add(l, 0, 4);
@@ -659,7 +659,7 @@ public class CreateGamePane extends BorderPane {
 
         grid2.add(informedDuration, 1, 4);
 
-        l = new Label(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_DELIVERY_DELAY));
+        l = new Label(LocalizeHost.getTextForKey(HostLocalizationKeys.LABEL_CREATEGAME_DELIVERY_DELAY));
 
         GridPane.setConstraints(l, 0, 5, 1, 1, HPos.RIGHT, VPos.CENTER);
         grid2.add(l, 0, 5);
@@ -668,7 +668,7 @@ public class CreateGamePane extends BorderPane {
 
         grid2.add(deliveryDelay, 1, 5);
 
-        l = new Label(Localize.getTextForKey(LocalizationKeys.LABEL_CREATEGAME_INITIAL_STOCK));
+        l = new Label(LocalizeHost.getTextForKey(HostLocalizationKeys.LABEL_CREATEGAME_INITIAL_STOCK));
 
         GridPane.setConstraints(l, 0, 6, 1, 1, HPos.RIGHT, VPos.CENTER);
         grid2.add(l, 0, 6);

@@ -3,6 +3,9 @@ package edu.utfpr.ct.hostgui;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.hostgui.utils.GameComponent;
 import edu.utfpr.ct.hostgui.utils.ParameterEventHandler;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -10,26 +13,27 @@ import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 
 public class LoaderPane extends BorderPane {
 
-    private HBox topPane;
-    private FlowPane eastPane;
-    private FlowPane westPane;
+    private final FlowPane eastPane;
+    private final FlowPane westPane;
 
-    private MainScene mainScene;
+    private final MainScene mainScene;
 
     private void updateAvailable() {
         westPane.getChildren().clear();
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 
         for (Game g : mainScene.gameAvailableGames()) {
-            GameComponent gC = new GameComponent(g.name, GameComponent.LOAD);
+            GameComponent gC = new GameComponent(g.name, GameComponent.LOAD, g.name + " criado em " + sdf.format(new Date(g.timestamp)));
             gC.setConfirmButtonAction(new ParameterEventHandler<ActionEvent>(g.name) {
                 
                 @Override
@@ -55,7 +59,7 @@ public class LoaderPane extends BorderPane {
         eastPane.getChildren().clear();
         
         for(Game g : mainScene.gameAvailableReports()){
-            GameComponent gC = new GameComponent(g.name, GameComponent.VIEW);
+            GameComponent gC = new GameComponent(g.name, GameComponent.VIEW, g.name + " criado em " + sdf.format(new Date(g.timestamp)));
             gC.setConfirmButtonAction(new ParameterEventHandler<ActionEvent>(g.name) {
                 
                 @Override
@@ -83,7 +87,6 @@ public class LoaderPane extends BorderPane {
         super();
         this.mainScene = mainScene;
 
-        topPane = new HBox();
         eastPane = new FlowPane(Orientation.HORIZONTAL);
         westPane = new FlowPane(Orientation.HORIZONTAL);
         
@@ -97,6 +100,10 @@ public class LoaderPane extends BorderPane {
         
         eastPane.setPadding(new Insets(15));
         westPane.setPadding(new Insets(15));
+        
+        getStyleClass().add("transparent");
+        eastPane.getStyleClass().add("transparent");
+        westPane.getStyleClass().add("transparent");
 
         ScrollPane eScroll = new ScrollPane(eastPane);
         ScrollPane wScroll = new ScrollPane(westPane);
@@ -117,8 +124,12 @@ public class LoaderPane extends BorderPane {
 
         eScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         wScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        
+        eScroll.getStyleClass().addAll("transparent", "shadowed-1", "right");
+        wScroll.getStyleClass().addAll("transparent", "shadowed-1", "left");
 
         GridPane gridP = new GridPane();
+        gridP.getStyleClass().addAll("transparent", "padded-10");
 
         RowConstraints rC = new RowConstraints();
         rC.setPercentHeight(100);
@@ -130,6 +141,7 @@ public class LoaderPane extends BorderPane {
 
         gridP.getRowConstraints().add(rC);
         gridP.getColumnConstraints().addAll(cC, cC);
+        gridP.setHgap(10);
 
         GridPane.setConstraints(wScroll, 0, 0);
         GridPane.setConstraints(eScroll, 1, 0);
@@ -141,7 +153,6 @@ public class LoaderPane extends BorderPane {
 
         gridP.getChildren().addAll(wScroll, eScroll);
 
-//        this.setTop(new ScrollPane(topPane));
         this.setCenter(gridP);
         
         updateAvailable();

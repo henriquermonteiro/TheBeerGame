@@ -6,8 +6,8 @@ import edu.utfpr.ct.datamodel.Node;
 import edu.utfpr.ct.hostgui.utils.AutoCompleteTextField;
 import edu.utfpr.ct.hostgui.utils.IdentifiableChangeListener;
 import edu.utfpr.ct.hostgui.utils.LockedToggleButton;
-import edu.utfpr.ct.localization.LocalizationKeys;
-import edu.utfpr.ct.localization.Localize;
+import edu.utfpr.ct.localization.HostLocalizationKeys;
+import edu.utfpr.ct.localization.LocalizeHost;
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -40,12 +40,12 @@ import javafx.scene.layout.Pane;
 
 public class PlayGamePane extends BorderPane {
 
-    private static final Image rIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.RETAILER_ICON)).toURI().toString());
-    private static final Image wIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.WHOLESALER_ICON)).toURI().toString());
-    private static final Image dIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.DISTRIBUTOR_ICON)).toURI().toString());
-    private static final Image pIcon = new Image(new File(Localize.getTextForKey(LocalizationKeys.PRODUCER_ICON)).toURI().toString());
-    private static final Image playIconImage = new Image(new File(Localize.getTextForKey(LocalizationKeys.PLAY_ICON)).toURI().toString());
-    private static final Image pauseIconImage = new Image(new File(Localize.getTextForKey(LocalizationKeys.PAUSE_ICON)).toURI().toString());
+    private static final Image rIcon = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.RETAILER_ICON)).toURI().toString());
+    private static final Image wIcon = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.WHOLESALER_ICON)).toURI().toString());
+    private static final Image dIcon = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.DISTRIBUTOR_ICON)).toURI().toString());
+    private static final Image pIcon = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.PRODUCER_ICON)).toURI().toString());
+    private static final Image playIconImage = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.PLAY_ICON)).toURI().toString());
+    private static final Image pauseIconImage = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.PAUSE_ICON)).toURI().toString());
 
     private Game game;
 
