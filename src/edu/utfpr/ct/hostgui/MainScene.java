@@ -126,6 +126,10 @@ public class MainScene extends BorderPane {
     }
     
     public void restoreReport(String gameName){
+        if(games.containsKey(gameName)){
+            return;
+        }
+        
         Game g = control.getReport(gameName);
         
         if(g != null){
@@ -136,6 +140,10 @@ public class MainScene extends BorderPane {
     }
     
     public void restoreGame(String gameName){
+        if(games.containsKey(gameName)){
+            return;
+        }
+        
         Game g = control.getGame(gameName);
         if(g != null){
             makeGameTab(g);
@@ -144,14 +152,38 @@ public class MainScene extends BorderPane {
         }
     }
     
+    private void closeTab(String tabName){
+        int k = 0;
+        boolean flag = false;
+        
+        for(Tab t : tabPane.getTabs()){
+            if(t.getText().equals(tabName)){
+                flag = true;
+                break;
+            }
+            
+            k++;
+        }
+        
+        if(flag) tabPane.getTabs().remove(k);
+    }
+    
     public void purgeGame(String gameName){
         if(control.purgeGame(gameName)){
+            if(games.containsKey(gameName)){
+                closeTab(gameName);
+            }
+            
             loaderPane.update();
         }
     }
     
     public void purgeReport(String gameName){
         if(control.purgeReport(gameName)){
+            if(games.containsKey(gameName)){
+                closeTab(gameName);
+            }
+            
             loaderPane.update();
         }
     }

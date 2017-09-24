@@ -4,15 +4,12 @@ import edu.utfpr.ct.datamodel.DemandTypes;
 import edu.utfpr.ct.datamodel.Function;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.datamodel.SupplyChainTypes;
-import edu.utfpr.ct.hostgui.utils.BorderedTitledPane;
 import edu.utfpr.ct.hostgui.utils.NumberChooserFX;
 import edu.utfpr.ct.localization.HostLocalizationKeys;
 import edu.utfpr.ct.localization.LocalizeHost;
 import java.io.File;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -35,36 +32,27 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
-import javafx.scene.text.TextAlignment;
+import jiconfont.icons.GoogleMaterialDesignIcons;
+import jiconfont.javafx.IconNode;
 
 public class CreateGamePane extends BorderPane {
 
-    private static final Image rIcon = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.RETAILER_ICON)).toURI().toString());
-    private static final Image wIcon = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.WHOLESALER_ICON)).toURI().toString());
-    private static final Image dIcon = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.DISTRIBUTOR_ICON)).toURI().toString());
-    private static final Image pIcon = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.PRODUCER_ICON)).toURI().toString());
-
-    private static final Image checkIcon = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.CONFIRM_ICON)).toURI().toString());
-    private static final Image cancelIcon = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.CANCEL_ICON)).toURI().toString());
-    private static final Image advancedIcon = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.ADVANCED_ICON)).toURI().toString());
+    private static final Image RETAILER_ICON = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.RETAILER_ICON)).toURI().toString());
+    private static final Image WHOLESALER_ICON = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.WHOLESALER_ICON)).toURI().toString());
+    private static final Image DISTRIBUTOR_ICON = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.DISTRIBUTOR_ICON)).toURI().toString());
+    private static final Image PRODUCER_ICON = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.PRODUCER_ICON)).toURI().toString());
 
     private TextField nameField;
     private CheckBox informedSupplyChain;
@@ -94,7 +82,7 @@ public class CreateGamePane extends BorderPane {
     private BorderPane advancedPane;
     private BorderPane simplePane;
     
-    private MainScene mainScene;
+    private final MainScene mainScene;
 
     public CreateGamePane(MainScene mainScene) {
         super();
@@ -136,11 +124,8 @@ public class CreateGamePane extends BorderPane {
                     Spinner spin = new Spinner();
                     spin.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, (Integer) parameterDef[k + 2]));
 
-                    spin.valueProperty().addListener(new ChangeListener() {
-                        @Override
-                        public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                            updateChart();
-                        }
+                    spin.valueProperty().addListener((ObservableValue observable, Object oldValue, Object newValue) -> {
+                        updateChart();
                     });
 
                     v.getChildren().add(spin);
@@ -214,19 +199,19 @@ public class CreateGamePane extends BorderPane {
             for (edu.utfpr.ct.datamodel.Node n : nodes) {
                 Image pHolder = null;
                 if (n.function.equals(Function.RETAILER)) {
-                    pHolder = rIcon;
+                    pHolder = RETAILER_ICON;
                 }
 
                 if (n.function.equals(Function.WHOLESALER)) {
-                    pHolder = wIcon;
+                    pHolder = WHOLESALER_ICON;
                 }
 
                 if (n.function.equals(Function.DISTRIBUTOR)) {
-                    pHolder = dIcon;
+                    pHolder = DISTRIBUTOR_ICON;
                 }
 
                 if (n.function.equals(Function.PRODUCER)) {
-                    pHolder = pIcon;
+                    pHolder = PRODUCER_ICON;
                 }
 
                 if (k > 0) {
@@ -273,19 +258,19 @@ public class CreateGamePane extends BorderPane {
             for (edu.utfpr.ct.datamodel.Node n : nodes) {
                 Image pHolder = null;
                 if (n.function.equals(Function.RETAILER)) {
-                    pHolder = rIcon;
+                    pHolder = RETAILER_ICON;
                 }
 
                 if (n.function.equals(Function.WHOLESALER)) {
-                    pHolder = wIcon;
+                    pHolder = WHOLESALER_ICON;
                 }
 
                 if (n.function.equals(Function.DISTRIBUTOR)) {
-                    pHolder = dIcon;
+                    pHolder = DISTRIBUTOR_ICON;
                 }
 
                 if (n.function.equals(Function.PRODUCER)) {
-                    pHolder = pIcon;
+                    pHolder = PRODUCER_ICON;
                 }
 
                 double mult = (elemRow - 0.5) - (Math.abs((k % (elemRow * 2)) - (elemRow - 0.5)));
@@ -435,15 +420,12 @@ public class CreateGamePane extends BorderPane {
         simplePassword.setPromptText(LocalizeHost.getTextForKey(HostLocalizationKeys.LABEL_CREATEGAME_PASSWORD_FIELD));
         simplePassword.setDisable(true);
         
-        simpleUsePassword.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if (simpleUsePassword.isSelected()) {
-                    simplePassword.setDisable(false);
-                } else {
-                    simplePassword.setText(null);
-                    simplePassword.setDisable(true);
-                }
+        simpleUsePassword.setOnAction((ActionEvent event) -> {
+            if (simpleUsePassword.isSelected()) {
+                simplePassword.setDisable(false);
+            } else {
+                simplePassword.setText(null);
+                simplePassword.setDisable(true);
             }
         });
         
@@ -516,29 +498,30 @@ public class CreateGamePane extends BorderPane {
         
         FlowPane fP = new FlowPane(Orientation.HORIZONTAL);
         fP.setAlignment(Pos.CENTER);
+        fP.getStyleClass().addAll("creation-buttons");
         
         Button createButton = new Button();
-        createButton.setStyle("-fx-base: #00FF00");
-        createButton.setGraphic(new ImageView(checkIcon));
-        createButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                callCreation(Boolean.TRUE);
-            }
+        createButton.getStyleClass().addAll("create");
+        IconNode create = new IconNode(GoogleMaterialDesignIcons.DONE);
+        create.getStyleClass().addAll("icon");
+        createButton.setGraphic(create);
+        createButton.setOnAction((ActionEvent event) -> {
+            callCreation(Boolean.TRUE);
         });
         
         Button cancelButton = new Button();
-        cancelButton.setGraphic(new ImageView(cancelIcon));
-        cancelButton.setStyle("-fx-base: #FF0000");
+        IconNode cancel = new IconNode(GoogleMaterialDesignIcons.CLEAR);
+        cancel.getStyleClass().addAll("icon");
+        cancelButton.setGraphic(cancel);
+        cancelButton.getStyleClass().addAll("clear");
         
         Button advButton = new Button();
-        advButton.setStyle("-fx-base: #934500");
-        advButton.setGraphic(new ImageView(advancedIcon));
-        advButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                changePane(true);
-            }
+        advButton.getStyleClass().addAll("config");
+        IconNode conf = new IconNode(GoogleMaterialDesignIcons.BUILD);
+        conf.getStyleClass().addAll("icon");
+        advButton.setGraphic(conf);
+        advButton.setOnAction((ActionEvent event) -> {
+            changePane(true);
         });
         
         fP.getChildren().addAll(createButton, cancelButton, advButton);
@@ -568,15 +551,12 @@ public class CreateGamePane extends BorderPane {
         password.setPromptText(LocalizeHost.getTextForKey(HostLocalizationKeys.LABEL_CREATEGAME_PASSWORD_FIELD));
         password.setDisable(true);
 
-        usePassword.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if (usePassword.isSelected()) {
-                    password.setDisable(false);
-                } else {
-                    password.setText(null);
-                    password.setDisable(true);
-                }
+        usePassword.setOnAction((ActionEvent event) -> {
+            if (usePassword.isSelected()) {
+                password.setDisable(false);
+            } else {
+                password.setText(null);
+                password.setDisable(true);
             }
         });
 
@@ -641,11 +621,8 @@ public class CreateGamePane extends BorderPane {
         grid2.add(l, 0, 3);
 
         realDuration = new NumberChooserFX("", 0.0, 100.0, 40.0, 1.0);
-        realDuration.addValuePropertyListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                updateChart();
-            }
+        realDuration.addValuePropertyListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            updateChart();
         });
 
         grid2.add(realDuration, 1, 3);
@@ -709,34 +686,26 @@ public class CreateGamePane extends BorderPane {
 
         updateCanvas(chainCanvas);
 
-        HBox buttonsBox = new HBox(10);
+        FlowPane buttonsBox = new FlowPane(Orientation.HORIZONTAL);
         buttonsBox.setAlignment(Pos.BASELINE_RIGHT);
-        buttonsBox.setPadding(new Insets(10));
+        buttonsBox.getStyleClass().addAll("creation-buttons");
 
-        ImageView iV = new ImageView(cancelIcon);
-        iV.setPreserveRatio(true);
-        iV.setFitHeight(46);
-        Button cancelButton = new Button("", iV);
-        cancelButton.setStyle("-fx-base: #FF0000");
+        IconNode cancel = new IconNode(GoogleMaterialDesignIcons.CLEAR);
+        cancel.getStyleClass().addAll("icon");
+        Button cancelButton = new Button("", cancel);
+        cancelButton.getStyleClass().addAll("clear");
 
-        iV = new ImageView(checkIcon);
-        iV.setPreserveRatio(true);
-        iV.setFitWidth(60);
-        Button confirmButton = new Button("", iV);
-        confirmButton.setStyle("-fx-base: #00FF00");
+        IconNode create = new IconNode(GoogleMaterialDesignIcons.DONE);
+        create.getStyleClass().addAll("icon");
+        Button confirmButton = new Button("", create);
+        confirmButton.getStyleClass().addAll("create");
         
-        cancelButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                changePane(false);
-            }
+        cancelButton.setOnAction((ActionEvent event) -> {
+            changePane(false);
         });
         
-        confirmButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                callCreation(Boolean.FALSE);
-            }
+        confirmButton.setOnAction((ActionEvent event) -> {
+            callCreation(Boolean.FALSE);
         });
 
         buttonsBox.getChildren().addAll(confirmButton, cancelButton);

@@ -157,3 +157,30 @@
     -fx-font-weight: bold;
     -fx-text-fill: #4A4A4A;
 }
+
+.creation-buttons {
+    -fx-hgap: 15px;
+    -fx-padding: 5px;
+}
+
+.creation-buttons .button{
+    -fx-min-height: 60px;
+    -fx-min-width: 100px;
+}
+
+.creation-buttons .icon{
+    -fx-icon-size: 30px;
+    -fx-fill: white;
+}
+
+.button.create{
+    -fx-base: #00cc33;
+}
+
+.button.clear{
+    -fx-base: #ff6666;
+}
+
+.button.config{
+    -fx-base: peru;
+}

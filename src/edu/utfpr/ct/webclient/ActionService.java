@@ -20,11 +20,15 @@ import org.apache.catalina.webresources.StandardRoot;
 import org.apache.tomcat.util.scan.Constants;
 import org.apache.tomcat.util.scan.StandardJarScanFilter;
 import edu.utfpr.ct.interfaces.IControllerPlayer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ActionService {
     private Tomcat server;
     private IControllerPlayer controler;
     private Thread listenner;
+    
+    private static boolean stopService = false;
     
     private static ActionService service;
 
@@ -123,6 +127,7 @@ public class ActionService {
         listenner = new Thread(){
             @Override
             public void run() {
+                if(stopService) return;
                 server.getServer().await();
             }
              
@@ -130,6 +135,14 @@ public class ActionService {
         
         listenner.start();
 //        server.getServer().await();
+    }
+    
+    public void stopService(){
+        try {
+            listenner.interrupt();
+            server.stop();
+        } catch (LifecycleException ex) {
+        }
     }
     
     public String checkIn(String playerID){

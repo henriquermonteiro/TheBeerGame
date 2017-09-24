@@ -5,15 +5,17 @@ import edu.utfpr.ct.hostgui.utils.GameComponent;
 import edu.utfpr.ct.hostgui.utils.ParameterEventHandler;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.Optional;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.FlowPane;
@@ -29,56 +31,80 @@ public class LoaderPane extends BorderPane {
 
     private void updateAvailable() {
         westPane.getChildren().clear();
-        
+
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 
         for (Game g : mainScene.gameAvailableGames()) {
             GameComponent gC = new GameComponent(g.name, GameComponent.LOAD, g.name + " criado em " + sdf.format(new Date(g.timestamp)));
             gC.setConfirmButtonAction(new ParameterEventHandler<ActionEvent>(g.name) {
-                
+
                 @Override
                 public void handle(ActionEvent event) {
-                    if((params[0] instanceof String)){
-                        mainScene.restoreGame((String)params[0]);
+                    if ((params[0] instanceof String)) {
+                        mainScene.restoreGame((String) params[0]);
                     }
                 }
             });
-            
+
             gC.setDeleteButtonAction(new ParameterEventHandler<ActionEvent>(g.name) {
                 @Override
                 public void handle(ActionEvent event) {
-                    if((params[0] instanceof String)){
-                        mainScene.purgeGame((String)params[0]);
+                    if ((params[0] instanceof String)) {
+                        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+                        confirmation.setContentText("Deseja eliminar o jogo '" + params[0] + "'? A operação não poderá ser desfeita.");
+                        confirmation.setHeaderText("Atenção!");
+                        confirmation.setTitle("Deletar '" + params[0] + "'?");
+                        Label icon = new Label();
+                        icon.getStyleClass().addAll("warning", "dialog-pane", "alert");
+                        confirmation.setGraphic(icon);
+
+                        Optional<ButtonType> res = confirmation.showAndWait();
+
+                        if (res.get() == ButtonType.OK) {
+                            mainScene.purgeGame((String) params[0]);
+                        }
                     }
                 }
             });
-            
+
             westPane.getChildren().add(gC);
         }
-        
+
         eastPane.getChildren().clear();
-        
-        for(Game g : mainScene.gameAvailableReports()){
+
+        for (Game g : mainScene.gameAvailableReports()) {
             GameComponent gC = new GameComponent(g.name, GameComponent.VIEW, g.name + " criado em " + sdf.format(new Date(g.timestamp)));
             gC.setConfirmButtonAction(new ParameterEventHandler<ActionEvent>(g.name) {
-                
+
                 @Override
                 public void handle(ActionEvent event) {
-                    if((params[0] instanceof String)){
-                        mainScene.restoreReport((String)params[0]);
+                    if ((params[0] instanceof String)) {
+                        mainScene.restoreReport((String) params[0]);
                     }
                 }
             });
-            
+
             gC.setDeleteButtonAction(new ParameterEventHandler<ActionEvent>(g.name) {
                 @Override
                 public void handle(ActionEvent event) {
-                    if((params[0] instanceof String)){
-                        mainScene.purgeReport((String)params[0]);
+                    if ((params[0] instanceof String)) {
+                        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+                        confirmation.setContentText("Deseja eliminar o relatório '" + params[0] + "'? A operação não poderá ser desfeita.");
+                        confirmation.setHeaderText("Atenção!");
+                        confirmation.setTitle("Deletar '" + params[0] + "'?");
+                        Label icon = new Label();
+                        icon.getStyleClass().addAll("warning", "dialog-pane", "alert");
+                        confirmation.setGraphic(icon);
+
+                        Optional<ButtonType> res = confirmation.showAndWait();
+
+                        if (res.get() == ButtonType.OK) {
+                            mainScene.purgeReport((String) params[0]);
+                        }
                     }
                 }
             });
-            
+
             eastPane.getChildren().add(gC);
         }
     }
@@ -89,42 +115,36 @@ public class LoaderPane extends BorderPane {
 
         eastPane = new FlowPane(Orientation.HORIZONTAL);
         westPane = new FlowPane(Orientation.HORIZONTAL);
-        
+
         eastPane.setHgap(15);
         eastPane.setVgap(15);
         westPane.setHgap(15);
         westPane.setVgap(15);
-        
+
         eastPane.setAlignment(Pos.CENTER);
         westPane.setAlignment(Pos.CENTER);
-        
+
         eastPane.setPadding(new Insets(15));
         westPane.setPadding(new Insets(15));
-        
+
         getStyleClass().add("transparent");
         eastPane.getStyleClass().add("transparent");
         westPane.getStyleClass().add("transparent");
 
         ScrollPane eScroll = new ScrollPane(eastPane);
         ScrollPane wScroll = new ScrollPane(westPane);
-        
-        eScroll.widthProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                eastPane.setPrefWidth(newValue.doubleValue());
-            }
+
+        eScroll.widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            eastPane.setPrefWidth(newValue.doubleValue());
         });
-        
-        wScroll.widthProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                westPane.setPrefWidth(newValue.doubleValue());
-            }
+
+        wScroll.widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            westPane.setPrefWidth(newValue.doubleValue());
         });
 
         eScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         wScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        
+
         eScroll.getStyleClass().addAll("transparent", "shadowed-1", "right");
         wScroll.getStyleClass().addAll("transparent", "shadowed-1", "left");
 
@@ -134,7 +154,7 @@ public class LoaderPane extends BorderPane {
         RowConstraints rC = new RowConstraints();
         rC.setPercentHeight(100);
         rC.setFillHeight(true);
-        
+
         ColumnConstraints cC = new ColumnConstraints();
         cC.setPercentWidth(50);
         cC.setFillWidth(true);
@@ -154,7 +174,7 @@ public class LoaderPane extends BorderPane {
         gridP.getChildren().addAll(wScroll, eScroll);
 
         this.setCenter(gridP);
-        
+
         updateAvailable();
     }
 
