@@ -1,6 +1,6 @@
 package edu.utfpr.ct.webclient;
 
-import edu.utfpr.ct.dataextractor.Table;
+import edu.utfpr.ct.gamecontroller.Table;
 import edu.utfpr.ct.datamodel.AbstractNode;
 import edu.utfpr.ct.datamodel.EngineData;
 import edu.utfpr.ct.datamodel.Node;

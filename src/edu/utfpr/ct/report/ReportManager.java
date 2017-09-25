@@ -5,6 +5,20 @@ import edu.utfpr.ct.interfaces.IReport;
 
 public class ReportManager implements IReport
 {
+	private static ReportManager reportManager;
+	
+	private ReportManager()
+	{
+	}
+	
+	public static ReportManager getReportManager()
+	{
+		if(reportManager == null)
+			reportManager = new ReportManager();
+		
+		return reportManager;
+	}
+	
 	@Override
 	public boolean createReport(Game game)
 	{

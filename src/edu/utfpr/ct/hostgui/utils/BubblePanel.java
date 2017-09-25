@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package edu.utfpr.ct.hostgui.utils;
 
 import javafx.beans.property.DoubleProperty;
@@ -16,10 +11,6 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.StrokeType;
 
-/**
- *
- * @author henrique
- */
 public class BubblePanel extends Pane{
 
     public BubblePanel() {

@@ -1,9 +1,8 @@
 package edu.utfpr.ct.interfaces;
 
-import edu.utfpr.ct.dataextractor.Table;
+import edu.utfpr.ct.gamecontroller.Table;
 import edu.utfpr.ct.datamodel.EngineData;
 import edu.utfpr.ct.datamodel.Game;
-import edu.utfpr.ct.exception.FinalizedGameException;
 
 public interface IControllerPlayer
 {

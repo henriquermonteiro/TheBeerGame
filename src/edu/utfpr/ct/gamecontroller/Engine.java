@@ -1,6 +1,5 @@
 package edu.utfpr.ct.gamecontroller;
 
-import edu.utfpr.ct.dataextractor.Table;
 import edu.utfpr.ct.datamodel.AbstractNode;
 import edu.utfpr.ct.datamodel.Function;
 import edu.utfpr.ct.datamodel.Game;
@@ -50,8 +49,6 @@ public class Engine
 		this.game = game;
 		this.turn = function;
 		resetConfigs(clearPlayers);
-                
-//		this.table = new Table(game);
 	}
 
 	public boolean isClientTurn()
@@ -85,9 +82,7 @@ public class Engine
 //            this.state = state;
 //        }
 		if(this.state != FINISHED)
-		{
 			this.state = state;
-		}
 
 		return (this.state == state);
 	}
@@ -102,9 +97,7 @@ public class Engine
 		Set<String> list = new HashSet<>(players);
 
 		for(Function f : Function.values())
-		{
 			list.remove(getNodeByFunction(f).playerName);
-		}
 
 		return list.toArray(new String[0]);
 	}
@@ -117,14 +110,11 @@ public class Engine
 	public boolean removePlayer(String playerName)
 	{
 		for(IFunction function : turn.getValues())
-		{
 			if(getNodeByFunction(function).playerName.equals(playerName))
 			{
 				getNodeByFunction(function).playerName = "";
-
 				setState(Engine.SETUP); // Se falta jogadores o jogo não pode continuar;
 			}
-		}
 
 		return players.remove(playerName);
 	}
@@ -132,9 +122,7 @@ public class Engine
 	public boolean changePlayerForNode(IFunction function, String playerName)
 	{
 		if(!"".equals(playerName) && !players.contains(playerName))
-		{
 			return false;
-		}
 
 		getNodeByFunction(function).playerName = playerName;
 
@@ -220,19 +208,20 @@ public class Engine
 				game.supplyChain[position] = travellingTime;
 			}
 		}
-                
+
 //                table.buildTable();
 	}
 
 	public Table getTable()
 	{
-                if(table == null){
-                    table = new Table(game);
-                }
-                
+		if(table == null)
+		{
+			table = new Table(game);
+		}
+
 		return table;
 	}
-	
+
 	public void rebuildOrders()
 	{
 		Node node;
@@ -257,7 +246,7 @@ public class Engine
 				if(i == node.playerMove.size())
 				{
 					state = SETUP;
-                                        getTable().updateLines();
+					getTable().updateLines();
 					return;
 				}
 
@@ -265,21 +254,22 @@ public class Engine
 //                nextTurn();
 			}
 		}
-                
-                getTable().updateLines();
+
+		getTable().updateLines();
 
 		state = FINISHED;
 	}
-        
-        public int makeOrder(int order){
-            return makeOrder(order, true);
-        }
+
+	public int makeOrder(int order)
+	{
+		return makeOrder(order, true);
+	}
 
 	/**
 	 * Makes all the order placed go from one Node to the other.
 	 *
 	 * @param order
-     * @param updateTable
+	 * @param updateTable
 	 * @return
 	 */
 	public int makeOrder(int order, boolean updateTable)
@@ -298,7 +288,8 @@ public class Engine
 			node = (Node) game.supplyChain[posCurrentNode];
 			qty = makeOrderRecursion(posCurrentNode + 1, order);
 			node.currentStock.add(node.getLastStock() + qty);
-			if(updateTable)getTable().updateLines();
+			if(updateTable)
+				getTable().updateLines();
 		}
 		nextTurn();
 

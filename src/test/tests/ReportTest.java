@@ -18,7 +18,7 @@ public class ReportTest
 		Game game;
 		Game[] games;
 
-		reportManager = new ReportManager();
+		reportManager = ReportManager.getReportManager();
 		comparator = new Comparator();
 
 		game = new Game();

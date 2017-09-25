@@ -1,27 +1,30 @@
 package edu.utfpr.ct.gamecontroller;
 
 import edu.utfpr.ct.hostgui.StartFrame;
+import edu.utfpr.ct.logmanager.database.Database;
 import edu.utfpr.ct.webclient.ActionService;
-import java.io.IOException;
-import javax.servlet.ServletException;
-import org.apache.catalina.LifecycleException;
-import test.tests.Demo;
-import test.tests.ReportTest;
+import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 
 public class TheBeerGame
 {
-	public static void main(String[] args) throws InterruptedException, ServletException, LifecycleException, IOException
+	public static void main(String[] args)
 	{
-//		new LoggerTest().test();
-//		new ReportTest().test();
-//		new ReportManager().getReports();
-//		new PlaceOrderTest().test();
-//		new Demo().testPlayThrough();
-//		new Demo().testGameOperations();
-//		new Demo().testLoggerOperations();
+		try
+		{
+			if(!Database.isConnectionFree())
+			{
+				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+				JOptionPane.showMessageDialog(null, "Apenas uma instância pode ser aberta por vez.", "Erro", JOptionPane.ERROR_MESSAGE);
+				System.exit(0);
+			}
 
-//		new ReportTest().test();
-		new ActionService(Controller.getController());
-		new StartFrame(Controller.getController()).runGUI();
+			new ActionService(Controller.getController());
+			new StartFrame(Controller.getController()).runGUI();
+		}
+		catch(Exception e)
+		{
+			System.out.println("TheBeerGame::main: " + e.getMessage());
+		}
 	}
 }

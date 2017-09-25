@@ -1,7 +1,5 @@
 package edu.utfpr.ct.gamecontroller;
 
-import edu.utfpr.ct.dataextractor.DataExtractor;
-import edu.utfpr.ct.dataextractor.Table;
 import edu.utfpr.ct.datamodel.AbstractNode;
 import edu.utfpr.ct.datamodel.EngineData;
 import edu.utfpr.ct.datamodel.Function;
@@ -20,6 +18,7 @@ import edu.utfpr.ct.interfaces.IControllerHost;
 import edu.utfpr.ct.interfaces.ILogger;
 import java.util.Arrays;
 import edu.utfpr.ct.interfaces.IControllerPlayer;
+import edu.utfpr.ct.logmanager.database.Database;
 import java.util.HashSet;
 
 public class Controller implements IControllerHost, IControllerPlayer
@@ -29,7 +28,7 @@ public class Controller implements IControllerHost, IControllerPlayer
 	private final Map<Game, Boolean> reports;
 	private final IReport reportManager;
 	private final ILogger logger;
-        private final HashSet<String> players;
+	private final HashSet<String> players;
 
 	private StartFrame hostGUI;
 
@@ -37,9 +36,9 @@ public class Controller implements IControllerHost, IControllerPlayer
 	{
 		this.engines = new HashMap<>();
 		this.reports = new HashMap<>();
-		this.reportManager = new ReportManager();
+		this.reportManager = ReportManager.getReportManager();
 		this.logger = Logger.getLogger();
-                this.players = new HashSet<>();
+		this.players = new HashSet<>();
 
 		loadResources();
 	}
@@ -114,6 +113,13 @@ public class Controller implements IControllerHost, IControllerPlayer
 		engines.put(game.name, engine);
 
 		return true;
+	}
+	
+	public void closeGame()
+	{
+		Database.closeConnection();
+		//matar o tomcat
+		System.exit(0);
 	}
 
 	@Override

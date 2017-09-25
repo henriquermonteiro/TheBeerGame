@@ -31,6 +31,24 @@ public class Database
 
 		file.delete();
 	}
+	
+	public static boolean closeConnection()
+	{
+		try
+		{
+			connection.close();
+			connection = null;
+			
+			return true;
+		}
+		catch(SQLException e)
+		{
+			System.out.println("Database::closeConnection(): " + e.getSQLState());
+			System.out.println("Database::closeConnection(): " + e.getMessage());
+			
+			return false;
+		}
+	}
 
 	public static Connection getConnection()
 	{
@@ -53,7 +71,7 @@ public class Database
 			return null;
 		}
 	}
-
+	
 	public static boolean tableExists(String table)
 	{
 		int rowsCount = 0;
@@ -72,6 +90,11 @@ public class Database
 		}
 
 		return rowsCount > 0;
+	}
+	
+	public static boolean isConnectionFree()
+	{
+		return getConnection() != null;
 	}
 
 	public void DBInfo()
