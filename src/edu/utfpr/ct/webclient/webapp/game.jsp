@@ -7,7 +7,24 @@
 <%
     if(session.getAttribute("USER-ID") == null || ((String)session.getAttribute("USER-ID")).isEmpty() || session.getAttribute("LOGGED_GAME") == null || ((String)session.getAttribute("LOGGED_GAME")).isEmpty() ){
         response.sendRedirect("/check_in.jsp");
+        return;
     }
+    
+    URL checkin_json = new URL(request.getScheme(), request.getServerName(), request.getServerPort(), "/update?game-name=" + URLEncoder.encode((String)session.getAttribute("LOGGED_GAME"), "UTF-8").replace("+", "%20") + "&player-name=" + URLEncoder.encode((String)session.getAttribute("USER-ID"), "UTF-8").replace("+", "%20") + "&table-function=" + URLEncoder.encode("0", "UTF-8").replace("+", "%20") + "&table-week=" + URLEncoder.encode("0", "UTF-8").replace("+", "%20"));
+    HttpURLConnection urlcon = (HttpURLConnection)checkin_json.openConnection();
+    urlcon.setRequestMethod("GET");
+    
+    try{
+        JSONObject json = (JSONObject)new JSONParser().parse(new BufferedReader(new InputStreamReader(urlcon.getInputStream())));
+        if(json.get("state") == null){
+            session.removeAttribute("LOGGED_GAME");
+            response.sendRedirect("/choose_room.jsp");
+        }
+    }catch(ParseException ex){
+        session.removeAttribute("LOGGED_GAME");
+        response.sendRedirect("/choose_room.jsp");
+    }
+    
     
     String lang = "default";
     if(session.getAttribute("PREF-LANG") != null){ 
@@ -364,6 +381,9 @@
                                 processReport(json);
                                 break;
                             default : // para testes
+                                if(json.state === undefined){
+                                    location.reload();
+                                }
                                 break;
                         }
                     }

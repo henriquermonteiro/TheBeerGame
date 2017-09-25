@@ -83,6 +83,13 @@ public class Engine
 //        }
 		if(this.state != FINISHED)
 			this.state = state;
+                
+                if(this.state == PAUSED){
+                    for(IFunction function : turn.getValues())
+			getNodeByFunction(function).playerName = "";
+                    
+                    players.clear();
+                }
 
 		return (this.state == state);
 	}

@@ -10,6 +10,8 @@ public interface ILogger
 	void logPlayerMove(int gameID, Node node);
 
 	void purgeGame(Integer gameID);
+        
+        void stopLogger();
 
 	Game[] getGames();
 }

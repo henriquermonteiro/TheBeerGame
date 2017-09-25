@@ -43,4 +43,6 @@ public interface IControllerHost
 	boolean removePlayerFromNode(String gameName, IFunction function);
 
 	int postMoveForNode(String gameName, int order) throws IllegalStateException, IllegalArgumentException;
+        
+        void closeApplication();
 }

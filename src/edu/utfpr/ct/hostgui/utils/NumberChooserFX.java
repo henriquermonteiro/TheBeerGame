@@ -108,5 +108,9 @@ public class NumberChooserFX extends HBox {
     public double getValue() {
         return slider.getValue();
     }
+    
+    public void setValue(double value){
+        slider.setValue(value);
+    }
 
 }

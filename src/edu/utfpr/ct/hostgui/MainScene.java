@@ -7,8 +7,19 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import edu.utfpr.ct.interfaces.IControllerHost;
+import edu.utfpr.ct.util.IPUtils;
+import edu.utfpr.ct.webclient.ActionService;
+import java.util.ArrayList;
+import java.util.Objects;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
 import jiconfont.icons.GoogleMaterialDesignIcons;
 import jiconfont.javafx.IconNode;
 
@@ -54,7 +65,15 @@ public class MainScene extends BorderPane {
         tabPane.getStyleClass().add(TabPane.STYLE_CLASS_FLOATING);
         tabPane.getStyleClass().add("transparent");
         
-        BorderPane top = new BorderPane(new Label("Endereço para jogadores: 127.0.0.1:8081"));
+        ArrayList<String> ips = (ArrayList<String>) IPUtils.findIP();
+        
+        BorderPane top = new BorderPane(new Label("Endereço para jogadores: " + (ips.isEmpty() ? "Erro ao buscar endereço. Porta usada: " : ips.get(0) +":") + ActionService.getService().getPort()));
+        Hyperlink rel = new Hyperlink("reload");
+        rel.setVisited(true);
+        rel.setOnAction((ActionEvent event) -> {
+            top.setCenter(new Label("Endereço para jogadores: " + (ips.isEmpty() ? "Erro ao buscar endereço. Porta usada: " : ips.get(0) +":") + ActionService.getService().getPort()));
+        });
+        top.setRight(rel);
         top.getStyleClass().addAll("ip-info");
         this.setTop(top);
 
@@ -72,6 +91,7 @@ public class MainScene extends BorderPane {
         Tab gameTab = new Tab(game.name, games.get(game.name));
 
         this.tabPane.getTabs().add(tabPane.getTabs().size() - 1, gameTab);
+        this.tabPane.getSelectionModel().select(gameTab);
     }
 
     public Game[] gameAvailableGames() {
@@ -157,7 +177,7 @@ public class MainScene extends BorderPane {
         boolean flag = false;
         
         for(Tab t : tabPane.getTabs()){
-            if(t.getText().equals(tabName)){
+            if(Objects.equals(t.getText(), tabName)){
                 flag = true;
                 break;
             }

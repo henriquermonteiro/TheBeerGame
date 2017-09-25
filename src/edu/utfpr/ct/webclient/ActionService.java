@@ -3,6 +3,7 @@ package edu.utfpr.ct.webclient;
 import edu.utfpr.ct.gamecontroller.Table;
 import edu.utfpr.ct.datamodel.EngineData;
 import edu.utfpr.ct.datamodel.Game;
+import edu.utfpr.ct.gamecontroller.Controller;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -20,23 +21,36 @@ import org.apache.catalina.webresources.StandardRoot;
 import org.apache.tomcat.util.scan.Constants;
 import org.apache.tomcat.util.scan.StandardJarScanFilter;
 import edu.utfpr.ct.interfaces.IControllerPlayer;
+import edu.utfpr.ct.util.IPUtils;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.catalina.Service;
+import org.apache.catalina.connector.Connector;
+import org.apache.coyote.ProtocolHandler;
+import org.apache.coyote.http11.Http11AprProtocol;
+import org.apache.coyote.http11.Http11NioProtocol;
 
 public class ActionService {
+
     private Tomcat server;
     private IControllerPlayer controler;
     private Thread listenner;
-    
-    private static boolean stopService = false;
-    
+
+//    private static boolean stopService = false;
     private static ActionService service;
 
     public static ActionService getService() {
+        if (service == null) {
+
+            try {
+                service = new ActionService();
+            } catch (ServletException | LifecycleException | IOException ex) {
+            }
+        }
+
         return service;
     }
 
-    
     private static File getRootFolder() {
         try {
             File root;
@@ -54,30 +68,47 @@ public class ActionService {
         }
     }
 
-    public ActionService(IControllerPlayer controler) throws ServletException, LifecycleException, IOException {
-        this.controler = controler;
+    private ActionService() throws ServletException, LifecycleException, IOException {
+        this.controler = Controller.getController();
         service = this;
-        
+
         File root = getRootFolder();
         System.setProperty("org.apache.catalina.startup.EXIT_ON_INIT_FAILURE", "true");
         Tomcat tomcat = new Tomcat();
         server = tomcat;
-        
+
         Path tempPath = Files.createTempDirectory("tomcat-base-dir");
         tomcat.setBaseDir(tempPath.toString());
-        
+
         String portT = System.getenv("PORT");
-        
-        Integer port;
-        
-        try{
+
+        Integer port = null;
+
+        try {
             port = Integer.parseInt(portT);
-        }catch(NumberFormatException ex){
-            port = 8081;
+        } catch (NumberFormatException ex) {
+            if (IPUtils.availablePort(80)) {
+                port = 80;
+            } else {
+                if (IPUtils.availablePort(8080)) {
+                    port = 8080;
+                } else {
+                    for (int k = 1; k < 10; k++) {
+                        if (IPUtils.availablePort(8080 + k)) {
+                            port = 8080 + k;
+                            break;
+                        }
+                    }
+
+                    if (port == null) {
+                        port = 0;
+                    }
+                }
+            }
         }
-        
+
         tomcat.setPort(port);
-        
+
         File webContentFolder = new File(root.getAbsolutePath(), "src/edu/utfpr/ct/webclient/webapp/");
         if (!webContentFolder.exists()) {
             webContentFolder = Files.createTempDirectory("default-doc-base").toFile();
@@ -86,7 +117,7 @@ public class ActionService {
         ctx.setDelegate(true);
         //Set execution independent of current thread context classloader (compatibility with exec:java mojo)
         ctx.setParentClassLoader(ActionService.class.getClassLoader());
-        
+
         //Disable TLD scanning by default
         if (System.getProperty(Constants.SKIP_JARS_PROPERTY) == null && System.getProperty(Constants.SKIP_JARS_PROPERTY) == null) {
             System.out.println("disabling TLD scanning");
@@ -95,21 +126,18 @@ public class ActionService {
         }
 
         System.out.println("configuring app with basedir: " + webContentFolder.getAbsolutePath());
-        
+
         ctx.getServletContext().setAttribute("action-service", this);
-        
+
         File additionWebInfClassesFolder = new File(root.getAbsolutePath(), "build/classes");
         WebResourceRoot resources = new StandardRoot(ctx);
 
         WebResourceSet resourceSet;
-        
+
 //        File f = new File("TheBeerGame.jar");
 //        String path = f.getAbsolutePath();
 //        System.out.println(path);
-        
 //        resourceSet = new JarResourceSet(resources, "/WEB-INF/classes", path, "/");
-        
-        
         if (additionWebInfClassesFolder.exists()) {
             resourceSet = new DirResourceSet(resources, "/WEB-INF/classes", additionWebInfClassesFolder.getAbsolutePath(), "/");
             System.out.println("loading WEB-INF resources from as '" + additionWebInfClassesFolder.getAbsolutePath() + "'");
@@ -118,62 +146,67 @@ public class ActionService {
         }
         resources.addPreResources(resourceSet);
         ctx.setResources(resources);
-        
-//        tomcat.addServlet("/checkin", "BeerGameServletCheckin", new CheckinServlet(this));
 
+//        tomcat.addServlet("/checkin", "BeerGameServletCheckin", new CheckinServlet(this));
         server.start();
         System.out.println("Wee");
-        
-        listenner = new Thread(){
+
+        listenner = new Thread() {
             @Override
             public void run() {
-                if(stopService) return;
+//                if(stopService){
+//                    System.out.println("Stopping");
+//                    return;
+//                }
                 server.getServer().await();
             }
-             
+
         };
-        
+
         listenner.start();
 //        server.getServer().await();
     }
-    
-    public void stopService(){
+
+    public void stopService() {
         try {
-            listenner.interrupt();
+//            stopService = true;
+//            listenner.interrupt();
             server.stop();
         } catch (LifecycleException ex) {
         }
     }
-    
-    public String checkIn(String playerID){
+
+    public String checkIn(String playerID) {
         return controler.checkIn(playerID);
     }
-    
-    public Game[] listAvailableRooms(String playerName){
+
+    public Game[] listAvailableRooms(String playerName) {
         return controler.listAvailableGameRooms(playerName);
     }
-    
-    public boolean enterGameRoom(String gameName, String playerID, String password){
+
+    public boolean enterGameRoom(String gameName, String playerID, String password) {
         return controler.enterGameRoom(gameName, playerID, password);
     }
-    
-    public int postMove(String gameName, String playerID, Integer move){
+
+    public int postMove(String gameName, String playerID, Integer move) {
         return controler.postMove(gameName, playerID, move);
     }
-    
-    public EngineData updateData(String gameName, String playerName){
+
+    public EngineData updateData(String gameName, String playerName) {
         return controler.getGameData(gameName, playerName);
     }
-    
-    public Table getTableData(String gameName){
+
+    public Table getTableData(String gameName) {
         return controler.getTableData(gameName);
     }
-    
-    public Boolean gameHasFinished(String gameName){
+
+    public Boolean gameHasFinished(String gameName) {
         Integer ret = controler.getGameState(gameName);
-        
-        if(ret == 1 || ret == 2) return false;
-        
+
+        if (ret == 1 || ret == 2) {
+            return false;
+        }
+
         return (ret == -1 ? true : null);
     }
 
@@ -183,5 +216,18 @@ public class ActionService {
 
     public boolean logout(String player) {
         return controler.logout(player);
+    }
+
+    public int getPort() {
+        for (Service s : server.getServer().findServices()) {
+            for (Connector c : s.findConnectors()) {
+                ProtocolHandler pH = c.getProtocolHandler();
+                if (pH instanceof Http11AprProtocol || pH instanceof Http11AprProtocol || pH instanceof Http11NioProtocol) {
+                    return c.getLocalPort();
+                }
+            }
+        }
+
+        return -1;
     }
 }

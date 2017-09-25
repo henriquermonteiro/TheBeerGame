@@ -54,6 +54,11 @@ public class StartFrame extends Application implements IGUI{
         primaryStage.show();
     }
 
+    @Override
+    public void stop() throws Exception {
+        controller.closeApplication();
+    }
+
     /**
      * @param args the command line arguments
      */
