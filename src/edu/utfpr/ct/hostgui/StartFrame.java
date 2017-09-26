@@ -42,10 +42,10 @@ public class StartFrame extends Application implements IGUI{
         p.getChildren().add(0, new BubblePanel());
         p.getChildren().add(1, mainScene);
         
-        primaryStage.setMinWidth(680);
-        primaryStage.setMinHeight(460);
+        primaryStage.setMinWidth(933 + 16);
+        primaryStage.setMinHeight(700 + 39);
         
-        Scene s = new Scene(p, 680, 460);
+        Scene s = new Scene(p, 933, 700);
 //        Scene s = new Scene(mainScene, 680, 460);
 //        s.getStylesheets().add(StartFrame.class.getResource("/edu/utfpr/ct/hostgui/utils/default.css").toExternalForm());
         s.getStylesheets().add(stylesheet);

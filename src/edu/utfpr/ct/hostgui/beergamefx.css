@@ -1,3 +1,8 @@
+.root {
+    -card-color: #F4F4F4;
+    -header-color: #FFC107;
+}
+
 .transparent{
     -fx-background-color: transparent;
 }
@@ -35,6 +40,81 @@
     -fx-effect: dropshadow(gaussian, black, 10, 0, 3, 3);
 }
 
+.card {
+    -fx-background-color: -card-color;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: #003399;
+    -fx-padding: 10 10 10 10;
+}
+
+.card.header {
+    -fx-background-color: -header-color;
+}
+
+.card.header > .label {
+    -fx-font-weight: bolder;
+    -fx-font-size: 30;
+    -fx-text-fill: white;
+}
+
+.card.center{
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+}
+
+.card.top-left{
+    -fx-border-radius: 10 0 0 0;
+    -fx-background-radius: 10 0 0 0;
+}
+
+.card.bottom-left{
+    -fx-border-radius: 0 0 0 10;
+    -fx-background-radius: 0 0 0 10;
+}
+
+.card.top-right{
+    -fx-border-radius: 0 10 0 0;
+    -fx-background-radius: 0 10 0 0;
+}
+
+.card.bottom-right{
+    -fx-border-radius: 0 0 10 0;
+    -fx-background-radius: 0 0 10 0;
+}
+
+.card.right{
+    -fx-border-radius: 0 10 10 0;
+    -fx-background-radius: 0 10 10 0;
+}
+
+.card.left{
+    -fx-border-radius: 10 0 0 10;
+    -fx-background-radius: 10 0 0 10;
+}
+
+.card.top{
+    -fx-border-radius: 10 10 0 0;
+    -fx-background-radius: 10 10 0 0;
+}
+
+.card.bottom{
+    -fx-border-radius: 0 0 10 10;
+    -fx-background-radius: 0 0 10 10;
+}
+
+.hyperlink{
+    -fx-border-color: transparent;
+}
+
+.hyperlink .icon {
+    -fx-fill: white;
+}
+
+.hyperlink:hover .icon {
+    -fx-fill: cornflowerblue;
+}
+
 .tab-pane, .tab-pane.floating {
     -fx-tab-min-width: 80px;
     -fx-tab-max-width: 120px;
@@ -48,7 +128,7 @@
 }
 
 .main-tabs > .tab-header-area .tab {
-    -fx-tab-background: #FFC107;
+    -fx-tab-background: -header-color;
     -fx-background-color: -fx-tab-background;
     -fx-background-radius: 8 8 0 0;
     -fx-border-radius: 8 8 0 0;
@@ -77,7 +157,7 @@
 }
 
 .ip-info {
-    -fx-background-color: #FFC107;
+    -fx-background-color: -header-color;
     -fx-min-height: 30px;
     -fx-background-radius: 3px;
     -fx-border-color: #777;

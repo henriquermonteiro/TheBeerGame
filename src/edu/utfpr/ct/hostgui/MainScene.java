@@ -14,6 +14,7 @@ import java.util.Objects;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
@@ -68,13 +69,15 @@ public class MainScene extends BorderPane {
         ArrayList<String> ips = (ArrayList<String>) IPUtils.findIP();
         
         BorderPane top = new BorderPane(new Label("Endereço para jogadores: " + (ips.isEmpty() ? "Erro ao buscar endereço. Porta usada: " : ips.get(0) +":") + ActionService.getService().getPort()));
-        Hyperlink rel = new Hyperlink("reload");
+        IconNode refresh = new IconNode(GoogleMaterialDesignIcons.REFRESH);
+        refresh.getStyleClass().addAll("icon");
+        Hyperlink rel = new Hyperlink("", refresh);
         rel.setVisited(true);
         rel.setOnAction((ActionEvent event) -> {
             top.setCenter(new Label("Endereço para jogadores: " + (ips.isEmpty() ? "Erro ao buscar endereço. Porta usada: " : ips.get(0) +":") + ActionService.getService().getPort()));
         });
         top.setRight(rel);
-        top.getStyleClass().addAll("ip-info");
+        top.getStyleClass().addAll("ip-info", "shadowed-1");
         this.setTop(top);
 
         this.setCenter(tabPane);
@@ -89,6 +92,14 @@ public class MainScene extends BorderPane {
             games.put(game.name, new GamePane(game, control.getReportState(game.name), null, this));
         }
         Tab gameTab = new Tab(game.name, games.get(game.name));
+        gameTab.setOnClosed(new EventHandler<Event>() {
+            @Override
+            public void handle(Event event) {
+                String name = ((Tab)event.getSource()).getText();
+                
+                if(name != null && !name.isEmpty()) games.remove(name);
+            }
+        });
 
         this.tabPane.getTabs().add(tabPane.getTabs().size() - 1, gameTab);
         this.tabPane.getSelectionModel().select(gameTab);
@@ -172,7 +183,7 @@ public class MainScene extends BorderPane {
         }
     }
     
-    private void closeTab(String tabName){
+    public void closeTab(String tabName){
         int k = 0;
         boolean flag = false;
         
@@ -185,7 +196,10 @@ public class MainScene extends BorderPane {
             k++;
         }
         
-        if(flag) tabPane.getTabs().remove(k);
+        if(flag){ 
+            tabPane.getTabs().remove(k);
+            games.remove(tabName);
+        }
     }
     
     public void purgeGame(String gameName){

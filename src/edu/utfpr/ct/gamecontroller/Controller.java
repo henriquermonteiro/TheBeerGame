@@ -310,6 +310,8 @@ public class Controller implements IControllerHost, IControllerPlayer {
         if (engine.isClientTurn()) {
             engine.makeOrder(engine.getGame().demand[engine.getWeeks() - 1]);
         }
+        
+        hostGUI.pushGameRoomUpdate(gameName);
 
         return qty;
     }

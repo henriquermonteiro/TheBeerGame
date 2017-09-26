@@ -6,7 +6,6 @@ import edu.utfpr.ct.hostgui.utils.ParameterEventHandler;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;

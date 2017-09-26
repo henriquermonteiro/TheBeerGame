@@ -9,7 +9,12 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.paint.Color;
 
 public class NumberChooserFX extends HBox {
 
@@ -21,7 +26,7 @@ public class NumberChooserFX extends HBox {
     private boolean changing;
 
     public NumberChooserFX(String label, double min, double max, Double value, Double step) {
-        this.isDecimal = (step * 10) % 10 != 0;
+        this.isDecimal = (step * 100) % 10 != 0;
 
         this.label = new Label(label);
         this.slider = new Slider(min, max, value);
@@ -31,7 +36,8 @@ public class NumberChooserFX extends HBox {
 
         changing = false;
 
-        this.slider.setBlockIncrement(step);
+        this.slider.setMajorTickUnit(step);
+        this.slider.setMinorTickCount(0);
         this.slider.setSnapToTicks(true);
         this.slider.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
@@ -50,18 +56,7 @@ public class NumberChooserFX extends HBox {
                 if (!changing) {
                     changing = true;
 
-                    try {
-                        Double v = Double.parseDouble(text.getText());
-
-                        v *= 100;
-                        v = Math.round(v) / 100.0;
-
-                        slider.setValue(v);
-
-                    } catch (NumberFormatException e) {
-                    }
-
-                    text.setText(String.format((isDecimal ? "%.2f" : "%.0f"), slider.getValue()));
+                    updateSlider();
 
                     changing = false;
                 }
@@ -75,18 +70,7 @@ public class NumberChooserFX extends HBox {
                     if (!changing) {
                         changing = true;
 
-                        try {
-                            Double v = Double.parseDouble(text.getText());
-
-                            v *= 100;
-                            v = Math.round(v) / 100.0;
-
-                            slider.setValue(v);
-
-                        } catch (NumberFormatException e) {
-                        }
-
-                        text.setText(String.format((isDecimal ? "%.2f" : "%.0f"), slider.getValue()));
+                        updateSlider();
 
                         changing = false;
                     }
@@ -94,22 +78,40 @@ public class NumberChooserFX extends HBox {
             }
         });
 
-        this.setAlignment(Pos.CENTER);
+        this.setAlignment(Pos.CENTER_LEFT);
         this.setSpacing(3.0);
         this.setPadding(new Insets(5.0, 5.0, 5.0, 5.0));
+        
+        HBox.setHgrow(slider, Priority.ALWAYS);
 
         this.getChildren().addAll(this.label, text, slider);
     }
-    
-    public void addValuePropertyListener(ChangeListener<? super Number> listener){
+
+    private void updateSlider() {
+        try {
+            System.out.println(text.getText());
+            Double v = Double.parseDouble(text.getText().replace(",", "."));
+
+            v *= 100;
+            v = Math.round(v) / 100.0;
+
+            slider.setValue(v);
+
+        } catch (NumberFormatException e) {
+        }
+
+        text.setText(String.format((isDecimal ? "%.2f" : "%.0f"), slider.getValue()).replace(".", ","));
+    }
+
+    public void addValuePropertyListener(ChangeListener<? super Number> listener) {
         slider.valueProperty().addListener(listener);
     }
 
     public double getValue() {
         return slider.getValue();
     }
-    
-    public void setValue(double value){
+
+    public void setValue(double value) {
         slider.setValue(value);
     }
 

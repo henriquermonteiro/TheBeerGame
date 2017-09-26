@@ -32,8 +32,11 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -106,10 +109,11 @@ public class CreateGamePane extends BorderPane {
 
     private Parent getDemandParametersBox(Object[] parameterDef) {
         if (parameterDef.length % 3 == 0) {
-            FlowPane ret = new FlowPane();
-            ret.setAlignment(Pos.CENTER);
-            ret.setHgap(15.0);
-            ret.setVgap(8.0);
+//            FlowPane ret = new FlowPane(Orientation.VERTICAL);
+//            ret.setAlignment(Pos.TOP_LEFT);
+            VBox ret = new VBox(8);
+//            ret.setHgap(15.0);
+//            ret.setVgap(8.0);
             ret.setPadding(new Insets(15));
 
             parametersElements = new Node[parameterDef.length / 3];
@@ -463,6 +467,7 @@ public class CreateGamePane extends BorderPane {
         BorderPane bP = new BorderPane(b);
 
         GridPane grid1 = new GridPane();
+        grid1.setVgap(5.0);
 
         GridPane.setConstraints(simpleName, 0, 0);
         GridPane.setConstraints(simpleInformedSupplyChain, 0, 1);
@@ -478,15 +483,28 @@ public class CreateGamePane extends BorderPane {
         r40.setVgrow(Priority.ALWAYS);
 
         grid1.getRowConstraints().addAll(r15, r15, r15, r15, r40);
+        
+        ColumnConstraints cC = new ColumnConstraints();
+        cC.setFillWidth(true);
+        cC.setHgrow(Priority.ALWAYS);
+        
+        grid1.getColumnConstraints().add(cC);
 
         grid1.getChildren().addAll(simpleName, simpleInformedSupplyChain, simpleUsePassword, simplePassword, simpleDemandChart);
+        
+        BorderPane namePane = new BorderPane(grid1);
+        namePane.getStyleClass().addAll("shadowed-1", "card", "left");
+        
+        BorderPane chainPane = new BorderPane(bP);
+        chainPane.getStyleClass().addAll("shadowed-1", "card", "right");
 
         GridPane grid2 = new GridPane();
+        grid2.setHgap(10.0);
 
         RowConstraints rC = new RowConstraints();
         rC.setPercentHeight(100);
 
-        ColumnConstraints cC = new ColumnConstraints();
+        cC = new ColumnConstraints();
         cC.setPercentWidth(50);
 
         grid2.getColumnConstraints().addAll(cC, cC);
@@ -494,8 +512,8 @@ public class CreateGamePane extends BorderPane {
 
         grid2.setPadding(new Insets(20));
 
-        grid2.add(grid1, 0, 0);
-        grid2.add(bP, 1, 0);
+        grid2.add(namePane, 0, 0);
+        grid2.add(chainPane, 1, 0);
 
         FlowPane fP = new FlowPane(Orientation.HORIZONTAL);
         fP.setAlignment(Pos.CENTER);
@@ -537,8 +555,14 @@ public class CreateGamePane extends BorderPane {
 
     private void createAdvancedContent() {
         GridPane grid1 = new GridPane();
-        grid1.setPadding(new Insets(5.0));
         grid1.setVgap(10.0);
+        grid1.setAlignment(Pos.TOP_CENTER);
+        
+        ColumnConstraints cConsG1 = new ColumnConstraints();
+        cConsG1.setFillWidth(true);
+        cConsG1.setHgrow(Priority.ALWAYS);
+        
+        grid1.getColumnConstraints().add(cConsG1);
 
         nameField = new TextField();
         nameField.setPromptText(LocalizeHost.getTextForKey(HostLocalizationKeys.LABEL_CREATEGAME_NAME));
@@ -567,59 +591,88 @@ public class CreateGamePane extends BorderPane {
         grid1.add(usePassword, 0, 2);
         grid1.add(password, 0, 3);
 
+        cConsG1 = new ColumnConstraints();
+        cConsG1.setFillWidth(true);
+        grid1.getColumnConstraints().add(cConsG1);
+        
+        GridPane grid4 = new GridPane();
+        grid4.setVgap(10.0);
+        
+        cConsG1 = new ColumnConstraints();
+        cConsG1.setFillWidth(true);
+        cConsG1.setPercentWidth(35);
+        
+        ColumnConstraints cConsG2 = new ColumnConstraints();
+        cConsG2.setFillWidth(true);
+        cConsG2.setPercentWidth(65);
+        
+        grid4.getColumnConstraints().add(cConsG1);
+        grid4.getColumnConstraints().add(cConsG2);
+
         demandTypeSelect = new ComboBox<>();
         demandTypeSelect.getItems().addAll(DemandTypes.values());
         demandTypeSelect.setValue(DemandTypes.SINGLE_STEP);
 
-        grid1.add(demandTypeSelect, 0, 4);
+        grid4.add(demandTypeSelect, 0, 0, 1, 1);
 
         demandChart = new LineChart(new NumberAxis(), new NumberAxis());
         demandChart.setPrefSize(600, 300);
         demandChart.legendVisibleProperty().setValue(Boolean.FALSE);
         demandChart.setCreateSymbols(false);
 
-        grid1.add(demandChart, 0, 5);
+        grid4.add(demandChart, 1, 0, 1, 2);
 
         parameterBox = new ScrollPane();
-        grid1.add(parameterBox, 0, 6);
-
-        ColumnConstraints cConsG1 = new ColumnConstraints();
-        cConsG1.setFillWidth(true);
-        grid1.getColumnConstraints().add(cConsG1);
+        grid4.add(parameterBox, 0, 1, 1, 1);
+        
+        RowConstraints rC = new RowConstraints();
+        rC.setFillHeight(true);
+        rC.setVgrow(Priority.SOMETIMES);
+        
+        grid4.getRowConstraints().add(rC);
+        
+        rC = new RowConstraints();
+        rC.setFillHeight(true);
+        rC.setVgrow(Priority.ALWAYS);
+        grid4.getRowConstraints().add(rC);
 
         updateParameterBox();
 
         GridPane grid2 = new GridPane();
-        grid2.setPadding(new Insets(2.0));
+        grid2.setAlignment(Pos.TOP_CENTER);
 
         Label l = new Label(LocalizeHost.getTextForKey(HostLocalizationKeys.LABEL_CREATEGAME_MISSINGUC));
+        l.setAlignment(Pos.CENTER_RIGHT);
 
         GridPane.setConstraints(l, 0, 0, 1, 1, HPos.RIGHT, VPos.CENTER);
         grid2.add(l, 0, 0);
 
-        missingUnitCost = new NumberChooserFX("", 0.0, 100.0, 1.0, 0.01);
+        missingUnitCost = new NumberChooserFX("", 0.0, 3.0, 1.0, 0.01);
 
         grid2.add(missingUnitCost, 1, 0);
 
         l = new Label(LocalizeHost.getTextForKey(HostLocalizationKeys.LABEL_CREATEGAME_STOCKUC));
+        l.setAlignment(Pos.CENTER_RIGHT);
 
         GridPane.setConstraints(l, 0, 1, 1, 1, HPos.RIGHT, VPos.CENTER);
         grid2.add(l, 0, 1);
 
-        stockUnitCost = new NumberChooserFX("", 0.0, 100.0, 0.5, 0.01);
+        stockUnitCost = new NumberChooserFX("", 0.0, 3.0, 0.5, 0.01);
 
         grid2.add(stockUnitCost, 1, 1);
 
         l = new Label(LocalizeHost.getTextForKey(HostLocalizationKeys.LABEL_CREATEGAME_SELLINGP));
+        l.setAlignment(Pos.CENTER_RIGHT);
 
         GridPane.setConstraints(l, 0, 2, 1, 1, HPos.RIGHT, VPos.CENTER);
         grid2.add(l, 0, 2);
 
-        sellingUnitProffit = new NumberChooserFX("", 0.0, 100.0, 0.0, 0.01);
+        sellingUnitProffit = new NumberChooserFX("", 0.0, 3.0, 0.0, 0.01);
 
         grid2.add(sellingUnitProffit, 1, 2);
 
         l = new Label(LocalizeHost.getTextForKey(HostLocalizationKeys.LABEL_CREATEGAME_REAL_DURATION));
+        l.setAlignment(Pos.CENTER_RIGHT);
 
         GridPane.setConstraints(l, 0, 3, 1, 1, HPos.RIGHT, VPos.CENTER);
         grid2.add(l, 0, 3);
@@ -632,6 +685,7 @@ public class CreateGamePane extends BorderPane {
         grid2.add(realDuration, 1, 3);
 
         l = new Label(LocalizeHost.getTextForKey(HostLocalizationKeys.LABEL_CREATEGAME_INF_DURATION));
+        l.setAlignment(Pos.CENTER_RIGHT);
 
         GridPane.setConstraints(l, 0, 4, 1, 1, HPos.RIGHT, VPos.CENTER);
         grid2.add(l, 0, 4);
@@ -641,15 +695,17 @@ public class CreateGamePane extends BorderPane {
         grid2.add(informedDuration, 1, 4);
 
         l = new Label(LocalizeHost.getTextForKey(HostLocalizationKeys.LABEL_CREATEGAME_DELIVERY_DELAY));
+        l.setAlignment(Pos.CENTER_RIGHT);
 
         GridPane.setConstraints(l, 0, 5, 1, 1, HPos.RIGHT, VPos.CENTER);
         grid2.add(l, 0, 5);
 
-        deliveryDelay = new NumberChooserFX("", 0.0, 100.0, 2.0, 1.0);
+        deliveryDelay = new NumberChooserFX("", 0.0, 7.0, 2.0, 1.0);
 
         grid2.add(deliveryDelay, 1, 5);
 
         l = new Label(LocalizeHost.getTextForKey(HostLocalizationKeys.LABEL_CREATEGAME_INITIAL_STOCK));
+        l.setAlignment(Pos.CENTER_RIGHT);
 
         GridPane.setConstraints(l, 0, 6, 1, 1, HPos.RIGHT, VPos.CENTER);
         grid2.add(l, 0, 6);
@@ -657,6 +713,16 @@ public class CreateGamePane extends BorderPane {
         initialStock = new NumberChooserFX("", 0.0, 100.0, 10.0, 1.0);
 
         grid2.add(initialStock, 1, 6);
+        
+        cConsG1 = new ColumnConstraints();
+        cConsG1.setHgrow(Priority.SOMETIMES);
+        cConsG1.setFillWidth(true);
+        
+        cConsG2 = new ColumnConstraints();
+        cConsG2.setHgrow(Priority.ALWAYS);
+        cConsG2.setFillWidth(true);
+        
+        grid2.getColumnConstraints().addAll(cConsG1, cConsG2);
 
         BorderPane grid3 = new BorderPane();
 
@@ -689,6 +755,18 @@ public class CreateGamePane extends BorderPane {
         grid3.setCenter(b);
 
         updateCanvas(chainCanvas);
+        
+        BorderPane namePane = new BorderPane(grid1);
+        namePane.getStyleClass().addAll("shadowed-1", "card", "top-left");
+        
+        BorderPane sliderPane = new BorderPane(grid2);
+        sliderPane.getStyleClass().addAll("card", "shadowed-1", "center");
+        
+        BorderPane chainPane = new BorderPane(grid3);
+        chainPane.getStyleClass().addAll("card", "shadowed-1", "right");
+        
+        BorderPane demandPane = new BorderPane(grid4);
+        demandPane.getStyleClass().addAll("card", "shadowed-1", "bottom-left");
 
         FlowPane buttonsBox = new FlowPane(Orientation.HORIZONTAL);
         buttonsBox.setAlignment(Pos.BASELINE_RIGHT);
@@ -718,28 +796,34 @@ public class CreateGamePane extends BorderPane {
         GridPane gP = new GridPane();
 
         ColumnConstraints cCons = new ColumnConstraints();
-        cCons.setPercentWidth(35);
+        cCons.setPercentWidth(30);
 
         ColumnConstraints cCons2 = new ColumnConstraints();
-        cCons2.setPercentWidth(30);
+        cCons2.setPercentWidth(50);
+        
+        ColumnConstraints cCons3 = new ColumnConstraints();
+        cCons3.setPercentWidth(20);
 
         gP.getColumnConstraints().add(cCons);
         gP.getColumnConstraints().add(cCons2);
-        gP.getColumnConstraints().add(cCons);
+        gP.getColumnConstraints().add(cCons3);
 
         RowConstraints rCons = new RowConstraints();
-        rCons.setPercentHeight(100);
-
+        rCons.setVgrow(Priority.NEVER);
+        gP.getRowConstraints().add(rCons);
+        
+        rCons = new RowConstraints();
+        rCons.setVgrow(Priority.ALWAYS);
         gP.getRowConstraints().add(rCons);
 
-        grid1.setAlignment(Pos.CENTER);
-        grid2.setAlignment(Pos.TOP_CENTER);
+        gP.add(namePane, 0, 0, 1, 1);
+        gP.add(demandPane, 0, 1, 2, 1);
+        gP.add(sliderPane, 1, 0, 1, 1);
+        gP.add(chainPane, 2, 0, 1, 2);
 
-        gP.add(grid1, 0, 0);
-        gP.add(grid2, 1, 0);
-        gP.add(grid3, 2, 0);
-
-        gP.setGridLinesVisible(true);
+//        gP.setGridLinesVisible(true);
+        gP.setVgap(5.0);
+        gP.setHgap(5.0);
 
         advancedPane = new BorderPane();
         advancedPane.setCenter(gP);
@@ -763,8 +847,8 @@ public class CreateGamePane extends BorderPane {
         updateParameterBox();
 
         simpleName.setText("");
-        simpleInformedSupplyChain.setSelected(false);;
-        simpleUsePassword.setSelected(false);;
+        simpleInformedSupplyChain.setSelected(false);
+        simpleUsePassword.setSelected(false);
         simplePassword.setText("");
     }
 }

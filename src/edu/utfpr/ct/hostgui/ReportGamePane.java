@@ -20,12 +20,12 @@ import javafx.scene.layout.BorderPane;
 public class ReportGamePane extends BorderPane{
     private static final Image webImage = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.WEB_ICON)).toURI().toString());
     
-    private Game game;
+    private final Game game;
     
     private Label gameName;
     private ToggleButton webStart;
 
-    private MainScene mainScene;
+    private final MainScene mainScene;
     
     private Parent nodePane(Node node){
         return new ScrollPane();

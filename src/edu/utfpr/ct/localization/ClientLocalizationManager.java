@@ -39,7 +39,7 @@ public class ClientLocalizationManager {
     }
 
     public static String[] getValidLanguages() {
-        File f = new File("lang");
+        File f = new File("lang" + File.separator + "web");
 
         String[] langs = null;
 
