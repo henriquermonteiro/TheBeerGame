@@ -46,10 +46,8 @@ public class StartFrame extends Application implements IGUI{
         primaryStage.setMinHeight(700 + 39);
         
         Scene s = new Scene(p, 933, 700);
-//        Scene s = new Scene(mainScene, 680, 460);
-//        s.getStylesheets().add(StartFrame.class.getResource("/edu/utfpr/ct/hostgui/utils/default.css").toExternalForm());
+        
         s.getStylesheets().add(stylesheet);
-//        primaryStage.setTitle(Localize.getTextFor(HostLocalizationKeys.FRAME_NAME));
         LocalizationUtils.bindLocalizationText(primaryStage.titleProperty(), HostLocalizationKeys.FRAME_NAME);
         primaryStage.setScene(s);
         primaryStage.show();

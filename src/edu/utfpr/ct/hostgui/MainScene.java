@@ -43,6 +43,8 @@ import jiconfont.javafx.IconNode;
 public class MainScene extends BorderPane {
 
     private final TabPane tabPane;
+    private final MenuButton langMenuButton;
+    private MenuItem currentItem;
 
     private final IControllerHost control;
 
@@ -95,28 +97,11 @@ public class MainScene extends BorderPane {
         rel.setOnAction((ActionEvent event) -> {
             top.setCenter(new Label("Endereço para jogadores: " + (ips.isEmpty() ? "Erro ao buscar endereço. Porta usada: " : ips.get(0) + ":") + ActionService.getService().getPort()));
         });
-
-        HBox content = new HBox();
-        content.getStyleClass().addAll("lang-element");
         
-        String toURL = HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.LANGUAGE_FLAG);
-        Image img = new Image(getClass().getResourceAsStream(toURL));
-        ImageView flag = new ImageView(img);
-        flag.setPreserveRatio(true);
-        flag.setFitHeight(28.0);
-        
-        Label name = new Label(HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.LANGUAGE_NAME));
-        
-        IconNode down = new IconNode(GoogleMaterialDesignIcons.EXPAND_MORE);
-        down.getStyleClass().add("icon");
-        
-        content.getChildren().addAll(flag, name, down);
-        
-        MenuButton lang = new MenuButton("", content);
-        lang.getStyleClass().addAll("lang-menu");
-        makeLanguageMenuItens(lang);
-//        lang.getContextMenu().getStyleClass().addAll("lang-context-menu");
-        top.setLeft(lang);
+        langMenuButton = new MenuButton();
+        updateLanguageMenuButton();
+        makeLanguageMenuItens(langMenuButton);
+        top.setLeft(langMenuButton);
 
         top.setRight(rel);
         top.getStyleClass().addAll("ip-info", "shadowed-1");
@@ -126,6 +111,8 @@ public class MainScene extends BorderPane {
     }
     
     private void makeLanguageMenuItens(MenuButton menu){
+        menu.getItems().clear();
+        
         String currentLang = HostLocalizationManager.getInstance().getLang().get();
         
         String toURL = HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.LANGUAGE_FLAG);
@@ -140,16 +127,8 @@ public class MainScene extends BorderPane {
         content.getStyleClass().addAll("hbox-1");
         MenuItem item = new MenuItem("", content);
         item.getStyleClass().addAll("lang-element", "item", "current");
-        item.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    if(item.getStyleClass().contains("current"))return;
-                    for(MenuItem i : menu.getItems()) i.getStyleClass().remove("current");
-                    
-                    HostLocalizationManager.getInstance().getLang().setValue(name.getText());
-                    item.getStyleClass().add("current");
-                }
-            });
+        
+        currentItem = item;
         
         menu.getItems().add(item);
         
@@ -166,21 +145,40 @@ public class MainScene extends BorderPane {
 
             content = new HBox(flag, name2);
             content.getStyleClass().addAll("hbox-1");
-            MenuItem item2 = new MenuItem("", content);
-            item2.getStyleClass().addAll("lang-element", "item");
-            item2.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    if(item2.getStyleClass().contains("current"))return;
-                    for(MenuItem i : menu.getItems()) i.getStyleClass().remove("current");
-                    
-                    HostLocalizationManager.getInstance().getLang().setValue(name2.getText());
-                    item2.getStyleClass().add("current");
-                }
+            item = new MenuItem("", content);
+            item.getStyleClass().addAll("lang-element", "item");
+            item.setOnAction((ActionEvent event) -> {
+                HostLocalizationManager.getInstance().getLang().setValue(name2.getText());
+                
+                makeLanguageMenuItens(langMenuButton);
+                updateLanguageMenuButton();
             });
 
-            menu.getItems().add(item2);
+            menu.getItems().add(item);
         }
+    }
+    
+    private void updateLanguageMenuButton(){
+        langMenuButton.getStyleClass().clear();
+        langMenuButton.getStyleClass().addAll("lang-menu");
+        
+        HBox content = new HBox();
+        content.getStyleClass().addAll("lang-element");
+        
+        String toURL = HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.LANGUAGE_FLAG);
+        Image img = new Image(getClass().getResourceAsStream(toURL));
+        ImageView flag = new ImageView(img);
+        flag.setPreserveRatio(true);
+        flag.setFitHeight(28.0);
+        
+        Label name = new Label(HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.LANGUAGE_NAME));
+        
+        IconNode down = new IconNode(GoogleMaterialDesignIcons.EXPAND_MORE);
+        down.getStyleClass().add("icon");
+        
+        content.getChildren().addAll(flag, name, down);
+        
+        langMenuButton.setGraphic(content);
     }
 
     public void makeGameTab(Game game) {

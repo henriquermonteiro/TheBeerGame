@@ -10,6 +10,7 @@ import edu.utfpr.ct.localization.HostLocalizationManager;
 import edu.utfpr.ct.localization.LocalizationUtils;
 import edu.utfpr.ct.localization.Localize;
 import java.io.File;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
@@ -719,6 +720,14 @@ public class CreateGamePane extends BorderPane {
         informedDuration = new NumberChooserFX("", 0.0, 100.0, 60.0, 1.0);
 
         grid2.add(informedDuration, 1, 4);
+        
+        informedDuration.addValuePropertyListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            if(newValue.doubleValue() < realDuration.getValue()) realDuration.setValue(newValue.doubleValue());
+        });
+        
+        realDuration.addValuePropertyListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            if(newValue.doubleValue() > informedDuration.getValue()) informedDuration.setValue(newValue.doubleValue());
+        });
 
 //        l = new Label(Localize.getTextFor(HostLocalizationKeys.LABEL_CREATEGAME_DELIVERY_DELAY));
         l = new Label();

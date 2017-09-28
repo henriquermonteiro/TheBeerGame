@@ -2,7 +2,6 @@ package edu.utfpr.ct.datamodel;
 
 import edu.utfpr.ct.localization.HostLocalizationKeys;
 import edu.utfpr.ct.localization.HostLocalizationManager;
-import edu.utfpr.ct.localization.Localize;
 
 public enum DemandTypes
 {
@@ -23,12 +22,12 @@ public enum DemandTypes
 		{
 		case 1:
 			if(inputs.length == 4)
-				if(inputs[2] > 0 && inputs[2] <= inputs[3])
+				if(inputs[2] > 0)
 				{
-					ret = new int[inputs[3]];
+                                        ret = new int[inputs[3]];
 
-					for(int k = 0; k < inputs[3]; k++)
-						ret[k] = (k < inputs[2] ? inputs[0] : inputs[1]);
+                                        for(int k = 0; k < inputs[3]; k++)
+                                                ret[k] = (k < inputs[2] ? inputs[0] : inputs[1]);
 				}
 			break;
 		}
