@@ -7,20 +7,36 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import edu.utfpr.ct.interfaces.IControllerHost;
+import edu.utfpr.ct.localization.HostLocalizationKeys;
+import edu.utfpr.ct.localization.HostLocalizationManager;
+import edu.utfpr.ct.localization.LocalizationUtils;
 import edu.utfpr.ct.util.IPUtils;
 import edu.utfpr.ct.webclient.ActionService;
+import java.awt.Toolkit;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Side;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import jiconfont.icons.GoogleMaterialDesignIcons;
 import jiconfont.javafx.IconNode;
 
@@ -29,19 +45,19 @@ public class MainScene extends BorderPane {
     private final TabPane tabPane;
 
     private final IControllerHost control;
-    
+
     private final LoaderPane loaderPane;
     private final HashMap<String, GamePane> games;
 
     public MainScene(IControllerHost control) {
         this.control = control;
-        
+
         getStyleClass().add("transparent");
-        
+
         games = new HashMap<>();
 
         loaderPane = new LoaderPane(this);
-        
+
         Tab homeTab = new Tab();
 
         IconNode home = new IconNode(GoogleMaterialDesignIcons.HOME);
@@ -49,7 +65,8 @@ public class MainScene extends BorderPane {
         homeTab.setGraphic(home);
         homeTab.setClosable(false);
         homeTab.setContent(loaderPane);
-        homeTab.setTooltip(new Tooltip("Tela inicial"));
+        homeTab.setTooltip(new Tooltip());
+        LocalizationUtils.bindLocalizationText(homeTab.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_MAIN_HOME);
 
         Tab addGameTab = new Tab();
 
@@ -58,46 +75,131 @@ public class MainScene extends BorderPane {
         add.getStyleClass().addAll("icon");
         addGameTab.setGraphic(add);
         addGameTab.setContent(new CreateGamePane(this));
-        addGameTab.setTooltip(new Tooltip("Criar novo jogo"));
+        addGameTab.setTooltip(new Tooltip());
+        LocalizationUtils.bindLocalizationText(addGameTab.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_MAIN_CREATE);
 
         tabPane = new TabPane(homeTab, addGameTab);
         tabPane.getStyleClass().addAll("main-tabs");
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.SELECTED_TAB);
         tabPane.getStyleClass().add(TabPane.STYLE_CLASS_FLOATING);
         tabPane.getStyleClass().add("transparent");
-        
+
         ArrayList<String> ips = (ArrayList<String>) IPUtils.findIP();
-        
-        BorderPane top = new BorderPane(new Label("Endereço para jogadores: " + (ips.isEmpty() ? "Erro ao buscar endereço. Porta usada: " : ips.get(0) +":") + ActionService.getService().getPort()));
+
+        BorderPane top = new BorderPane(new Label("Endereço para jogadores: " + (ips.isEmpty() ? "Erro ao buscar endereço. Porta usada: " : ips.get(0) + ":") + ActionService.getService().getPort()));
         IconNode refresh = new IconNode(GoogleMaterialDesignIcons.REFRESH);
         refresh.getStyleClass().addAll("icon");
+
         Hyperlink rel = new Hyperlink("", refresh);
         rel.setVisited(true);
         rel.setOnAction((ActionEvent event) -> {
-            top.setCenter(new Label("Endereço para jogadores: " + (ips.isEmpty() ? "Erro ao buscar endereço. Porta usada: " : ips.get(0) +":") + ActionService.getService().getPort()));
+            top.setCenter(new Label("Endereço para jogadores: " + (ips.isEmpty() ? "Erro ao buscar endereço. Porta usada: " : ips.get(0) + ":") + ActionService.getService().getPort()));
         });
+
+        HBox content = new HBox();
+        content.getStyleClass().addAll("lang-element");
+        
+        String toURL = HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.LANGUAGE_FLAG);
+        Image img = new Image(getClass().getResourceAsStream(toURL));
+        ImageView flag = new ImageView(img);
+        flag.setPreserveRatio(true);
+        flag.setFitHeight(28.0);
+        
+        Label name = new Label(HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.LANGUAGE_NAME));
+        
+        IconNode down = new IconNode(GoogleMaterialDesignIcons.EXPAND_MORE);
+        down.getStyleClass().add("icon");
+        
+        content.getChildren().addAll(flag, name, down);
+        
+        MenuButton lang = new MenuButton("", content);
+        lang.getStyleClass().addAll("lang-menu");
+        makeLanguageMenuItens(lang);
+//        lang.getContextMenu().getStyleClass().addAll("lang-context-menu");
+        top.setLeft(lang);
+
         top.setRight(rel);
         top.getStyleClass().addAll("ip-info", "shadowed-1");
         this.setTop(top);
 
         this.setCenter(tabPane);
     }
+    
+    private void makeLanguageMenuItens(MenuButton menu){
+        String currentLang = HostLocalizationManager.getInstance().getLang().get();
+        
+        String toURL = HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.LANGUAGE_FLAG);
+        Image img = new Image(getClass().getResourceAsStream(toURL));
+        ImageView flag = new ImageView(img);
+        flag.setPreserveRatio(true);
+        flag.setFitHeight(30.0);
+        
+        Label name = new Label(HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.LANGUAGE_NAME));
+        
+        HBox content = new HBox(flag, name);
+        content.getStyleClass().addAll("hbox-1");
+        MenuItem item = new MenuItem("", content);
+        item.getStyleClass().addAll("lang-element", "item", "current");
+        item.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    if(item.getStyleClass().contains("current"))return;
+                    for(MenuItem i : menu.getItems()) i.getStyleClass().remove("current");
+                    
+                    HostLocalizationManager.getInstance().getLang().setValue(name.getText());
+                    item.getStyleClass().add("current");
+                }
+            });
+        
+        menu.getItems().add(item);
+        
+        for(String lang : HostLocalizationManager.getValidLanguages()){
+            if(currentLang.equals(lang)) continue;
+            
+            toURL = HostLocalizationManager.getInstance().getClientFor(lang).getTextFor(HostLocalizationKeys.LANGUAGE_FLAG);
+            img = new Image(getClass().getResourceAsStream(toURL));
+            flag = new ImageView(img);
+            flag.setPreserveRatio(true);
+            flag.setFitHeight(30.0);
+
+            Label name2 = new Label(HostLocalizationManager.getInstance().getClientFor(lang).getTextFor(HostLocalizationKeys.LANGUAGE_NAME));
+
+            content = new HBox(flag, name2);
+            content.getStyleClass().addAll("hbox-1");
+            MenuItem item2 = new MenuItem("", content);
+            item2.getStyleClass().addAll("lang-element", "item");
+            item2.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    if(item2.getStyleClass().contains("current"))return;
+                    for(MenuItem i : menu.getItems()) i.getStyleClass().remove("current");
+                    
+                    HostLocalizationManager.getInstance().getLang().setValue(name2.getText());
+                    item2.getStyleClass().add("current");
+                }
+            });
+
+            menu.getItems().add(item2);
+        }
+    }
 
     public void makeGameTab(Game game) {
         int state = control.getGameState(game.name);
-        
-        if(state != -1){
+
+        if (state != -1) {
             games.put(game.name, new GamePane(game, control.getGameState(game.name), control.getPlayersOnGame(game.name), this));
-        }else{
+        } else {
             games.put(game.name, new GamePane(game, control.getReportState(game.name), null, this));
         }
         Tab gameTab = new Tab(game.name, games.get(game.name));
         gameTab.setOnClosed(new EventHandler<Event>() {
             @Override
             public void handle(Event event) {
-                String name = ((Tab)event.getSource()).getText();
-                
-                if(name != null && !name.isEmpty()) games.remove(name);
+                String name = ((Tab) event.getSource()).getText();
+
+                if (name != null && !name.isEmpty()) {
+                    games.remove(name);
+                }
             }
         });
 
@@ -121,21 +223,21 @@ public class MainScene extends BorderPane {
             // TODO : warn error
         }
     }
-    
-    public void changePlayerInNode(Game game, String newPlayer, Integer node){
-        if(control.changePlayerForNode(game.name, Function.values()[node], newPlayer));
-        
+
+    public void changePlayerInNode(Game game, String newPlayer, Integer node) {
+        if (control.changePlayerForNode(game.name, Function.values()[node], newPlayer));
+
         updateGame(game.name);
     }
-    
-    public void removePlayerFromNode(Game game, Integer node){
+
+    public void removePlayerFromNode(Game game, Integer node) {
         control.removePlayerFromNode(game.name, Function.values()[node]);
     }
-    
-    public void updateGame(String gameName){
+
+    public void updateGame(String gameName) {
         GamePane p = games.get(gameName);
-        
-        if(p != null){
+
+        if (p != null) {
             p.updateGame(control.getGame(gameName), control.getGameState(gameName), control.getPlayersOnGame(gameName));
         }
     }
@@ -155,69 +257,69 @@ public class MainScene extends BorderPane {
             control.pauseReport(game.name);
         }
     }
-    
-    public void restoreReport(String gameName){
-        if(games.containsKey(gameName)){
+
+    public void restoreReport(String gameName) {
+        if (games.containsKey(gameName)) {
             return;
         }
-        
+
         Game g = control.getReport(gameName);
-        
-        if(g != null){
+
+        if (g != null) {
             makeGameTab(g);
-        }else{
+        } else {
             // TODO warn user
         }
     }
-    
-    public void restoreGame(String gameName){
-        if(games.containsKey(gameName)){
+
+    public void restoreGame(String gameName) {
+        if (games.containsKey(gameName)) {
             return;
         }
-        
+
         Game g = control.getGame(gameName);
-        if(g != null){
+        if (g != null) {
             makeGameTab(g);
-        }else{
+        } else {
             // TODO warn user
         }
     }
-    
-    public void closeTab(String tabName){
+
+    public void closeTab(String tabName) {
         int k = 0;
         boolean flag = false;
-        
-        for(Tab t : tabPane.getTabs()){
-            if(Objects.equals(t.getText(), tabName)){
+
+        for (Tab t : tabPane.getTabs()) {
+            if (Objects.equals(t.getText(), tabName)) {
                 flag = true;
                 break;
             }
-            
+
             k++;
         }
-        
-        if(flag){ 
+
+        if (flag) {
             tabPane.getTabs().remove(k);
             games.remove(tabName);
         }
     }
-    
-    public void purgeGame(String gameName){
-        if(control.purgeGame(gameName)){
-            if(games.containsKey(gameName)){
+
+    public void purgeGame(String gameName) {
+        if (control.purgeGame(gameName)) {
+            if (games.containsKey(gameName)) {
                 closeTab(gameName);
             }
-            
+
             loaderPane.update();
         }
     }
-    
-    public void purgeReport(String gameName){
-        if(control.purgeReport(gameName)){
-            if(games.containsKey(gameName)){
+
+    public void purgeReport(String gameName) {
+        if (control.purgeReport(gameName)) {
+            if (games.containsKey(gameName)) {
                 closeTab(gameName);
             }
-            
+
             loaderPane.update();
         }
     }

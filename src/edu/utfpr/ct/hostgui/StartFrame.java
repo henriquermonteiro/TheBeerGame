@@ -4,11 +4,11 @@ import edu.utfpr.ct.gamecontroller.Controller;
 import edu.utfpr.ct.hostgui.utils.BubblePanel;
 import edu.utfpr.ct.interfaces.IGUI;
 import edu.utfpr.ct.localization.HostLocalizationKeys;
-import edu.utfpr.ct.localization.LocalizeHost;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import edu.utfpr.ct.interfaces.IControllerHost;
+import edu.utfpr.ct.localization.LocalizationUtils;
 import javafx.scene.layout.StackPane;
 import jiconfont.icons.GoogleMaterialDesignIcons;
 import jiconfont.javafx.IconFontFX;
@@ -49,7 +49,8 @@ public class StartFrame extends Application implements IGUI{
 //        Scene s = new Scene(mainScene, 680, 460);
 //        s.getStylesheets().add(StartFrame.class.getResource("/edu/utfpr/ct/hostgui/utils/default.css").toExternalForm());
         s.getStylesheets().add(stylesheet);
-        primaryStage.setTitle(LocalizeHost.getTextForKey(HostLocalizationKeys.FRAME_NAME));
+//        primaryStage.setTitle(Localize.getTextFor(HostLocalizationKeys.FRAME_NAME));
+        LocalizationUtils.bindLocalizationText(primaryStage.titleProperty(), HostLocalizationKeys.FRAME_NAME);
         primaryStage.setScene(s);
         primaryStage.show();
     }

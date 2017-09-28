@@ -7,7 +7,7 @@ import edu.utfpr.ct.hostgui.utils.AutoCompleteTextField;
 import edu.utfpr.ct.hostgui.utils.IdentifiableChangeListener;
 import edu.utfpr.ct.hostgui.utils.LockedToggleButton;
 import edu.utfpr.ct.localization.HostLocalizationKeys;
-import edu.utfpr.ct.localization.LocalizeHost;
+import edu.utfpr.ct.localization.Localize;
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -40,16 +40,18 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
+import jiconfont.icons.GoogleMaterialDesignIcons;
+import jiconfont.javafx.IconNode;
 
 public class PlayGamePane extends BorderPane {
 
-    private static final Image rIcon = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.RETAILER_ICON)).toURI().toString());
-    private static final Image wIcon = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.WHOLESALER_ICON)).toURI().toString());
-    private static final Image dIcon = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.DISTRIBUTOR_ICON)).toURI().toString());
-    private static final Image pIcon = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.PRODUCER_ICON)).toURI().toString());
+    private static final Image rIcon = new Image(new File("icon" + File.separator + "retailer.png").toURI().toString());
+    private static final Image wIcon = new Image(new File("icon" + File.separator + "wholesaler.png").toURI().toString());
+    private static final Image dIcon = new Image(new File("icon" + File.separator + "distributor.png").toURI().toString());
+    private static final Image pIcon = new Image(new File("icon" + File.separator + "Industry.png").toURI().toString());
 
-    private static final Image playIconImage = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.PLAY_ICON)).toURI().toString());
-    private static final Image pauseIconImage = new Image(new File(LocalizeHost.getTextForKey(HostLocalizationKeys.PAUSE_ICON)).toURI().toString());
+//    private static final Image playIconImage = new Image(new File(Localize.getTextForKey(HostLocalizationKeys.PLAY_ICON)).toURI().toString());
+//    private static final Image pauseIconImage = new Image(new File(Localize.getTextForKey(HostLocalizationKeys.PAUSE_ICON)).toURI().toString());
 
     private final Game game;
 
@@ -65,8 +67,10 @@ public class PlayGamePane extends BorderPane {
 
     private boolean byPass_setText = false;
 
-    private ImageView playIcon;
-    private ImageView pauseIcon;
+//    private ImageView playIcon;
+//    private ImageView pauseIcon;
+    private IconNode playPauseIcon;
+//    private ImageView pauseIcon;
     private GridPane playerColumns;
 
     private final MainScene mainScene;
@@ -124,18 +128,23 @@ public class PlayGamePane extends BorderPane {
     }
 
     private void createContent() {
-        playIcon = new ImageView(playIconImage);
-        pauseIcon = new ImageView(pauseIconImage);
-        playIcon.setPreserveRatio(true);
-        pauseIcon.setPreserveRatio(true);
+//        playIcon = new ImageView(playIconImage);
+//        pauseIcon = new ImageView(pauseIconImage);
+//        playIcon.setPreserveRatio(true);
+//        pauseIcon.setPreserveRatio(true);
+        playPauseIcon = new IconNode(GoogleMaterialDesignIcons.STOP);
+//        pauseIcon = new ImageView(pauseIconImage);
+//        playIcon.setPreserveRatio(true);
+//        pauseIcon.setPreserveRatio(true);
 
         gameName = new Label();
 
         playPauseButton = new ToggleButton();
-        playPauseButton.setGraphic(pauseIcon);
+        playPauseButton.setGraphic(playPauseIcon);
 
         playPauseButton.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            playPauseButton.setGraphic((newValue ? playIcon : pauseIcon));
+//            playPauseButton.setGraphic((newValue ? playIcon : pauseIcon));
+            playPauseIcon.setIconCode((newValue ? GoogleMaterialDesignIcons.PLAY_ARROW : GoogleMaterialDesignIcons.STOP));
 
             mainScene.changeGameState(game, newValue);
         });

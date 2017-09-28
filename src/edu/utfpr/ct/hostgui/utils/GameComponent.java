@@ -1,5 +1,7 @@
 package edu.utfpr.ct.hostgui.utils;
 
+import edu.utfpr.ct.localization.HostLocalizationKeys;
+import edu.utfpr.ct.localization.LocalizationUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -33,12 +35,18 @@ public class GameComponent extends GridPane {
         title.setTooltip(new Tooltip(tooltip));
 
         loadButton = new Button();
+        removeButton = new Button();
+        removeButton.setTooltip(new Tooltip());
         if (mode == LOAD) {
             IconNode reload = new IconNode(GoogleMaterialDesignIcons.REFRESH);
             reload.getStyleClass().add("icon");
             loadButton.setGraphic(reload);
 
-            loadButton.setTooltip(new Tooltip("Carregar jogo"));
+//            loadButton.setTooltip(new Tooltip("Carregar jogo"));
+            loadButton.setTooltip(new Tooltip());
+            LocalizationUtils.bindLocalizationText(loadButton.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_GAME_COMP_LOAD_GAME);
+            
+            LocalizationUtils.bindLocalizationText(removeButton.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_GAME_COMP_REMO_GAME);
         }
 
         if (mode == VIEW) {
@@ -46,16 +54,20 @@ public class GameComponent extends GridPane {
             report.getStyleClass().add("icon");
             loadButton.setGraphic(report);
 
-            loadButton.setTooltip(new Tooltip("Carregar relatório"));
+//            loadButton.setTooltip(new Tooltip("Carregar relatório"));
+            loadButton.setTooltip(new Tooltip());
+            LocalizationUtils.bindLocalizationText(loadButton.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_GAME_COMP_LOAD_REPO);
+            
+            LocalizationUtils.bindLocalizationText(removeButton.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_GAME_COMP_REMO_REPO);
         }
 
         IconNode delete = new IconNode(GoogleMaterialDesignIcons.DELETE_FOREVER);
         delete.getStyleClass().add("icon");
 
-        removeButton = new Button();
+//        removeButton = new Button();
         removeButton.setGraphic(delete);
         
-        removeButton.setTooltip(new Tooltip("Apagar registro"));
+//        removeButton.setTooltip(new Tooltip("Apagar registro"));
 
         loadButton.getStyleClass().addAll("left", "load");
         removeButton.getStyleClass().addAll("right", "remove");

@@ -1,7 +1,8 @@
 package edu.utfpr.ct.datamodel;
 
 import edu.utfpr.ct.localization.HostLocalizationKeys;
-import edu.utfpr.ct.localization.LocalizeHost;
+import edu.utfpr.ct.localization.HostLocalizationManager;
+import edu.utfpr.ct.localization.Localize;
 
 public enum DemandTypes
 {
@@ -64,9 +65,9 @@ public enum DemandTypes
 		switch(position)
 		{
 		case 1:
-			return LocalizeHost.getTextForKey(HostLocalizationKeys.DEMAND_TYPE_SINGLESTEP);
+			return HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.DEMAND_TYPE_SINGLESTEP);
 		default:
-			return "UNKNOW";
+			return HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.DEMAND_TYPE_UNKNOWN);
 		}
 	}
 }

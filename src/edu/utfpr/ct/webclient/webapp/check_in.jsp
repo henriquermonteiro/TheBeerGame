@@ -14,7 +14,7 @@
         lang = (String) session.getAttribute("PREF-LANG");
     }
     
-    LocalizeClient localize = ClientLocalizationManager.getInstance().getClientFor(lang);
+    Localize localize = ClientLocalizationManager.getInstance().getClientFor(lang);
     
     String hidden = (request.getParameter("warning") != null ? "" : " hidden");
     
@@ -72,21 +72,21 @@
                 <div class="center-content">
                     <div class="login-card mdl-card mdl-shadow--2dp">
                         <div class="mdl-card__title mdl-card--expand">
-                            <h2 class="mdl-card__title-text"><%=(localize.getTextForKey(ClientLocalizationKeys.CHECKIN_TITLE))%></h2>
+                            <h2 class="mdl-card__title-text"><%=(localize.getTextFor(ClientLocalizationKeys.CHECKIN_TITLE))%></h2>
                         </div>
                         <div class="mdl-card__supporting-text">
                             <form name="login" action="/check_in.jsp" onsubmit="validateForm()" method="POST">
-                                <span id="inv_name" class="warning<%=hidden %>"><%=(localize.getTextForKey(ClientLocalizationKeys.CHECKIN_WARNING))%></span>
+                                <span id="inv_name" class="warning<%=hidden %>"><%=(localize.getTextFor(ClientLocalizationKeys.CHECKIN_WARNING))%></span>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                     <input name="nickname" class="mdl-textfield__input" type="text" pattern="[A-Z,a-z,0-9]{6,36}" id="sample4">
-                                    <label class="mdl-textfield__label" for="sample4"><%=(localize.getTextForKey(ClientLocalizationKeys.CHECKIN_TEXT_LABEL))%></label>
-                                    <span class="mdl-textfield__error"><%=(localize.getTextForKey(ClientLocalizationKeys.CHECKIN_TEXT_ERROR))%></span>
+                                    <label class="mdl-textfield__label" for="sample4"><%=(localize.getTextFor(ClientLocalizationKeys.CHECKIN_TEXT_LABEL))%></label>
+                                    <span class="mdl-textfield__error"><%=(localize.getTextFor(ClientLocalizationKeys.CHECKIN_TEXT_ERROR))%></span>
                                 </div>
                             </form>
                         </div>
                         <div class="mdl-card__actions">
                             <button onclick="submitForm()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
-                                <%=(localize.getTextForKey(ClientLocalizationKeys.CHECKIN_SUBMIT))%>
+                                <%=(localize.getTextFor(ClientLocalizationKeys.CHECKIN_SUBMIT))%>
                             </button>
                         </div>
                     </div>

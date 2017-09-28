@@ -1,7 +1,8 @@
 package edu.utfpr.ct.datamodel;
 
 import edu.utfpr.ct.localization.HostLocalizationKeys;
-import edu.utfpr.ct.localization.LocalizeHost;
+import edu.utfpr.ct.localization.HostLocalizationManager;
+import edu.utfpr.ct.localization.Localize;
 import java.util.ArrayList;
 
 public enum SupplyChainTypes
@@ -46,9 +47,9 @@ public enum SupplyChainTypes
 		switch(id)
 		{
 		case 1:
-			return LocalizeHost.getTextForKey(HostLocalizationKeys.SUPPLYCHAIN_TYPE_CLASSIC);
+			return HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.SUPPLYCHAIN_TYPE_CLASSIC);
 		default:
-			return "UNKONW";
+			return HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.SUPPLYCHAIN_TYPE_UNKNOWN);
 		}
 	}
 

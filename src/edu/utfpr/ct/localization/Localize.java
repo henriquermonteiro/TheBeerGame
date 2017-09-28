@@ -9,14 +9,26 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class LocalizeClient {
+public class Localize {
 
     private final String language;
     private HashMap<String, String> stringMapping;
+    private final String path;
 
-    public LocalizeClient() {
-        language = Locale.getDefault().getLanguage();
-        changeLanguage(language);
+    public Localize(String lang, boolean isHost) {
+        language = (lang.equalsIgnoreCase("default") ? Locale.getDefault().getLanguage() : lang);
+
+        if (isHost) {
+            path = "lang" + File.separator;
+        } else {
+            path = "lang" + File.separator + "web" + File.separator;
+        }
+        
+        loadLanguage(lang);
+    }
+
+    public String getLanguage() {
+        return language;
     }
 
     public String getTextFor(String keyString) {
@@ -29,17 +41,11 @@ public class LocalizeClient {
         return ret;
     }
 
-    public String getTextForKey(String keyString) {
-        return getTextFor(keyString);
-    }
-
-//    public final void changeLanguage(String language) throws IllegalArgumentException{
-    public final void changeLanguage(String language){
-        File f = new File("lang" + File.separator + "web" + File.separator + language + ".map");
+    private void loadLanguage(String language) {
+        File f = new File(path + language + ".map");
 
         if (!f.exists()) {
-            f = new File("lang" + File.separator + "web" + File.separator + "default.map");
-//            throw new IllegalArgumentException(language + " is not a valid language identifier or the language is unavailable.");
+            f = new File(path + "default.map");
         }
 
         stringMapping = new HashMap<>();
@@ -59,9 +65,7 @@ public class LocalizeClient {
             }
 
         } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
         } catch (IOException ex) {
-            ex.printStackTrace();
         } finally {
             if (fis != null) {
                 try {

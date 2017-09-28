@@ -31,7 +31,7 @@
         lang = (String) session.getAttribute("PREF-LANG");
     }
     
-    LocalizeClient localize = ClientLocalizationManager.getInstance().getClientFor(lang);
+    Localize localize = ClientLocalizationManager.getInstance().getClientFor(lang);
  
 %>
 <jsp:include page="resources/head_begin.jsp"/>
@@ -64,7 +64,7 @@
                     button.removeAttribute("disabled");
                 }
 
-                label.innerHTML = "<%=(localize.getTextForKey(ClientLocalizationKeys.GAME_CONTROL_LABEL_ALLOW)) %>";
+                label.innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_CONTROL_LABEL_ALLOW)) %>";
 
                 input.focus();
                 input.parentNode.classList.add('is-dirty');
@@ -86,7 +86,7 @@
                     button.setAttribute("disabled", "");
                 }
 
-                label.innerHTML = "<%=(localize.getTextForKey(ClientLocalizationKeys.GAME_CONTROL_LABEL_BLOCK)) %>";
+                label.innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_CONTROL_LABEL_BLOCK)) %>";
                 input.value = "";
             }
 
@@ -111,15 +111,15 @@
                 var row = history.insertRow(1);
                 var cell = row.insertCell(k++);
                 if(func === 0){
-                    cell.innerHTML = "<%=(localize.getTextForKey(ClientLocalizationKeys.GAME_TABLE_FUNC_CON)) %>";
+                    cell.innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_FUNC_CON)) %>";
                 } else if (func === 1){
-                    cell.innerHTML = "<%=(localize.getTextForKey(ClientLocalizationKeys.GAME_TABLE_FUNC_RET)) %>";
+                    cell.innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_FUNC_RET)) %>";
                 } else if (func === 2){
-                    cell.innerHTML = "<%=(localize.getTextForKey(ClientLocalizationKeys.GAME_TABLE_FUNC_WHO)) %>";
+                    cell.innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_FUNC_WHO)) %>";
                 } else if (func === 3){
-                    cell.innerHTML = "<%=(localize.getTextForKey(ClientLocalizationKeys.GAME_TABLE_FUNC_DIS)) %>";
+                    cell.innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_FUNC_DIS)) %>";
                 } else if (func === 4){
-                    cell.innerHTML = "<%=(localize.getTextForKey(ClientLocalizationKeys.GAME_TABLE_FUNC_PRO)) %>";
+                    cell.innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_FUNC_PRO)) %>";
                 }
                     
                 
@@ -336,9 +336,9 @@
 
                     document.getElementById("rep_name").innerHTML = json_state.name;
                     if(json_state.informed_chain === true){
-                        document.getElementById("rep_type").innerHTML = "<%=(localize.getTextForKey(ClientLocalizationKeys.REPORT_TYPE_INFO)) %>";
+                        document.getElementById("rep_type").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.REPORT_TYPE_INFO)) %>";
                     }else{
-                        document.getElementById("rep_type").innerHTML = "<%=(localize.getTextForKey(ClientLocalizationKeys.REPORT_TYPE_NINF)) %>";
+                        document.getElementById("rep_type").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.REPORT_TYPE_NINF)) %>";
                     }
 
                     document.getElementById("rep_stockcost").innerHTML = json_state.stock_cost;
@@ -408,7 +408,7 @@
         <div id="waiting">
             <div class="wait-card mdl-card mdl-shadow--2dp">
                 <div class="mdl-card__title mdl-card--expand">
-                    <h2 class="mdl-card__title-text"><%=(localize.getTextForKey(ClientLocalizationKeys.WAIT_TITLE)) %></h2>
+                    <h2 class="mdl-card__title-text"><%=(localize.getTextFor(ClientLocalizationKeys.WAIT_TITLE)) %></h2>
                 </div>
                 <div class="mdl-card__media">
                     <div class="table">
@@ -443,15 +443,15 @@
         <div id="game-panel" class="hidden">
             <div class="table-card mdl-card mdl-shadow--6dp mdl-card--horizontal">
                 <div class="mdl-card__supporting-text  mdl-card--border">
-                    <span><%=(localize.getTextForKey(ClientLocalizationKeys.GAME_INFO_WEEKS)) %></span><span id="curweek">k</span>/<span id="totweek">L</span>
+                    <span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_INFO_WEEKS)) %></span><span id="curweek">k</span>/<span id="totweek">L</span>
                 </div>
                 <div class="mdl-card__media mdl-card--border">
                     <table>
                         <tr>
-                            <th><%=(localize.getTextForKey(ClientLocalizationKeys.GAME_INFO_RET)) %>
-                            <th><%=(localize.getTextForKey(ClientLocalizationKeys.GAME_INFO_WHO)) %>
-                            <th><%=(localize.getTextForKey(ClientLocalizationKeys.GAME_INFO_DIS)) %>
-                            <th><%=(localize.getTextForKey(ClientLocalizationKeys.GAME_INFO_PRO)) %>
+                            <th><%=(localize.getTextFor(ClientLocalizationKeys.GAME_INFO_RET)) %>
+                            <th><%=(localize.getTextFor(ClientLocalizationKeys.GAME_INFO_WHO)) %>
+                            <th><%=(localize.getTextFor(ClientLocalizationKeys.GAME_INFO_DIS)) %>
+                            <th><%=(localize.getTextFor(ClientLocalizationKeys.GAME_INFO_PRO)) %>
                         </tr>
                         <tr id="image">
                             <td><img src="resources\retailer.png" alt="Retailer">
@@ -460,22 +460,22 @@
                             <td><img src="resources\Industry.png" alt="Producer">
 
                         <tr id="name">
-                            <td id="retailer"><b><%=(localize.getTextForKey(ClientLocalizationKeys.GAME_NAME_LABEL)) %></b><span id="RETAILER_name2">Name 1</span>
-                            <td id="wholesaler"><b><%=(localize.getTextForKey(ClientLocalizationKeys.GAME_NAME_LABEL)) %></b><span id="WHOLESALER_name2">Name 2</span>
-                            <td id="distributor"><b><%=(localize.getTextForKey(ClientLocalizationKeys.GAME_NAME_LABEL)) %></b><span id="DISTRIBUTOR_name2">Name 3</span>
-                            <td id="producer"><b><%=(localize.getTextForKey(ClientLocalizationKeys.GAME_NAME_LABEL)) %></b><span id="PRODUCER_name2">Name 4</span>
+                            <td id="retailer"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_NAME_LABEL)) %></b><span id="RETAILER_name2">Name 1</span>
+                            <td id="wholesaler"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_NAME_LABEL)) %></b><span id="WHOLESALER_name2">Name 2</span>
+                            <td id="distributor"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_NAME_LABEL)) %></b><span id="DISTRIBUTOR_name2">Name 3</span>
+                            <td id="producer"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_NAME_LABEL)) %></b><span id="PRODUCER_name2">Name 4</span>
 
                         <tr id="profit">
-                            <td id="retailer"><b><%=(localize.getTextForKey(ClientLocalizationKeys.GAME_COST_LABEL)) %></b><span id="RETAILER_cost">0.00</span>
-                            <td id="wholesaler"><b><%=(localize.getTextForKey(ClientLocalizationKeys.GAME_COST_LABEL)) %></b><span id="WHOLESALER_cost">0.00</span>
-                            <td id="distributor"><b><%=(localize.getTextForKey(ClientLocalizationKeys.GAME_COST_LABEL)) %></b><span id="DISTRIBUTOR_cost">0.00</span>
-                            <td id="producer"><b><%=(localize.getTextForKey(ClientLocalizationKeys.GAME_COST_LABEL)) %></b><span id="PRODUCER_cost">0.00</span>
+                            <td id="retailer"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_COST_LABEL)) %></b><span id="RETAILER_cost">0.00</span>
+                            <td id="wholesaler"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_COST_LABEL)) %></b><span id="WHOLESALER_cost">0.00</span>
+                            <td id="distributor"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_COST_LABEL)) %></b><span id="DISTRIBUTOR_cost">0.00</span>
+                            <td id="producer"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_COST_LABEL)) %></b><span id="PRODUCER_cost">0.00</span>
 
                         <tr id="stock">
-                            <td id="retailer"><b><%=(localize.getTextForKey(ClientLocalizationKeys.GAME_STOCK_LABEL)) %></b><span id="RETAILER_stock">16</span>
-                            <td id="wholesaler"><b><%=(localize.getTextForKey(ClientLocalizationKeys.GAME_STOCK_LABEL)) %></b><span id="WHOLESALER_stock">16</span>
-                            <td id="distributor"><b><%=(localize.getTextForKey(ClientLocalizationKeys.GAME_STOCK_LABEL)) %></b><span id="DISTRIBUTOR_stock">16</span>
-                            <td id="producer"><b><%=(localize.getTextForKey(ClientLocalizationKeys.GAME_STOCK_LABEL)) %></b><span id="PRODUCER_stock">16</span>
+                            <td id="retailer"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_STOCK_LABEL)) %></b><span id="RETAILER_stock">16</span>
+                            <td id="wholesaler"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_STOCK_LABEL)) %></b><span id="WHOLESALER_stock">16</span>
+                            <td id="distributor"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_STOCK_LABEL)) %></b><span id="DISTRIBUTOR_stock">16</span>
+                            <td id="producer"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_STOCK_LABEL)) %></b><span id="PRODUCER_stock">16</span>
                         <tr id="incoming-order">
                             <td id="retailer">
                                 <table>
@@ -503,17 +503,17 @@
                     </table>
                 </div>
                 <div class="mdl-card__supporting-text  mdl-card--border">
-                    <span><%=(localize.getTextForKey(ClientLocalizationKeys.GAME_TABLE_NAME)) %></span>
+                    <span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_NAME)) %></span>
                 </div>
                 <div class="mdl-card__media mdl-card--border">
                     <table id="history">
                         <tr>
-                            <th><%=(localize.getTextForKey(ClientLocalizationKeys.GAME_TABLE_FUNC)) %>
-                            <th><%=(localize.getTextForKey(ClientLocalizationKeys.GAME_TABLE_WEEK)) %>
-                            <th><%=(localize.getTextForKey(ClientLocalizationKeys.GAME_TABLE_STOCK)) %>
-                            <th><%=(localize.getTextForKey(ClientLocalizationKeys.GAME_TABLE_PROFIT)) %>
-                            <th colspan="2"><%=(localize.getTextForKey(ClientLocalizationKeys.GAME_TABLE_INCORDER)) %>
-                            <th><%=(localize.getTextForKey(ClientLocalizationKeys.GAME_TABLE_REQUEST)) %>
+                            <th><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_FUNC)) %>
+                            <th><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_WEEK)) %>
+                            <th><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_STOCK)) %>
+                            <th><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_PROFIT)) %>
+                            <th colspan="2"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_INCORDER)) %>
+                            <th><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_REQUEST)) %>
                     </table>
                 </div>
             </div>
@@ -521,12 +521,12 @@
                 <div class="half-oval-shaped drop-shadow">
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                         <input class="mdl-textfield__input" type="text" pattern="[0-9]{1,9}" id="order__input">
-                        <label class="mdl-textfield__label" for="order_input" id="order__label"><%=(localize.getTextForKey(ClientLocalizationKeys.GAME_CONTROL_LABEL_ALLOW)) %></label>
-                        <span class="mdl-textfield__error"><%=(localize.getTextForKey(ClientLocalizationKeys.GAME_CONTROL_ERROR)) %></span>
+                        <label class="mdl-textfield__label" for="order_input" id="order__label"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_CONTROL_LABEL_ALLOW)) %></label>
+                        <span class="mdl-textfield__error"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_CONTROL_ERROR)) %></span>
                     </div>
                     <span style="display: inline-block;">
                         <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" id="order__button" onclick="send_request();">
-                            <%=(localize.getTextForKey(ClientLocalizationKeys.GAME_CONTROL_BUTTON)) %>
+                            <%=(localize.getTextFor(ClientLocalizationKeys.GAME_CONTROL_BUTTON)) %>
                         </button>
                     </span>
                 </div>
@@ -537,31 +537,31 @@
             <div class="mdl-card mdl-shadow--6dp mdl-card--horizontal">
                 <div class="mdl-card__supporting-text mdl-card--border">
                     <p style="display: table; width: 100%;">
-                        <label style="display: table-row; font-size: 22px;"><b><%=(localize.getTextForKey(ClientLocalizationKeys.REPORT_INFO_NAME)) %></b><span id="rep_name">Sala B-204</span></label>
-                        <label style="display: table-row;"><b><%=(localize.getTextForKey(ClientLocalizationKeys.REPORT_INFO_TYPE)) %></b><span id="rep_type">Não Informada</span></label>
+                        <label style="display: table-row; font-size: 22px;"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_INFO_NAME)) %></b><span id="rep_name">Sala B-204</span></label>
+                        <label style="display: table-row;"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_INFO_TYPE)) %></b><span id="rep_type">Não Informada</span></label>
                     </p>
                 </div>
                 <div class="mdl-card__supporting-text mdl-card--border">
                     <p style="display: table; width: 100%;">
-                        <label style="display: table-cell;"><b><%=(localize.getTextForKey(ClientLocalizationKeys.REPORT_INFO_STOCKCOST)) %></b><span id="rep_stockcost">0,5</span></label>
-                        <label style="display: table-cell;"><b><%=(localize.getTextForKey(ClientLocalizationKeys.REPORT_INFO_MISSCOST)) %></b><span id="rep_missingcost">1,0</span></label>
-                        <label style="display: table-cell;"><b><%=(localize.getTextForKey(ClientLocalizationKeys.REPORT_INFO_SALEPROFIT)) %></b><span id="rep_saleprofit">1,0</span></label>
+                        <label style="display: table-cell;"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_INFO_STOCKCOST)) %></b><span id="rep_stockcost">0,5</span></label>
+                        <label style="display: table-cell;"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_INFO_MISSCOST)) %></b><span id="rep_missingcost">1,0</span></label>
+                        <label style="display: table-cell;"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_INFO_SALEPROFIT)) %></b><span id="rep_saleprofit">1,0</span></label>
                     </p>
                 </div>
                 <div class="mdl-card__supporting-text mdl-card--border">
                     <p style="display: table; width: 100%;">
-                        <label style="display: table-cell;"><b><%=(localize.getTextForKey(ClientLocalizationKeys.REPORT_INFO_DELDELAY)) %></b><span id="rep_delay">2</span></label>
-                        <label style="display: table-cell;"><b><%=(localize.getTextForKey(ClientLocalizationKeys.REPORT_INFO_REALDURATION)) %></b><span id="rep_realduration">50</span></label>
-                        <label style="display: table-cell;"><b><%=(localize.getTextForKey(ClientLocalizationKeys.REPORT_INFO_INFDURATION)) %></b><span id="rep_infduration">70</span></label>
+                        <label style="display: table-cell;"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_INFO_DELDELAY)) %></b><span id="rep_delay">2</span></label>
+                        <label style="display: table-cell;"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_INFO_REALDURATION)) %></b><span id="rep_realduration">50</span></label>
+                        <label style="display: table-cell;"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_INFO_INFDURATION)) %></b><span id="rep_infduration">70</span></label>
                     </p>
                 </div>
                 <div class="mdl-card__supporting-text mdl-card--border">
                     <table>
                         <tr>
-                            <th><%=(localize.getTextForKey(ClientLocalizationKeys.REPORT_INFO_RETAILER)) %>
-                            <th><%=(localize.getTextForKey(ClientLocalizationKeys.REPORT_INFO_WHOLESALER)) %>
-                            <th><%=(localize.getTextForKey(ClientLocalizationKeys.REPORT_INFO_DISTRIBUTOR)) %>
-                            <th><%=(localize.getTextForKey(ClientLocalizationKeys.REPORT_INFO_PRODUCER)) %>
+                            <th><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_INFO_RETAILER)) %>
+                            <th><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_INFO_WHOLESALER)) %>
+                            <th><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_INFO_DISTRIBUTOR)) %>
+                            <th><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_INFO_PRODUCER)) %>
                         </tr>
                         <tr id="image">
                             <td><img src="resources\retailer.png" alt="Retailer">
@@ -570,22 +570,22 @@
                             <td><img src="resources\Industry.png" alt="Producer">
 
                         <tr id="name">
-                            <td id="retailer"><b><%=(localize.getTextForKey(ClientLocalizationKeys.REPORT_NAME_LABEL)) %></b><span id="rep_RETAILER_name">Name 1</span>
-                            <td id="wholesaler"><b><%=(localize.getTextForKey(ClientLocalizationKeys.REPORT_NAME_LABEL)) %></b><span id="rep_WHOLESALER_name">Name 2</span>
-                            <td id="distributor"><b><%=(localize.getTextForKey(ClientLocalizationKeys.REPORT_NAME_LABEL)) %></b><span id="rep_DISTRIBUTOR_name">Name 3</span>
-                            <td id="producer"><b><%=(localize.getTextForKey(ClientLocalizationKeys.REPORT_NAME_LABEL)) %></b><span id="rep_PRODUCER_name">Name 4</span>
+                            <td id="retailer"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_NAME_LABEL)) %></b><span id="rep_RETAILER_name">Name 1</span>
+                            <td id="wholesaler"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_NAME_LABEL)) %></b><span id="rep_WHOLESALER_name">Name 2</span>
+                            <td id="distributor"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_NAME_LABEL)) %></b><span id="rep_DISTRIBUTOR_name">Name 3</span>
+                            <td id="producer"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_NAME_LABEL)) %></b><span id="rep_PRODUCER_name">Name 4</span>
 
                         <tr id="profit">
-                            <td id="retailer"><b><%=(localize.getTextForKey(ClientLocalizationKeys.REPORT_COST_LABEL)) %></b><span id="rep_RETAILER_cost">0.00</span>
-                            <td id="wholesaler"><b><%=(localize.getTextForKey(ClientLocalizationKeys.REPORT_COST_LABEL)) %></b><span id="rep_WHOLESALER_cost">0.00</span>
-                            <td id="distributor"><b><%=(localize.getTextForKey(ClientLocalizationKeys.REPORT_COST_LABEL)) %></b><span id="rep_DISTRIBUTOR_cost">0.00</span>
-                            <td id="producer"><b><%=(localize.getTextForKey(ClientLocalizationKeys.REPORT_COST_LABEL)) %></b><span id="rep_PRODUCER_cost">0.00</span>
+                            <td id="retailer"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_COST_LABEL)) %></b><span id="rep_RETAILER_cost">0.00</span>
+                            <td id="wholesaler"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_COST_LABEL)) %></b><span id="rep_WHOLESALER_cost">0.00</span>
+                            <td id="distributor"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_COST_LABEL)) %></b><span id="rep_DISTRIBUTOR_cost">0.00</span>
+                            <td id="producer"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_COST_LABEL)) %></b><span id="rep_PRODUCER_cost">0.00</span>
 
                         <tr id="stock">
-                            <td id="retailer"><b><%=(localize.getTextForKey(ClientLocalizationKeys.REPORT_STOCK_LABEL)) %></b><span id="rep_RETAILER_stock">16</span>
-                            <td id="wholesaler"><b><%=(localize.getTextForKey(ClientLocalizationKeys.REPORT_STOCK_LABEL)) %></b><span id="rep_WHOLESALER_stock">16</span>
-                            <td id="distributor"><b><%=(localize.getTextForKey(ClientLocalizationKeys.REPORT_STOCK_LABEL)) %></b><span id="rep_DISTRIBUTOR_stock">16</span>
-                            <td id="producer"><b><%=(localize.getTextForKey(ClientLocalizationKeys.REPORT_STOCK_LABEL)) %></b><span id="rep_PRODUCER_stock">16</span>
+                            <td id="retailer"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_STOCK_LABEL)) %></b><span id="rep_RETAILER_stock">16</span>
+                            <td id="wholesaler"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_STOCK_LABEL)) %></b><span id="rep_WHOLESALER_stock">16</span>
+                            <td id="distributor"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_STOCK_LABEL)) %></b><span id="rep_DISTRIBUTOR_stock">16</span>
+                            <td id="producer"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_STOCK_LABEL)) %></b><span id="rep_PRODUCER_stock">16</span>
                     </table>
                     </table>
                 </div>

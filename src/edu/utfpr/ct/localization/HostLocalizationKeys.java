@@ -2,6 +2,9 @@ package edu.utfpr.ct.localization;
 
 public class HostLocalizationKeys
 {
+	public static final String LANGUAGE_NAME = "HOST-LANG-IDENTIFIER";
+	public static final String LANGUAGE_FLAG = "HOST-FLAG-PATH";
+        
 	public static final String FRAME_NAME = "GUI-FRAME-NAME";
 
 	public static final String LABEL_STARTING_WAIT = "GUI-LABEL-AWAIT-START";
@@ -55,8 +58,10 @@ public class HostLocalizationKeys
 	public static final String DEMAND_PARAMETER_SINGLESTEP_FINWEEK = "DEMAND-PARAM-SINGLESTEP-FINAL-WEEK";
 
 	public static final String DEMAND_TYPE_SINGLESTEP = "DEMAND-TYPE-SINGLESTEP";
+	public static final String DEMAND_TYPE_UNKNOWN = "DEMAND-TYPE-UNKNOWN";
 
 	public static final String SUPPLYCHAIN_TYPE_CLASSIC = "SUPPLYCHAIN-TYPE-CLASSIC";
+	public static final String SUPPLYCHAIN_TYPE_UNKNOWN = "SUPPLYCHAIN-TYPE-UNKNOWN";
 
 	public static final String DEFAULT_GAME_NAME = "DEFAULT-GAME-NAME";
 
@@ -65,4 +70,12 @@ public class HostLocalizationKeys
 	public static final String TITLE_REPORT_WHOLESALER = "TITLE-REPORT-WHOLESALER-TAB";
 	public static final String TITLE_REPORT_DISTRIBUTOR = "TITLE-REPORT-DISTRIBUTOR-TAB";
 	public static final String TITLE_REPORT_PRODUCER = "TITLE-REPORT-PRODUCER-TAB";
+	public static final String TITLE_REPORT_UNKNOWN = "TITLE-REPORT-UNKNOWN-TAB";
+        
+        public static final String TOOLTIP_MAIN_HOME = "TOOLTIP-MAINSCENE-HOME-TAB";
+        public static final String TOOLTIP_MAIN_CREATE = "TOOLTIP-MAINSCENE-CREATE-GAME-TAB";
+        public static final String TOOLTIP_GAME_COMP_LOAD_GAME = "TOOLTIP-GAME-COMPONENT-LOAD-GAME";
+        public static final String TOOLTIP_GAME_COMP_LOAD_REPO = "TOOLTIP-GAME-COMPONENT-LOAD-REPORT";
+        public static final String TOOLTIP_GAME_COMP_REMO_GAME = "TOOLTIP-GAME-COMPONENT-REMOVE-GAME";
+        public static final String TOOLTIP_GAME_COMP_REMO_REPO = "TOOLTIP-GAME-COMPONENT-REMOVE-REPORT";
 }

@@ -103,6 +103,65 @@
     -fx-background-radius: 0 0 10 10;
 }
 
+.lang-menu {
+    -fx-background-color: -header-color;
+    -fx-border-color: transparent;
+    -fx-background-radius: 3 0 0 3;
+}
+
+.lang-menu:hover {
+    -fx-background-color: derive(-header-color, -20%);
+}
+
+.lang-menu > .arrow-button {
+    -fx-padding: 0;
+}
+
+.lang-menu > .arrow-button > .arrow {
+    -fx-padding: 0;
+}
+
+.lang-menu .lang-element{
+    -fx-spacing: 10;
+    -fx-alignment: center;
+}
+
+.lang-menu .lang-element .label{
+    -fx-text-fill: white;
+}
+
+.lang-menu .lang-element .icon{
+    -fx-fill: white;
+}
+
+.context-menu {
+    -fx-background-color: -header-color;
+    -fx-border-color: transparent;
+}
+
+.lang-element.item{
+    -fx-background-color: -header-color;
+    -fx-focus-color: -header-color;
+    -fx-text-fill: white;
+}
+
+.lang-element.item.current{
+    -fx-background-color: derive(-header-color, -10%);
+    -fx-focus-color: derive(-header-color, -10%);
+    -fx-text-fill: white;
+}
+
+.lang-element.item .hbox-1 {
+    -fx-spacing: 10;
+    -fx-alignment: center;
+}
+
+.lang-element.item:focused {
+    -fx-background-color: derive(-header-color, -20%);
+    -fx-focus-color: derive(-header-color, -20%);
+}
+
+
 .hyperlink{
     -fx-border-color: transparent;
 }
