@@ -78,4 +78,10 @@ public class HostLocalizationKeys
         public static final String TOOLTIP_GAME_COMP_LOAD_REPO = "TOOLTIP-GAME-COMPONENT-LOAD-REPORT";
         public static final String TOOLTIP_GAME_COMP_REMO_GAME = "TOOLTIP-GAME-COMPONENT-REMOVE-GAME";
         public static final String TOOLTIP_GAME_COMP_REMO_REPO = "TOOLTIP-GAME-COMPONENT-REMOVE-REPORT";
+        
+        public static String LABEL_INFO_STATUS = "GUI-LABEL-INFORMATION-GAME-STATUS";
+        public static String TEXT_IP_BEGIN = "IP-TEXT-BEGIN";
+        public static String TEXT_IP_MIDDLE_ERROR = "IP-TEXT-MIDDLE-IP-ERROR";
+        public static String TEXT_IP_MIDDLE = "IP-TEXT-MIDDLE-DOTS";
+        public static String TEXT_IP_END = "IP-TEXT-END";
 }

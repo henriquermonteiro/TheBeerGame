@@ -5,6 +5,7 @@ import edu.utfpr.ct.datamodel.Function;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.datamodel.SupplyChainTypes;
 import edu.utfpr.ct.hostgui.utils.NumberChooserFX;
+import edu.utfpr.ct.hostgui.utils.StaticImages;
 import edu.utfpr.ct.localization.HostLocalizationKeys;
 import edu.utfpr.ct.localization.HostLocalizationManager;
 import edu.utfpr.ct.localization.LocalizationUtils;
@@ -55,10 +56,10 @@ import jiconfont.javafx.IconNode;
 
 public class CreateGamePane extends BorderPane {
     
-    private static final Image RETAILER_ICON = new Image(new File("icon" + File.separator + "retailer.png").toURI().toString());
-    private static final Image WHOLESALER_ICON = new Image(new File("icon" + File.separator + "wholesaler.png").toURI().toString());
-    private static final Image DISTRIBUTOR_ICON = new Image(new File("icon" + File.separator + "distributor.png").toURI().toString());
-    private static final Image PRODUCER_ICON = new Image(new File("icon" + File.separator + "Industry.png").toURI().toString());
+//    private static final Image RETAILER_ICON = new Image(new File("icon" + File.separator + "retailer.png").toURI().toString());
+//    private static final Image WHOLESALER_ICON = new Image(new File("icon" + File.separator + "wholesaler.png").toURI().toString());
+//    private static final Image DISTRIBUTOR_ICON = new Image(new File("icon" + File.separator + "distributor.png").toURI().toString());
+//    private static final Image PRODUCER_ICON = new Image(new File("icon" + File.separator + "Industry.png").toURI().toString());
 
     private TextField nameField;
     private CheckBox informedSupplyChain;
@@ -208,19 +209,19 @@ public class CreateGamePane extends BorderPane {
             for (edu.utfpr.ct.datamodel.Node n : nodes) {
                 Image pHolder = null;
                 if (n.function.equals(Function.RETAILER)) {
-                    pHolder = RETAILER_ICON;
+                    pHolder = StaticImages.RETAILER_ICON;
                 }
 
                 if (n.function.equals(Function.WHOLESALER)) {
-                    pHolder = WHOLESALER_ICON;
+                    pHolder = StaticImages.WHOLESALER_ICON;
                 }
 
                 if (n.function.equals(Function.DISTRIBUTOR)) {
-                    pHolder = DISTRIBUTOR_ICON;
+                    pHolder = StaticImages.DISTRIBUTOR_ICON;
                 }
 
                 if (n.function.equals(Function.PRODUCER)) {
-                    pHolder = PRODUCER_ICON;
+                    pHolder = StaticImages.PRODUCER_ICON;
                 }
 
                 if (k > 0) {
@@ -267,19 +268,19 @@ public class CreateGamePane extends BorderPane {
             for (edu.utfpr.ct.datamodel.Node n : nodes) {
                 Image pHolder = null;
                 if (n.function.equals(Function.RETAILER)) {
-                    pHolder = RETAILER_ICON;
+                    pHolder = StaticImages.RETAILER_ICON;
                 }
 
                 if (n.function.equals(Function.WHOLESALER)) {
-                    pHolder = WHOLESALER_ICON;
+                    pHolder = StaticImages.WHOLESALER_ICON;
                 }
 
                 if (n.function.equals(Function.DISTRIBUTOR)) {
-                    pHolder = DISTRIBUTOR_ICON;
+                    pHolder = StaticImages.DISTRIBUTOR_ICON;
                 }
 
                 if (n.function.equals(Function.PRODUCER)) {
-                    pHolder = PRODUCER_ICON;
+                    pHolder = StaticImages.PRODUCER_ICON;
                 }
 
                 double mult = (elemRow - 0.5) - (Math.abs((k % (elemRow * 2)) - (elemRow - 0.5)));

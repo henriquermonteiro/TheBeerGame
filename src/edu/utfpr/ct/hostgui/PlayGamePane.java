@@ -6,6 +6,7 @@ import edu.utfpr.ct.datamodel.Node;
 import edu.utfpr.ct.hostgui.utils.AutoCompleteTextField;
 import edu.utfpr.ct.hostgui.utils.IdentifiableChangeListener;
 import edu.utfpr.ct.hostgui.utils.LockedToggleButton;
+import edu.utfpr.ct.hostgui.utils.StaticImages;
 import edu.utfpr.ct.localization.HostLocalizationKeys;
 import edu.utfpr.ct.localization.Localize;
 import java.io.File;
@@ -21,6 +22,9 @@ import javafx.geometry.VPos;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
@@ -34,21 +38,28 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.paint.Color;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import jiconfont.icons.GoogleMaterialDesignIcons;
 import jiconfont.javafx.IconNode;
 
 public class PlayGamePane extends BorderPane {
 
-    private static final Image rIcon = new Image(new File("icon" + File.separator + "retailer.png").toURI().toString());
-    private static final Image wIcon = new Image(new File("icon" + File.separator + "wholesaler.png").toURI().toString());
-    private static final Image dIcon = new Image(new File("icon" + File.separator + "distributor.png").toURI().toString());
-    private static final Image pIcon = new Image(new File("icon" + File.separator + "Industry.png").toURI().toString());
+//    private static final Image rIcon = new Image(new File("icon" + File.separator + "retailer.png").toURI().toString());
+//    private static final Image wIcon = new Image(new File("icon" + File.separator + "wholesaler.png").toURI().toString());
+//    private static final Image dIcon = new Image(new File("icon" + File.separator + "distributor.png").toURI().toString());
+//    private static final Image pIcon = new Image(new File("icon" + File.separator + "Industry.png").toURI().toString());
 
 //    private static final Image playIconImage = new Image(new File(Localize.getTextForKey(HostLocalizationKeys.PLAY_ICON)).toURI().toString());
 //    private static final Image pauseIconImage = new Image(new File(Localize.getTextForKey(HostLocalizationKeys.PAUSE_ICON)).toURI().toString());
@@ -133,6 +144,7 @@ public class PlayGamePane extends BorderPane {
 //        playIcon.setPreserveRatio(true);
 //        pauseIcon.setPreserveRatio(true);
         playPauseIcon = new IconNode(GoogleMaterialDesignIcons.STOP);
+        playPauseIcon.getStyleClass().addAll("icon");
 //        pauseIcon = new ImageView(pauseIconImage);
 //        playIcon.setPreserveRatio(true);
 //        pauseIcon.setPreserveRatio(true);
@@ -140,6 +152,7 @@ public class PlayGamePane extends BorderPane {
         gameName = new Label();
 
         playPauseButton = new ToggleButton();
+        playPauseButton.getStyleClass().addAll("play-pause");
         playPauseButton.setGraphic(playPauseIcon);
 
         playPauseButton.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
@@ -271,16 +284,16 @@ public class PlayGamePane extends BorderPane {
 
             switch (((Node) game.supplyChain[ModelUtils.getActualNodePosition(game, k)]).function.getPosition()) {
                 case 1:
-                    iV.setImage(rIcon);
+                    iV.setImage(StaticImages.RETAILER_ICON);
                     break;
                 case 2:
-                    iV.setImage(wIcon);
+                    iV.setImage(StaticImages.WHOLESALER_ICON);
                     break;
                 case 3:
-                    iV.setImage(dIcon);
+                    iV.setImage(StaticImages.DISTRIBUTOR_ICON);
                     break;
                 case 4:
-                    iV.setImage(pIcon);
+                    iV.setImage(StaticImages.PRODUCER_ICON);
                     break;
             }
 

@@ -1,13 +1,8 @@
 package edu.utfpr.ct.hostgui.utils;
 
-import edu.utfpr.ct.localization.HostLocalizationKeys;
-import edu.utfpr.ct.localization.Localize;
-import java.io.File;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import jiconfont.icons.GoogleMaterialDesignIcons;
 import jiconfont.javafx.IconNode;
 

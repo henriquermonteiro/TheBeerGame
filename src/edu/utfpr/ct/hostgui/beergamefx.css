@@ -297,6 +297,27 @@
     -fx-text-fill: #4A4A4A;
 }
 
+.play-pause {
+    -fx-background-color: derive(-header-color, -10%);
+}
+
+.play-pause:hover {
+    -fx-background-color: derive(-header-color, -20%);
+}
+
+.play-pause:selected {
+    -fx-background-color: derive(mediumspringgreen, -20%);
+}
+
+.play-pause:selected:hover {
+    -fx-background-color: derive(mediumspringgreen, -40%);
+}
+
+.play-pause .icon {
+    -fx-fill: white;
+    -fx-icon-size: 40px;
+}
+
 .creation-buttons {
     -fx-hgap: 15px;
     -fx-padding: 5px;

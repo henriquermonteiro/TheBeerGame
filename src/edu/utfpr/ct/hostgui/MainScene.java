@@ -12,22 +12,17 @@ import edu.utfpr.ct.localization.HostLocalizationManager;
 import edu.utfpr.ct.localization.LocalizationUtils;
 import edu.utfpr.ct.util.IPUtils;
 import edu.utfpr.ct.webclient.ActionService;
-import java.awt.Toolkit;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.geometry.Side;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContextMenu;
+import javafx.geometry.HPos;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
@@ -35,8 +30,12 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.text.Text;
 import jiconfont.icons.GoogleMaterialDesignIcons;
 import jiconfont.javafx.IconNode;
 
@@ -50,8 +49,124 @@ public class MainScene extends BorderPane {
 
     private final LoaderPane loaderPane;
     private final HashMap<String, GamePane> games;
+    private final StartFrame startFrame;
 
-    public MainScene(IControllerHost control) {
+    public StartFrame getStartFrame() {
+        return startFrame;
+    }
+    
+    public void makeGameInfo(String gameName){
+        Game g = control.getGame(gameName);
+        boolean isGame = true;
+        
+        if(g == null){
+            g = control.getReport(gameName);
+            isGame = false;
+        }
+        
+        if(g == null) return;
+        
+        
+        Text name = new Text(g.name);
+        BorderPane nameInfo = new BorderPane(name);
+        nameInfo.getStyleClass().addAll("card", "shadowed-1");
+        
+        GridPane statusInfo = new GridPane();
+        statusInfo.getStyleClass().addAll("card", "shadowed-1");
+        
+        Text passw = new Text((g.password == null || g.password.isEmpty() ? "---" : g.password));
+        Label passw_Label = new Label();
+        LocalizationUtils.bindLocalizationText(passw_Label.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_PASSWORD_FIELD);
+        HBox passw_Layout = new HBox(passw_Label, passw);
+        
+        Text status = new Text(Boolean.toString(isGame));
+        Label status_Label = new Label();
+        LocalizationUtils.bindLocalizationText(status_Label.textProperty(), HostLocalizationKeys.LABEL_INFO_STATUS);
+        HBox status_Layout = new HBox(status_Label, status);
+        
+        Text informed = new Text(Boolean.toString(g.informedChainSupply));
+        Label informed_Label = new Label();
+        LocalizationUtils.bindLocalizationText(informed_Label.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_INFORMED_SC);
+        HBox informed_Layout = new HBox(informed_Label, informed);
+        
+        statusInfo.add(passw_Layout, 0, 0, 1, 1);
+        statusInfo.add(status_Layout, 1, 0, 1, 1);
+        statusInfo.add(informed_Layout, 0, 1, 2, 1);
+        
+        ColumnConstraints cC = new ColumnConstraints();
+        cC.setPercentWidth(50);
+        statusInfo.getColumnConstraints().add(cC);
+        statusInfo.getColumnConstraints().add(cC);
+        
+        
+        GridPane generalInfo = new GridPane();
+        generalInfo.getStyleClass().addAll("card", "shadowed-1");
+        
+        Text missCost = new Text(Double.toString(g.missingUnitCost));
+        Label missC_Label = new Label();
+        LocalizationUtils.bindLocalizationText(missC_Label.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_MISSINGUC);
+        HBox missingCost_Layout = new HBox(missC_Label, missCost);
+        
+        Text stockCost = new Text(Double.toString(g.stockUnitCost));
+        Label stockCost_Label = new Label();
+        LocalizationUtils.bindLocalizationText(stockCost_Label.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_STOCKUC);
+        HBox stockCost_Layout = new HBox(stockCost_Label, stockCost);
+        
+        Text sellProf = new Text(Double.toString(g.sellingUnitProfit));
+        Label sellProf_Label = new Label();
+        LocalizationUtils.bindLocalizationText(sellProf_Label.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_SELLINGP);
+        HBox sellProf_Layout = new HBox(sellProf_Label, sellProf);
+        
+        Text realDur = new Text(Double.toString(g.realDuration));
+        Label realDur_Label = new Label();
+        LocalizationUtils.bindLocalizationText(realDur_Label.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_REAL_DURATION);
+        HBox realDur_Layout = new HBox(realDur_Label, realDur);
+        
+        Text infoDur = new Text(Double.toString(g.informedDuration));
+        Label infoDur_Label = new Label();
+        LocalizationUtils.bindLocalizationText(infoDur_Label.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_INF_DURATION);
+        HBox infoDur_Layout = new HBox(infoDur_Label, infoDur);
+        
+        Text initStock = new Text(Double.toString(g.initialStock));
+        Label initStock_Label = new Label();
+        LocalizationUtils.bindLocalizationText(initStock_Label.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_INITIAL_STOCK);
+        HBox initStock_Layout = new HBox(initStock_Label, initStock);
+        
+        Text deliDelay = new Text(Double.toString(g.deliveryDelay));
+        Label deliDelay_Label = new Label();
+        LocalizationUtils.bindLocalizationText(deliDelay_Label.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_DELIVERY_DELAY);
+        HBox deliDelay_Layout = new HBox(deliDelay_Label, deliDelay);
+        
+        generalInfo.add(missingCost_Layout, 0, 0, 1, 1);
+        generalInfo.add(stockCost_Layout, 1, 0, 2, 1);
+        generalInfo.add(sellProf_Layout, 3, 0, 1, 1);
+        
+        generalInfo.add(realDur_Layout, 0, 1, 2, 1);
+        generalInfo.add(infoDur_Layout, 2, 1, 2, 1);
+        
+        generalInfo.add(initStock_Layout, 0, 2, 2, 1);
+        generalInfo.add(deliDelay_Layout, 2, 2, 2, 1);
+        
+        generalInfo.setAlignment(Pos.CENTER);
+        generalInfo.getRowConstraints().add(new RowConstraints(0.0, 10.0, 200.0, Priority.NEVER, VPos.CENTER, false));
+        generalInfo.getRowConstraints().add(new RowConstraints(0.0, 10.0, 200.0, Priority.NEVER, VPos.CENTER, false));
+        generalInfo.getRowConstraints().add(new RowConstraints(0.0, 10.0, 200.0, Priority.NEVER, VPos.CENTER, false));
+        
+        generalInfo.getColumnConstraints().add(new ColumnConstraints(40.0, 60.0, 300.0, Priority.SOMETIMES, HPos.CENTER, false));
+        generalInfo.getColumnConstraints().add(new ColumnConstraints(40.0, 60.0, 300.0, Priority.SOMETIMES, HPos.CENTER, false));
+        generalInfo.getColumnConstraints().add(new ColumnConstraints(40.0, 60.0, 300.0, Priority.SOMETIMES, HPos.CENTER, false));
+        generalInfo.getColumnConstraints().add(new ColumnConstraints(40.0, 60.0, 300.0, Priority.SOMETIMES, HPos.CENTER, false));
+        
+        GridPane outterPane= new GridPane();
+        outterPane.add(nameInfo, 0, 0);
+        outterPane.add(statusInfo, 0, 1);
+        outterPane.add(generalInfo, 0, 2);
+        outterPane.setAlignment(Pos.CENTER);
+        
+        startFrame.makeAlert(outterPane);
+    }
+
+    public MainScene(IControllerHost control, StartFrame startFrame) {
         this.control = control;
 
         getStyleClass().add("transparent");
@@ -59,6 +174,8 @@ public class MainScene extends BorderPane {
         games = new HashMap<>();
 
         loaderPane = new LoaderPane(this);
+        
+        this.startFrame = startFrame;
 
         Tab homeTab = new Tab();
 
@@ -88,16 +205,37 @@ public class MainScene extends BorderPane {
 
         ArrayList<String> ips = (ArrayList<String>) IPUtils.findIP();
 
-        BorderPane top = new BorderPane(new Label("Endereço para jogadores: " + (ips.isEmpty() ? "Erro ao buscar endereço. Porta usada: " : ips.get(0) + ":") + ActionService.getService().getPort()));
+        StringProperty ip_begin = new SimpleStringProperty();
+        LocalizationUtils.bindLocalizationText(ip_begin, HostLocalizationKeys.TEXT_IP_BEGIN);
+        StringProperty ip_middle_error = new SimpleStringProperty();
+        LocalizationUtils.bindLocalizationText(ip_middle_error, HostLocalizationKeys.TEXT_IP_MIDDLE_ERROR);
+        StringProperty ip_middle = new SimpleStringProperty();
+        LocalizationUtils.bindLocalizationText(ip_middle, HostLocalizationKeys.TEXT_IP_MIDDLE);
+        StringProperty ip_end = new SimpleStringProperty();
+        LocalizationUtils.bindLocalizationText(ip_end, HostLocalizationKeys.TEXT_IP_END);
+        
+        Label ip = new Label();        
+        ip.textProperty().bind(Bindings.createStringBinding(() -> {
+            return ip_begin.get().concat((ips.isEmpty() ? ip_middle_error.get() : ips.get(0))).concat(ip_middle.get().concat("" + ActionService.getService().getPort()).concat(ip_end.get()));
+        }, HostLocalizationManager.getInstance().getLang()));
+//        BorderPane top = new BorderPane(new Label("Endereço para jogadores: " + (ips.isEmpty() ? "Erro ao buscar endereço. Porta usada: " : ips.get(0) + ":") + ActionService.getService().getPort()));
+        BorderPane top = new BorderPane(ip);
         IconNode refresh = new IconNode(GoogleMaterialDesignIcons.REFRESH);
         refresh.getStyleClass().addAll("icon");
 
         Hyperlink rel = new Hyperlink("", refresh);
         rel.setVisited(true);
         rel.setOnAction((ActionEvent event) -> {
-            top.setCenter(new Label("Endereço para jogadores: " + (ips.isEmpty() ? "Erro ao buscar endereço. Porta usada: " : ips.get(0) + ":") + ActionService.getService().getPort()));
+            ArrayList<String> ips2 = (ArrayList<String>) IPUtils.findIP();
+            
+            Label ip2 = new Label();        
+            ip2.textProperty().bind(Bindings.createStringBinding(() -> {
+                return ip_begin.get().concat((ips2.isEmpty() ? ip_middle_error.get() : ips2.get(0))).concat(ip_middle.get().concat("" + ActionService.getService().getPort()).concat(ip_end.get()));
+            }, HostLocalizationManager.getInstance().getLang()));
+
+            top.setCenter(ip2);
         });
-        
+
         langMenuButton = new MenuButton();
         updateLanguageMenuButton();
         makeLanguageMenuItens(langMenuButton);
@@ -109,32 +247,34 @@ public class MainScene extends BorderPane {
 
         this.setCenter(tabPane);
     }
-    
-    private void makeLanguageMenuItens(MenuButton menu){
+
+    private void makeLanguageMenuItens(MenuButton menu) {
         menu.getItems().clear();
-        
+
         String currentLang = HostLocalizationManager.getInstance().getLang().get();
-        
+
         String toURL = HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.LANGUAGE_FLAG);
         Image img = new Image(getClass().getResourceAsStream(toURL));
         ImageView flag = new ImageView(img);
         flag.setPreserveRatio(true);
         flag.setFitHeight(30.0);
-        
+
         Label name = new Label(HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.LANGUAGE_NAME));
-        
+
         HBox content = new HBox(flag, name);
         content.getStyleClass().addAll("hbox-1");
         MenuItem item = new MenuItem("", content);
         item.getStyleClass().addAll("lang-element", "item", "current");
-        
+
         currentItem = item;
-        
+
         menu.getItems().add(item);
-        
-        for(String lang : HostLocalizationManager.getValidLanguages()){
-            if(currentLang.equals(lang)) continue;
-            
+
+        for (String lang : HostLocalizationManager.getValidLanguages()) {
+            if (currentLang.equals(lang)) {
+                continue;
+            }
+
             toURL = HostLocalizationManager.getInstance().getClientFor(lang).getTextFor(HostLocalizationKeys.LANGUAGE_FLAG);
             img = new Image(getClass().getResourceAsStream(toURL));
             flag = new ImageView(img);
@@ -149,7 +289,7 @@ public class MainScene extends BorderPane {
             item.getStyleClass().addAll("lang-element", "item");
             item.setOnAction((ActionEvent event) -> {
                 HostLocalizationManager.getInstance().getLang().setValue(name2.getText());
-                
+
                 makeLanguageMenuItens(langMenuButton);
                 updateLanguageMenuButton();
             });
@@ -157,27 +297,27 @@ public class MainScene extends BorderPane {
             menu.getItems().add(item);
         }
     }
-    
-    private void updateLanguageMenuButton(){
+
+    private void updateLanguageMenuButton() {
         langMenuButton.getStyleClass().clear();
         langMenuButton.getStyleClass().addAll("lang-menu");
-        
+
         HBox content = new HBox();
         content.getStyleClass().addAll("lang-element");
-        
+
         String toURL = HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.LANGUAGE_FLAG);
         Image img = new Image(getClass().getResourceAsStream(toURL));
         ImageView flag = new ImageView(img);
         flag.setPreserveRatio(true);
         flag.setFitHeight(28.0);
-        
+
         Label name = new Label(HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.LANGUAGE_NAME));
-        
+
         IconNode down = new IconNode(GoogleMaterialDesignIcons.EXPAND_MORE);
         down.getStyleClass().add("icon");
-        
+
         content.getChildren().addAll(flag, name, down);
-        
+
         langMenuButton.setGraphic(content);
     }
 
