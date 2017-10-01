@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @WebServlet(
-        name = "BeerGamePlayerService-Update",
+        name = "BeerGameHostService-Information",
         urlPatterns = {"/info"}
 )
 public class GameInfoServlet extends HttpServlet{

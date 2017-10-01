@@ -33,10 +33,10 @@ public class GameUpdateServlet extends HttpServlet {
         if (service != null) {
             JSONObject json = new JSONObject();
 
-            String gameName = null;
-            String playerName = null;
-            String s_function = null;
-            String s_week = null;
+            String gameName;
+            String playerName;
+            String s_function;
+            String s_week;
 
             boolean flag = true;
 

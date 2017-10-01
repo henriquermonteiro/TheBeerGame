@@ -9,8 +9,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import edu.utfpr.ct.interfaces.IControllerHost;
 import edu.utfpr.ct.localization.LocalizationUtils;
+import java.io.File;
 import java.util.ArrayList;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import jiconfont.icons.GoogleMaterialDesignIcons;
 import jiconfont.javafx.IconFontFX;
@@ -58,6 +60,8 @@ public class StartFrame extends Application implements IGUI{
         s.getStylesheets().add(stylesheet);
         LocalizationUtils.bindLocalizationText(primaryStage.titleProperty(), HostLocalizationKeys.FRAME_NAME);
         primaryStage.setScene(s);
+        Image ic = new Image(new File("icon" + File.separator + "Beer_mug_transparent2.png").toURI().toString());
+        primaryStage.getIcons().add(new Image(new File("icon" + File.separator + "Beer_mug_transparent2.png").toURI().toString()));
         primaryStage.show();
     }
     
@@ -84,6 +88,7 @@ public class StartFrame extends Application implements IGUI{
             });
         });
         window.setScene(s);
+        window.getIcons().add(new Image(new File("icon" + File.separator + "Beer_mug_transparent2.png").toURI().toString()));
         window.show();
     }
 

@@ -19,7 +19,7 @@ public class TheBeerGame
 				System.exit(0);
 			}
 
-//			new ActionService(Controller.getController());
+//			Controller.getController();
                         ActionService.getService();
 			new StartFrame(Controller.getController()).runGUI();
 		}
