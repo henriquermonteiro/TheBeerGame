@@ -65,13 +65,17 @@ public class Engine
 
 	public boolean setState(int state)
 	{
-		if((this.state != FINISHED) && (state == RUNNING && isAllPlayerSet()))
+		if(this.state == SETUP && ((state == RUNNING && isAllPlayerSet()) || (state == PAUSED)))
+			this.state = state;
+		else if(this.state == RUNNING)
+			this.state = state;
+		else if(this.state == PAUSED && state == RUNNING)
 			this.state = state;
 
 		if(this.state == PAUSED)
 		{
 			for(IFunction function : turn.getValues())
-				getNodeByFunction(function).playerName = "";
+				removePlayerForNode(function);
 
 			players.clear();
 		}
@@ -123,10 +127,10 @@ public class Engine
 	{
 		getNodeByFunction(function).playerName = "";
 		setState(Engine.SETUP);
-		
+
 		return true;
 	}
-	
+
 	//WHATAPORRA?
 	public boolean changePlayerForNode(IFunction function, String playerName)
 	{
