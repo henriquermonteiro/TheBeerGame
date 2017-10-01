@@ -174,7 +174,7 @@ public class GameUpdateServlet extends HttpServlet {
             resp.getOutputStream().flush();
         }
 
-//        resp.getOutputStream().close();
+        resp.getOutputStream().close();
     }
 
     @Override

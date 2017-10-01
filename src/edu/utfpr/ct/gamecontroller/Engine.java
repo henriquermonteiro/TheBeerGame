@@ -65,9 +65,8 @@ public class Engine
 
 	public boolean setState(int state)
 	{
-		if (((this.state != FINISHED) && (state == RUNNING && isAllPlayerSet())) || state == PAUSED || state == SETUP || (this.state == RUNNING && state == FINISHED))
+		if((this.state != FINISHED) && (state == RUNNING && isAllPlayerSet()))
 			this.state = state;
-                
 
 		if(this.state == PAUSED)
 		{
@@ -371,6 +370,6 @@ public class Engine
 		clientTurn = true;
 		turn = turn.first();
 		weeks = 0;
-		state = SETUP;
+		state = PAUSED;
 	}
 }
