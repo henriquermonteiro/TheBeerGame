@@ -8,7 +8,6 @@ import java.sql.Statement;
 public class Create
 {
 	private final String game = "CREATE TABLE game( "
-								//+ "game_id               INT NOT NULL, "
 								+ "game_id               INT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), "
 								+ "timestamp             BIGINT NOT NULL, "
 								+ "name                  VARCHAR(128) NOT NULL, "

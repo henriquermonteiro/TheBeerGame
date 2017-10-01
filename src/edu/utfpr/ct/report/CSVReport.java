@@ -74,7 +74,7 @@ class CSVReport extends AbstractReport
 					  + game.informedChainSupply;
 
 		new SimpleDateFormat("yyyy-MM-dd HH-mm-ss").format(new Date(game.timestamp));
-		
+
 		bw.write("Configuration");
 		bw.newLine();
 		bw.write(header);

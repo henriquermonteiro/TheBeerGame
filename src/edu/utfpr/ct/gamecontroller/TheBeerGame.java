@@ -12,15 +12,14 @@ public class TheBeerGame
 	{
 		try
 		{
-			if(!Database.isConnectionFree())
+			if(!Database.isConnected())
 			{
 				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-				JOptionPane.showMessageDialog(null, "Apenas uma instância pode ser aberta por vez.", "Erro", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Only one instance of the game can be running at a time", "Error", JOptionPane.ERROR_MESSAGE);
 				System.exit(0);
 			}
 
-//			Controller.getController();
-                        ActionService.getService();
+			ActionService.getService();
 			new StartFrame(Controller.getController()).runGUI();
 		}
 		catch(Exception e)

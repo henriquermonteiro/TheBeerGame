@@ -14,6 +14,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import edu.utfpr.ct.interfaces.ILogger;
+import java.util.logging.Level;
 
 public class Logger implements ILogger
 {
@@ -25,7 +26,7 @@ public class Logger implements ILogger
 		new Database().initializeDB();
 	}
 
-	public static Logger getLogger()
+	public static synchronized Logger getLogger()
 	{
 		if(logger == null)
 			logger = new Logger();
@@ -109,7 +110,7 @@ public class Logger implements ILogger
 	public void logPlayerMove(int gameID, Node node)
 	{
 		String query;
-		PreparedStatement stmt;
+		PreparedStatement stmt = null;
 
 		try
 		{

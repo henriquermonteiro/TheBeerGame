@@ -2,31 +2,33 @@ package edu.utfpr.ct.exception;
 
 public class FinalizedGameException extends Exception
 {
-	private static final String messageText = "The game requested is finalized. Use the report methods.";
+	private static final long serialVersionUID = 6608165778360505212L;
+
+	private static final String MESSAGE_TEXT = "The game requested is finalized. Use the report methods.";
 
 	public FinalizedGameException()
 	{
-		super(messageText);
+		super(MESSAGE_TEXT);
 	}
 
 	public FinalizedGameException(String string)
 	{
-		super(messageText);
+		super(MESSAGE_TEXT);
 	}
 
 	public FinalizedGameException(String string, Throwable thrwbl)
 	{
-		super(messageText, thrwbl);
+		super(MESSAGE_TEXT, thrwbl);
 	}
 
 	public FinalizedGameException(Throwable thrwbl)
 	{
-		super(messageText, thrwbl);
+		super(MESSAGE_TEXT, thrwbl);
 	}
 
 	public FinalizedGameException(String string, Throwable thrwbl, boolean bln, boolean bln1)
 	{
-		super(messageText, thrwbl, bln, bln1);
+		super(MESSAGE_TEXT, thrwbl, bln, bln1);
 	}
 
 	public static void throwException() throws FinalizedGameException
@@ -36,11 +38,11 @@ public class FinalizedGameException extends Exception
 
 	public static void throwException(Throwable thrwbl) throws FinalizedGameException
 	{
-		throw new FinalizedGameException(messageText, thrwbl);
+		throw new FinalizedGameException(MESSAGE_TEXT, thrwbl);
 	}
 
 	public static void throwException(Throwable thrwbl, boolean bln, boolean bln1) throws FinalizedGameException
 	{
-		throw new FinalizedGameException(messageText, thrwbl, bln, bln1);
+		throw new FinalizedGameException(MESSAGE_TEXT, thrwbl, bln, bln1);
 	}
 }

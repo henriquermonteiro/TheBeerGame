@@ -132,7 +132,7 @@ class HTMLReport extends AbstractReport
 			if(!(abstractNode instanceof TravellingTime))
 				function += "'" + ((Node) abstractNode).function.getName() + "', \n";
 		function += "]";
-		
+
 		return function;
 	}
 

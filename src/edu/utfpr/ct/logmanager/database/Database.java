@@ -32,7 +32,7 @@ public class Database
 		file.delete();
 	}
 	
-	public static boolean closeConnection()
+	public static synchronized boolean closeConnection()
 	{
 		try
 		{
@@ -50,7 +50,7 @@ public class Database
 		}
 	}
 
-	public static Connection getConnection()
+	public static synchronized Connection getConnection()
 	{
 		String connectionString;
 
@@ -92,7 +92,7 @@ public class Database
 		return rowsCount > 0;
 	}
 	
-	public static boolean isConnectionFree()
+	public static synchronized boolean isConnected()
 	{
 		return getConnection() != null;
 	}

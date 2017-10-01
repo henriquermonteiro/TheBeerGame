@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Node extends AbstractNode
 {
-	private static final long serialVersionUID = -8635726000488404463L;
+	private static final long serialVersionUID = 8650978713791502113L;
 
 	public String playerName;
 	public IFunction function;
@@ -16,17 +16,11 @@ public class Node extends AbstractNode
 
 	public int getLastStock()
 	{
-		if(currentStock.isEmpty())
-			return -1;
-		else
-			return currentStock.get(currentStock.size() - 1);
+		return currentStock.isEmpty() ? -1 : currentStock.get(currentStock.size() - 1);
 	}
 
 	public double getLastProfit()
 	{
-		if(profit.isEmpty())
-			return -1;
-		else
-			return profit.get(profit.size() - 1);
+		return profit.isEmpty() ? -1 : profit.get(profit.size() - 1);
 	}
 }

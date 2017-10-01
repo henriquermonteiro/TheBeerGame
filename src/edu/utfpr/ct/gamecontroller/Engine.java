@@ -19,8 +19,8 @@ public class Engine
 	public static final int FINISHED = 8;
 
 	private final Set<String> players;
-	private Table table;
 	private Game game;
+	private Table table;
 	private boolean clientTurn;
 	private IFunction turn;
 	private int weeks;
@@ -38,17 +38,9 @@ public class Engine
 
 	public void setGame(Game game, IFunction function)
 	{
-//        this.game = game;
-//        this.turn = function;
-//        resetConfigs();
-		setGame(game, function, true);
-	}
-
-	public void setGame(Game game, IFunction function, boolean clearPlayers)
-	{
 		this.game = game;
 		this.turn = function;
-		resetConfigs(clearPlayers);
+		resetConfigs();
 	}
 
 	public boolean isClientTurn()
@@ -73,23 +65,16 @@ public class Engine
 
 	public boolean setState(int state)
 	{
-//        if ((this.state == SETUP && state == RUNNING)
-//                || (this.state == SETUP && state == PAUSED)
-//                || (this.state == RUNNING && state == PAUSED)
-//                || (this.state == PAUSED && state == RUNNING)
-//                || (this.state == PAUSED && state == SETUP)
-//                || state == FINISHED) {
-//            this.state = state;
-//        }
 		if(this.state != FINISHED)
 			this.state = state;
-                
-                if(this.state == PAUSED){
-                    for(IFunction function : turn.getValues())
-			getNodeByFunction(function).playerName = "";
-                    
-                    players.clear();
-                }
+
+		if(this.state == PAUSED)
+		{
+			for(IFunction function : turn.getValues())
+				getNodeByFunction(function).playerName = "";
+
+			players.clear();
+		}
 
 		return (this.state == state);
 	}
@@ -103,12 +88,20 @@ public class Engine
 	{
 		Set<String> list = new HashSet<>(players);
 
-		for(Function f : Function.values())
-			list.remove(getNodeByFunction(f).playerName);
+		for(IFunction function : turn.getValues())
+			list.remove(getNodeByFunction(function).playerName);
 
 		return list.toArray(new String[0]);
 	}
 
+	public Table getTable()
+	{
+		if(table == null)
+			table = new Table(game);
+
+		return table;
+	}
+	
 	public boolean addPlayer(String playerName)
 	{
 		return players.add(playerName);
@@ -126,6 +119,7 @@ public class Engine
 		return players.remove(playerName);
 	}
 
+	//WHATAPORRA?
 	public boolean changePlayerForNode(IFunction function, String playerName)
 	{
 		if(!"".equals(playerName) && !players.contains(playerName))
@@ -138,9 +132,7 @@ public class Engine
 			Node n = getNodeByFunction(f);
 
 			if(n.playerName == null || n.playerName.equals(""))
-			{
 				return true;
-			}
 		}
 
 		setState(Engine.RUNNING);
@@ -175,21 +167,16 @@ public class Engine
 		TravellingTime travellingTime;
 
 		if(state != SETUP)
-		{
 			return;
-		}
 
 		chainSize = turn.getValues().length;
 		chainSize = chainSize + chainSize * game.deliveryDelay;
 
 		if(game.timestamp == 0)
-		{
 			game.timestamp = new GregorianCalendar().getTimeInMillis();
-		}
 		if(game.demand == null)
-		{
 			game.demand = new int[game.realDuration];
-		}
+
 		game.supplyChain = new AbstractNode[chainSize];
 
 		position = 0;
@@ -204,7 +191,7 @@ public class Engine
 			node.playerName = "";
 			node.function = value;
 			node.currentStock.add(game.initialStock);
-			node.profit.add(0.0);
+			node.profit.add(0.0); //POR QUE ESTA PORRA ESTÁ AQUI?
 			game.supplyChain[position] = node;
 			position++;
 
@@ -215,18 +202,6 @@ public class Engine
 				game.supplyChain[position] = travellingTime;
 			}
 		}
-
-//                table.buildTable();
-	}
-
-	public Table getTable()
-	{
-		if(table == null)
-		{
-			table = new Table(game);
-		}
-
-		return table;
 	}
 
 	public void rebuildOrders()
@@ -234,9 +209,7 @@ public class Engine
 		Node node;
 
 		if(state != SETUP)
-		{
 			return;
-		}
 
 		state = RUNNING;
 
@@ -362,9 +335,7 @@ public class Engine
 	private void nextTurn()
 	{
 		if(state == FINISHED)
-		{
 			return;
-		}
 
 		if(clientTurn)
 		{
@@ -377,20 +348,15 @@ public class Engine
 			weeks++;
 		}
 		else
-		{
 			turn = turn.next();
-		}
 
 		if(game.realDuration == weeks)
-		{
 			setState(FINISHED);
-		}
 	}
 
-	private void resetConfigs(boolean clearPlayers)
+	private void resetConfigs()
 	{
-		if(clearPlayers)
-			players.clear();
+		players.clear();
 		clientTurn = true;
 		turn = turn.first();
 		weeks = 0;
