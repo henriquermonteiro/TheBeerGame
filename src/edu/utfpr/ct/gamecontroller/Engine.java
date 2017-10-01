@@ -370,6 +370,6 @@ public class Engine
 		clientTurn = true;
 		turn = turn.first();
 		weeks = 0;
-		state = SETUP;
+		state = PAUSED;
 	}
 }
