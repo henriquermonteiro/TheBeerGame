@@ -201,13 +201,22 @@ public class Controller implements IControllerHost, IControllerPlayer
 	@Override
 	public boolean startGame(String gameName)
 	{
-		return engines.get(gameName).setState(Engine.RUNNING);
+                if(engines.get(gameName).setState(Engine.RUNNING)){
+                    return true;
+                }
+                
+                return engines.get(gameName).setState(Engine.SETUP);
 	}
 
 	@Override
 	public boolean pauseGame(String gameName)
 	{
-		return engines.get(gameName).setState(Engine.PAUSED);
+		if(engines.get(gameName).setState(Engine.PAUSED)){
+                    hostGUI.pushGameRoomUpdate(gameName);
+                    return true;
+                }
+                
+                return false;
 	}
 
 	@Override
