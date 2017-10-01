@@ -8,11 +8,17 @@ import edu.utfpr.ct.hostgui.utils.IdentifiableChangeListener;
 import edu.utfpr.ct.hostgui.utils.LockedToggleButton;
 import edu.utfpr.ct.hostgui.utils.StaticImages;
 import edu.utfpr.ct.localization.HostLocalizationKeys;
-import edu.utfpr.ct.localization.Localize;
-import java.io.File;
+import edu.utfpr.ct.localization.HostLocalizationManager;
+import edu.utfpr.ct.localization.LocalizationUtils;
+import edu.utfpr.ct.util.ChartJSUtils;
+import edu.utfpr.ct.webclient.ActionService;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -22,9 +28,6 @@ import javafx.geometry.VPos;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -32,57 +35,41 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.image.Image;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.Light;
+import javafx.scene.effect.Lighting;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.scene.web.WebView;
 import jiconfont.icons.GoogleMaterialDesignIcons;
 import jiconfont.javafx.IconNode;
 
 public class PlayGamePane extends BorderPane {
-
-//    private static final Image rIcon = new Image(new File("icon" + File.separator + "retailer.png").toURI().toString());
-//    private static final Image wIcon = new Image(new File("icon" + File.separator + "wholesaler.png").toURI().toString());
-//    private static final Image dIcon = new Image(new File("icon" + File.separator + "distributor.png").toURI().toString());
-//    private static final Image pIcon = new Image(new File("icon" + File.separator + "Industry.png").toURI().toString());
-
-//    private static final Image playIconImage = new Image(new File(Localize.getTextForKey(HostLocalizationKeys.PLAY_ICON)).toURI().toString());
-//    private static final Image pauseIconImage = new Image(new File(Localize.getTextForKey(HostLocalizationKeys.PAUSE_ICON)).toURI().toString());
 
     private final Game game;
 
     private Label gameName;
     private ToggleButton playPauseButton;
     private AutoCompleteTextField[] playersInNodes;
-//    private LineChart[] charts;
-    private LineChart chart;
-//    private XYChart.Series<Integer, Integer>[] chartsData;
-    private XYChart.Series<Integer, Integer>[] chartData;
+    private WebView chart;
+//    private XYChart.Series<Integer, Integer>[] chartData;
     private ListView<String> pool;
     private Set<String> validPlayers;
 
     private boolean byPass_setText = false;
 
-//    private ImageView playIcon;
-//    private ImageView pauseIcon;
     private IconNode playPauseIcon;
-//    private ImageView pauseIcon;
     private GridPane playerColumns;
 
     private final MainScene mainScene;
@@ -104,13 +91,13 @@ public class PlayGamePane extends BorderPane {
             playersInNodes[k].getEntries().clear();
             playersInNodes[k].getEntries().addAll(Arrays.asList(newPool));
 
-            XYChart.Series xyD = chartData[k];
-
-            if (xyD.getData().size() != playerNode.playerMove.size()) {
-                for (int j = xyD.getData().size(); j < playerNode.playerMove.size(); j++) {
-                    xyD.getData().add(new XYChart.Data<>(j + 1, playerNode.playerMove.get(j)));
-                }
-            }
+//            XYChart.Series xyD = chartData[k];
+//
+//            if (xyD.getData().size() != playerNode.playerMove.size()) {
+//                for (int j = xyD.getData().size(); j < playerNode.playerMove.size(); j++) {
+//                    xyD.getData().add(new XYChart.Data<>(j + 1, playerNode.playerMove.get(j)));
+//                }
+//            }
 
         }
 
@@ -119,6 +106,7 @@ public class PlayGamePane extends BorderPane {
         Platform.runLater(() -> {
             playPauseButton.setSelected(state);
             pool.setItems(FXCollections.observableList(Arrays.asList(newPool)));
+            chart.getEngine().reload();
         });
 
     }
@@ -140,15 +128,8 @@ public class PlayGamePane extends BorderPane {
     }
 
     private void createContent() {
-//        playIcon = new ImageView(playIconImage);
-//        pauseIcon = new ImageView(pauseIconImage);
-//        playIcon.setPreserveRatio(true);
-//        pauseIcon.setPreserveRatio(true);
         playPauseIcon = new IconNode(GoogleMaterialDesignIcons.STOP);
         playPauseIcon.getStyleClass().addAll("icon");
-//        pauseIcon = new ImageView(pauseIconImage);
-//        playIcon.setPreserveRatio(true);
-//        pauseIcon.setPreserveRatio(true);
 
         gameName = new Label();
 
@@ -157,23 +138,20 @@ public class PlayGamePane extends BorderPane {
         playPauseButton.setGraphic(playPauseIcon);
 
         playPauseButton.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-//            playPauseButton.setGraphic((newValue ? playIcon : pauseIcon));
             playPauseIcon.setIconCode((newValue ? GoogleMaterialDesignIcons.PLAY_ARROW : GoogleMaterialDesignIcons.STOP));
 
             mainScene.changeGameState(game, newValue);
         });
 
         playersInNodes = new AutoCompleteTextField[game.supplyChain.length / (game.deliveryDelay + 1)];
-//        charts = new LineChart[playersInNodes.length];
-        chart = new LineChart(new NumberAxis(1.0, game.realDuration, 5.0), new NumberAxis());
-        chartData = new XYChart.Series[playersInNodes.length];
+//        chart = new LineChart(new NumberAxis(1.0, game.realDuration, 5.0), new NumberAxis());
+//        chartData = new XYChart.Series[playersInNodes.length];
 
         for (int k = 0; k < playersInNodes.length; k++) {
             playersInNodes[k] = new AutoCompleteTextField(k);
-//            charts[k] = new LineChart(new NumberAxis(1.0, game.realDuration, 5.0), new NumberAxis());
-            chartData[k] = new XYChart.Series<>();
-
-            chart.getData().add(chartData[k]);
+//            chartData[k] = new XYChart.Series<>();
+//
+//            chart.getData().add(chartData[k]);
         }
 
         validPlayers = new HashSet<>();
@@ -207,24 +185,30 @@ public class PlayGamePane extends BorderPane {
         topPane.setRight(playPauseButton);
         topPane.setLeft(info);
 
-        pool.setMinWidth(60);
+        pool.setMinWidth(120);
 
         ScrollPane rightPane = new ScrollPane(pool);
         rightPane.fitToHeightProperty().setValue(Boolean.TRUE);
         rightPane.fitToWidthProperty().setValue(true);
+        rightPane.setMinWidth(150);
 
         rightPane.getStyleClass().addAll("card", "right", "shadowed-1");
 
-        ScrollPane centerPane = new ScrollPane();
+        GridPane centerPane = new GridPane();
         centerPane.getStyleClass().addAll("card", "left", "shadowed-1");
-        centerPane.fitToHeightProperty().setValue(Boolean.TRUE);
+//        centerPane.fitToHeightProperty().setValue(Boolean.TRUE);
 
         playerColumns = new GridPane();
 
         for (int k = 0; k < playersInNodes.length; k++) {
             GridPane gP = new GridPane();
+            
+            Label name = new Label();
+            LocalizationUtils.bindLocalizationText(name.textProperty(), HostLocalizationKeys.CHART_OR_FUNCTION_AX+(k+1));
+            
+            gP.add(name, 0, 0, 3, 1);
 
-            gP.add(playersInNodes[k], 1, 0);
+            gP.add(playersInNodes[k], 1, 1);
 
             LockedToggleButton lTB = new LockedToggleButton();
 
@@ -249,6 +233,18 @@ public class PlayGamePane extends BorderPane {
                 event.setDropCompleted(success);
                 event.consume();
             });
+            
+            int ref = k;
+            playersInNodes[k].focusedProperty().addListener((observable) -> {
+                if (byPass_setText) {
+                    return;
+                }
+
+                int test = validPlayerText(playersInNodes[ref].getText());
+                if (test <= 0) {
+                    playersInNodes[ref].setText("");
+                }
+             });
 
             playersInNodes[k].textProperty().addListener(new IdentifiableChangeListener<String>(playersInNodes[k].getIdentificator()) {
                 @Override
@@ -280,39 +276,75 @@ public class PlayGamePane extends BorderPane {
                 }
             });
 
-            gP.add(lTB, 2, 0);
+            gP.add(lTB, 2, 1);
 
-            Pane spring = new Pane();
-            spring.setMinWidth(30);
-            spring.prefWidthProperty().bind(gP.widthProperty().divide(2).subtract(playersInNodes[k].widthProperty().divide(2)));
-
-            gP.add(spring, 0, 0);
+//            Pane spring = new Pane();
+//            spring.setMinWidth(30);
+//            spring.prefWidthProperty().bind(gP.widthProperty().divide(2).subtract(playersInNodes[k].widthProperty().divide(2)));
+//
+//            gP.add(spring, 0, 0);
 
             ImageView iV = new ImageView();
 
-            iV.setFitHeight(80);
+            iV.setFitHeight(65);
             iV.setPreserveRatio(true);
+            
+            ColorAdjust bright = new ColorAdjust();
+            bright.setBrightness(0.3);
+            bright.setContrast(0.1);
+            
+            Lighting light = new Lighting();
+            light.setDiffuseConstant(1.0);
+            light.setSpecularConstant(0.0);
+            light.setSpecularExponent(0.0);
+            light.setSurfaceScale(0.0);
+            
+            bright.setInput(light);
 
             switch (((Node) game.supplyChain[ModelUtils.getActualNodePosition(game, k)]).function.getPosition()) {
                 case 1:
                     iV.setImage(StaticImages.RETAILER_ICON);
+                    light.setLight(new Light.Distant(45, 45, Color.web(ChartJSUtils.COLORS_S[1])));
                     break;
                 case 2:
                     iV.setImage(StaticImages.WHOLESALER_ICON);
+                    light.setLight(new Light.Distant(45, 45, Color.web(ChartJSUtils.COLORS_S[2])));
                     break;
                 case 3:
                     iV.setImage(StaticImages.DISTRIBUTOR_ICON);
+                    light.setLight(new Light.Distant(45, 45, Color.web(ChartJSUtils.COLORS_S[3])));
                     break;
                 case 4:
                     iV.setImage(StaticImages.PRODUCER_ICON);
+                    light.setLight(new Light.Distant(45, 45, Color.web(ChartJSUtils.COLORS_S[4])));
                     break;
             }
+            
+            iV.setEffect(bright);
 
             Label l = new Label();
             l.setGraphic(iV);
 
-            gP.add(l, 1, 1);
-            GridPane.setConstraints(l, 1, 1, 1, 1, HPos.CENTER, VPos.CENTER);
+            gP.add(l, 1, 2);
+//            GridPane.setConstraints(l, 1, 1, 1, 1, HPos.CENTER, VPos.CENTER);
+            
+            ColumnConstraints cC1 = new ColumnConstraints();
+            cC1.setFillWidth(true);
+            cC1.setHalignment(HPos.CENTER);
+            cC1.setHgrow(Priority.SOMETIMES);
+            cC1.setPercentWidth(20);
+            ColumnConstraints cC2 = new ColumnConstraints();
+            cC2.setHalignment(HPos.CENTER);
+            cC2.setFillWidth(true);
+            cC2.setHgrow(Priority.SOMETIMES);
+            cC2.setPercentWidth(60);
+            ColumnConstraints cC3 = new ColumnConstraints();
+            cC3.setHalignment(HPos.CENTER);
+            cC3.setFillWidth(true);
+            cC3.setHgrow(Priority.SOMETIMES);
+            cC3.setPercentWidth(20);
+            
+            gP.getColumnConstraints().addAll(cC1, cC2, cC3);
             
             gP.setVgap(3.0);
             gP.setHgap(3.0);
@@ -344,20 +376,56 @@ public class PlayGamePane extends BorderPane {
         
         playerColumns.getRowConstraints().add(rC);
 
-        playerColumns.add(chart, 0, 1, playersInNodes.length, 1);
+//        playerColumns.add(chart, 0, 1, playersInNodes.length, 1);
+//
+//        chart.setMinWidth(0);
+//        chart.setLegendVisible(false);
+//
+//        if (playersInNodes.length < 6) {
+//            centerPane.setFitToWidth(true);
+//        }
+//
+//        centerPane.setContent(playerColumns);
 
-        chart.setMinWidth(0);
-        chart.setLegendVisible(false);
-
-        if (playersInNodes.length < 6) {
-            centerPane.setFitToWidth(true);
+        centerPane.add(playerColumns, 0, 0);
+        
+        chart = new WebView();
+        try {
+            chart.getEngine().load("http://127.0.0.1:" + ActionService.getService().getPort() + "/info?no-legend=true&game-name=" + URLEncoder.encode(game.name, "UTF-8"));
+        } catch (UnsupportedEncodingException ex) {
         }
-
-        centerPane.setContent(playerColumns);
+        
+        HostLocalizationManager.getInstance().getLang().addListener((observable) -> {
+            chart.getEngine().reload();
+        });
+        
+        BorderPane chartP = new BorderPane(chart);
+        chartP.setPadding(new Insets(5));
+        
+        centerPane.add(chartP, 0, 1);
+        
+        ColumnConstraints cC = new ColumnConstraints();
+        cC.setFillWidth(true);
+        cC.setHgrow(Priority.ALWAYS);
+        cC.setHalignment(HPos.CENTER);
+        
+        centerPane.getColumnConstraints().add(cC);
+        
+        rC = new RowConstraints();
+        rC.setFillHeight(true);
+        rC.setVgrow(Priority.SOMETIMES);
+        
+        centerPane.getRowConstraints().add(rC);
+        
+        rC = new RowConstraints();
+        rC.setFillHeight(true);
+        rC.setVgrow(Priority.ALWAYS);
+        
+        centerPane.getRowConstraints().add(rC);
 
         GridPane gridP = new GridPane();
 
-        ColumnConstraints cC = new ColumnConstraints();
+        cC = new ColumnConstraints();
         cC.setFillWidth(true);
         cC.setHgrow(Priority.ALWAYS);
         cC.setHalignment(HPos.CENTER);
@@ -366,7 +434,7 @@ public class PlayGamePane extends BorderPane {
         
         cC = new ColumnConstraints();
         cC.setFillWidth(true);
-        cC.setHgrow(Priority.SOMETIMES);
+        cC.setHgrow(Priority.ALWAYS);
         cC.setHalignment(HPos.CENTER);
         
         gridP.getColumnConstraints().add(cC);

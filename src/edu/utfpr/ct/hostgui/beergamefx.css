@@ -58,6 +58,19 @@
     -fx-text-fill: white;
 }
 
+.card.header > .hyperlink{
+    -fx-padding: 10;
+}
+
+.card.header > .hyperlink > .icon {
+    -fx-icon-size: 30px;
+    -fx-fill: white;
+}
+
+.card.header > .hyperlink:hover > .icon {
+    -fx-fill: cornflowerblue;
+}
+
 .card.center{
     -fx-border-radius: 0;
     -fx-background-radius: 0;

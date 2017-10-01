@@ -281,7 +281,7 @@ public class MainScene extends BorderPane {
         ip.textProperty().bind(Bindings.createStringBinding(() -> {
             return ip_begin.get().concat((ips.isEmpty() ? ip_middle_error.get() : ips.get(0))).concat(ip_middle.get().concat("" + ActionService.getService().getPort()).concat(ip_end.get()));
         }, HostLocalizationManager.getInstance().getLang()));
-        BorderPane top = new BorderPane(ip);
+        GridPane top = new GridPane();
         IconNode refresh = new IconNode(GoogleMaterialDesignIcons.REFRESH);
         refresh.getStyleClass().addAll("icon");
 
@@ -295,15 +295,39 @@ public class MainScene extends BorderPane {
                 return ip_begin.get().concat((ips2.isEmpty() ? ip_middle_error.get() : ips2.get(0))).concat(ip_middle.get().concat("" + ActionService.getService().getPort()).concat(ip_end.get()));
             }, HostLocalizationManager.getInstance().getLang()));
 
-            top.setCenter(ip2);
+            top.getChildren().remove(top.getChildren().size() - 1);
+            top.add(ip2, 1, 0);
         });
 
         langMenuButton = new MenuButton();
         updateLanguageMenuButton();
         makeLanguageMenuItens(langMenuButton);
-        top.setLeft(langMenuButton);
+        top.add(langMenuButton, 0, 0);
 
-        top.setRight(rel);
+        top.add(rel, 2, 0);
+        top.add(ip, 1, 0);
+        
+        ColumnConstraints cCl = new ColumnConstraints();
+        cCl.setFillWidth(true);
+        cCl.setHalignment(HPos.LEFT);
+        cCl.setHgrow(Priority.SOMETIMES);
+        cCl.setPercentWidth(25);
+        
+        ColumnConstraints cCc = new ColumnConstraints();
+        cCc.setFillWidth(true);
+        cCc.setHalignment(HPos.CENTER);
+        cCc.setHgrow(Priority.SOMETIMES);
+        cCc.setPercentWidth(50);
+        
+        ColumnConstraints cCr = new ColumnConstraints();
+        cCr.setFillWidth(true);
+        cCr.setHalignment(HPos.RIGHT);
+        cCr.setHgrow(Priority.SOMETIMES);
+        cCr.setPercentWidth(25);
+        
+        top.getColumnConstraints().addAll(cCl, cCc, cCr);
+        
+        
         top.getStyleClass().addAll("ip-info", "shadowed-1");
         this.setTop(top);
 
