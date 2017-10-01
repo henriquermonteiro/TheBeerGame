@@ -25,6 +25,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
@@ -192,9 +193,19 @@ public class PlayGamePane extends BorderPane {
 
         BorderPane topPane = new BorderPane();
         topPane.getStyleClass().addAll("card", "header", "shadowed-1");
+        
+        Hyperlink info = new Hyperlink();
+        IconNode infoIcon = new IconNode(GoogleMaterialDesignIcons.INFO_OUTLINE);
+        infoIcon.getStyleClass().addAll("icon");
+        
+        info.setGraphic(infoIcon);
+        info.setOnAction((event) -> {
+            mainScene.makeGameInfo(game.name);
+        });
 
         topPane.setCenter(gameName);
         topPane.setRight(playPauseButton);
+        topPane.setLeft(info);
 
         pool.setMinWidth(60);
 

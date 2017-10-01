@@ -84,4 +84,19 @@ public class HostLocalizationKeys
         public static String TEXT_IP_MIDDLE_ERROR = "IP-TEXT-MIDDLE-IP-ERROR";
         public static String TEXT_IP_MIDDLE = "IP-TEXT-MIDDLE-DOTS";
         public static String TEXT_IP_END = "IP-TEXT-END";
+        public static String INFO_NO_PASSW = "INFORMATION-NO-PASSWORD";
+        public static String INFO_IS_GAME = "INFORMATION-IS-GAME";
+        public static String INFO_IS_REPORT = "INFORMATION-IS-REPORT";
+        public static String INFO_IS_INFORMED = "INFORMATION-IS-INFOMED-SUPPLYCHAIN";
+        public static String INFO_NOT_INFORMED = "INFORMATION-NOT-INFOMED-SUPPLYCHAIN";
+        
+        public static String CHART_OR_TITLE = "CHART-ORDER-TITLE";
+        public static String CHART_OR_LABEL_X = "CHART-ORDER-LABEL-X-AXIS";
+        public static String CHART_OR_LABEL_Y = "CHART-ORDER-LABEL-Y-AXIS";
+        public static String CHART_OR_FUNCTION_AX = "CHART-ORDER-FUNCTION-";
+        public static String CHART_OR_FUNCTION_0 = "CHART-ORDER-FUNCTION-0";
+        public static String CHART_OR_FUNCTION_1 = "CHART-ORDER-FUNCTION-1";
+        public static String CHART_OR_FUNCTION_2 = "CHART-ORDER-FUNCTION-2";
+        public static String CHART_OR_FUNCTION_3 = "CHART-ORDER-FUNCTION-3";
+        public static String CHART_OR_FUNCTION_4 = "CHART-ORDER-FUNCTION-4";
 }

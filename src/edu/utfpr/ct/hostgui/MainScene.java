@@ -12,6 +12,8 @@ import edu.utfpr.ct.localization.HostLocalizationManager;
 import edu.utfpr.ct.localization.LocalizationUtils;
 import edu.utfpr.ct.util.IPUtils;
 import edu.utfpr.ct.webclient.ActionService;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Objects;
 import javafx.beans.binding.Bindings;
@@ -22,7 +24,6 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
-import javafx.geometry.VPos;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
@@ -34,8 +35,8 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Text;
+import javafx.scene.web.WebView;
 import jiconfont.icons.GoogleMaterialDesignIcons;
 import jiconfont.javafx.IconNode;
 
@@ -43,7 +44,6 @@ public class MainScene extends BorderPane {
 
     private final TabPane tabPane;
     private final MenuButton langMenuButton;
-    private MenuItem currentItem;
 
     private final IControllerHost control;
 
@@ -54,116 +54,179 @@ public class MainScene extends BorderPane {
     public StartFrame getStartFrame() {
         return startFrame;
     }
+
+    public void makeGameInfo(String gameName) {
+        try {
+            Game g = control.getGame(gameName);
+            boolean isGame = true;
+            
+            if (g == null) {
+                g = control.getReport(gameName);
+                isGame = false;
+            }
+            
+            if (g == null) {
+                return;
+            }
+            
+            Label name = new Label(g.name);
+            BorderPane nameInfo = new BorderPane(name);
+            nameInfo.getStyleClass().addAll("card", "header", "shadowed-1");
+            
+            GridPane statusInfo = new GridPane();
+            statusInfo.getStyleClass().addAll("card", "top", "shadowed-1", "data");
+            
+            Text passw = new Text();
+            String password = g.password;
+            passw.textProperty().bind(Bindings.createStringBinding(() -> {
+                return (password == null || password.isEmpty() ? HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.INFO_NO_PASSW) : password);
+            }, HostLocalizationManager.getInstance().getLang()));
+            passw.getStyleClass().addAll("text-node");
+            Label passw_Label = new Label();
+            LocalizationUtils.bindLocalizationText(passw_Label.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_PASSWORD_FIELD);
+            HBox passw_Layout = new HBox(passw_Label, passw);
+            passw_Layout.getStyleClass().add("hbox");
+            
+            Text status = new Text();
+            boolean isGameF = isGame;
+            status.textProperty().bind(Bindings.createStringBinding(() -> {
+                return (isGameF ? HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.INFO_IS_GAME) : HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.INFO_IS_REPORT));
+            }, HostLocalizationManager.getInstance().getLang()));
+            status.getStyleClass().addAll("text-node");
+            Label status_Label = new Label();
+            LocalizationUtils.bindLocalizationText(status_Label.textProperty(), HostLocalizationKeys.LABEL_INFO_STATUS);
+            HBox status_Layout = new HBox(status_Label, status);
+            status_Layout.getStyleClass().add("hbox");
+            
+            Text informed = new Text(Boolean.toString(g.informedChainSupply));
+            boolean isInformed = g.informedChainSupply;
+            informed.textProperty().bind(Bindings.createStringBinding(() -> {
+                return (isInformed ? HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.INFO_IS_INFORMED) : HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.INFO_NOT_INFORMED));
+            }, HostLocalizationManager.getInstance().getLang()));
+            informed.getStyleClass().addAll("text-node");
+            Label informed_Label = new Label();
+            LocalizationUtils.bindLocalizationText(informed_Label.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_INFORMED_SC);
+            HBox informed_Layout = new HBox(informed_Label, informed);
+            informed_Layout.getStyleClass().add("hbox");
+            
+            statusInfo.add(passw_Layout, 0, 0, 1, 1);
+            statusInfo.add(status_Layout, 1, 0, 1, 1);
+            statusInfo.add(informed_Layout, 0, 1, 2, 1);
+            
+            ColumnConstraints cC = new ColumnConstraints();
+            cC.setPercentWidth(50);
+            cC.setHalignment(HPos.LEFT);
+            cC.setFillWidth(false);
+            statusInfo.getColumnConstraints().add(cC);
+            statusInfo.getColumnConstraints().add(cC);
+            
+            GridPane generalInfo = new GridPane();
+            generalInfo.getStyleClass().addAll("card", "center", "shadowed-1", "data");
+            
+            Text missCost = new Text(Double.toString(g.missingUnitCost));
+            missCost.getStyleClass().addAll("text-node");
+            Label missC_Label = new Label();
+            LocalizationUtils.bindLocalizationText(missC_Label.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_MISSINGUC);
+            HBox missingCost_Layout = new HBox(missC_Label, missCost);
+            missingCost_Layout.getStyleClass().add("hbox");
+            
+            Text stockCost = new Text(Double.toString(g.stockUnitCost));
+            stockCost.getStyleClass().addAll("text-node");
+            Label stockCost_Label = new Label();
+            LocalizationUtils.bindLocalizationText(stockCost_Label.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_STOCKUC);
+            HBox stockCost_Layout = new HBox(stockCost_Label, stockCost);
+            stockCost_Layout.getStyleClass().add("hbox");
+            
+            Text sellProf = new Text(Double.toString(g.sellingUnitProfit));
+            sellProf.getStyleClass().addAll("text-node");
+            Label sellProf_Label = new Label();
+            LocalizationUtils.bindLocalizationText(sellProf_Label.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_SELLINGP);
+            HBox sellProf_Layout = new HBox(sellProf_Label, sellProf);
+            sellProf_Layout.getStyleClass().add("hbox");
+            
+            Text realDur = new Text(Double.toString(g.realDuration));
+            realDur.getStyleClass().addAll("text-node");
+            Label realDur_Label = new Label();
+            LocalizationUtils.bindLocalizationText(realDur_Label.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_REAL_DURATION);
+            HBox realDur_Layout = new HBox(realDur_Label, realDur);
+            realDur_Layout.getStyleClass().add("hbox");
+            
+            Text infoDur = new Text(Double.toString(g.informedDuration));
+            infoDur.getStyleClass().addAll("text-node");
+            Label infoDur_Label = new Label();
+            LocalizationUtils.bindLocalizationText(infoDur_Label.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_INF_DURATION);
+            HBox infoDur_Layout = new HBox(infoDur_Label, infoDur);
+            infoDur_Layout.getStyleClass().add("hbox");
+            
+            Text initStock = new Text(Double.toString(g.initialStock));
+            initStock.getStyleClass().addAll("text-node");
+            Label initStock_Label = new Label();
+            LocalizationUtils.bindLocalizationText(initStock_Label.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_INITIAL_STOCK);
+            HBox initStock_Layout = new HBox(initStock_Label, initStock);
+            initStock_Layout.getStyleClass().add("hbox");
+            
+            Text deliDelay = new Text(Double.toString(g.deliveryDelay));
+            deliDelay.getStyleClass().addAll("text-node");
+            Label deliDelay_Label = new Label();
+            LocalizationUtils.bindLocalizationText(deliDelay_Label.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_DELIVERY_DELAY);
+            HBox deliDelay_Layout = new HBox(deliDelay_Label, deliDelay);
+            deliDelay_Layout.getStyleClass().add("hbox");
+            
+//            generalInfo.add(missingCost_Layout, 0, 0, 2, 1);
+//            generalInfo.add(stockCost_Layout, 2, 0, 2, 1);
+//            generalInfo.add(sellProf_Layout, 4, 0, 2, 1);
+//            
+//            generalInfo.add(realDur_Layout, 0, 1, 3, 1);
+//            generalInfo.add(infoDur_Layout, 3, 1, 3, 1);
+//            
+//            generalInfo.add(initStock_Layout, 0, 2, 3, 1);
+//            generalInfo.add(deliDelay_Layout, 3, 2, 3, 1);
+            generalInfo.add(missingCost_Layout, 0, 0, 1, 1);
+            generalInfo.add(stockCost_Layout, 0, 1, 1, 1);
+            generalInfo.add(sellProf_Layout, 0, 2, 1, 1);
+            
+            generalInfo.add(realDur_Layout, 1, 0, 1, 1);
+            generalInfo.add(infoDur_Layout, 1, 1, 1, 1);
+            
+            generalInfo.add(initStock_Layout, 2, 0, 1, 1);
+            generalInfo.add(deliDelay_Layout, 2, 1, 1, 1);
+            
+            generalInfo.setAlignment(Pos.CENTER);
+            
+            cC = new ColumnConstraints();
+            cC.setPercentWidth(100/3);
+            cC.setHgrow(Priority.SOMETIMES);
+            cC.setHalignment(HPos.LEFT);
+            cC.setFillWidth(false);
+
+            generalInfo.getColumnConstraints().addAll(cC, cC, cC);
+            
+            GridPane chartPane = new GridPane();
+            chartPane.getStyleClass().addAll("card", "bottom", "shadowed-1");
+
+            WebView chart = new WebView();
+            HostLocalizationManager.getInstance().getLang().addListener((observable) -> {
+                chart.getEngine().reload();
+            });
     
-    public void makeGameInfo(String gameName){
-        Game g = control.getGame(gameName);
-        boolean isGame = true;
-        
-        if(g == null){
-            g = control.getReport(gameName);
-            isGame = false;
+            String url = "http://127.0.0.1:" + ActionService.getService().getPort() + "/info?game-name=" + URLEncoder.encode(gameName, "UTF-8");
+            chart.getEngine().load(url);
+
+            chartPane.add(chart, 0, 0);
+
+            GridPane outterPane = new GridPane();
+            outterPane.getStyleClass().addAll("game-info");
+            outterPane.add(nameInfo, 0, 0);
+            outterPane.add(statusInfo, 0, 1);
+            outterPane.add(generalInfo, 0, 2);
+            outterPane.add(chartPane, 0, 3);
+            outterPane.setAlignment(Pos.CENTER);
+
+            startFrame.makeAlert(outterPane, gameName);
+
+        } catch (UnsupportedEncodingException ex) {
+            ex.printStackTrace();
         }
-        
-        if(g == null) return;
-        
-        
-        Text name = new Text(g.name);
-        BorderPane nameInfo = new BorderPane(name);
-        nameInfo.getStyleClass().addAll("card", "shadowed-1");
-        
-        GridPane statusInfo = new GridPane();
-        statusInfo.getStyleClass().addAll("card", "shadowed-1");
-        
-        Text passw = new Text((g.password == null || g.password.isEmpty() ? "---" : g.password));
-        Label passw_Label = new Label();
-        LocalizationUtils.bindLocalizationText(passw_Label.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_PASSWORD_FIELD);
-        HBox passw_Layout = new HBox(passw_Label, passw);
-        
-        Text status = new Text(Boolean.toString(isGame));
-        Label status_Label = new Label();
-        LocalizationUtils.bindLocalizationText(status_Label.textProperty(), HostLocalizationKeys.LABEL_INFO_STATUS);
-        HBox status_Layout = new HBox(status_Label, status);
-        
-        Text informed = new Text(Boolean.toString(g.informedChainSupply));
-        Label informed_Label = new Label();
-        LocalizationUtils.bindLocalizationText(informed_Label.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_INFORMED_SC);
-        HBox informed_Layout = new HBox(informed_Label, informed);
-        
-        statusInfo.add(passw_Layout, 0, 0, 1, 1);
-        statusInfo.add(status_Layout, 1, 0, 1, 1);
-        statusInfo.add(informed_Layout, 0, 1, 2, 1);
-        
-        ColumnConstraints cC = new ColumnConstraints();
-        cC.setPercentWidth(50);
-        statusInfo.getColumnConstraints().add(cC);
-        statusInfo.getColumnConstraints().add(cC);
-        
-        
-        GridPane generalInfo = new GridPane();
-        generalInfo.getStyleClass().addAll("card", "shadowed-1");
-        
-        Text missCost = new Text(Double.toString(g.missingUnitCost));
-        Label missC_Label = new Label();
-        LocalizationUtils.bindLocalizationText(missC_Label.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_MISSINGUC);
-        HBox missingCost_Layout = new HBox(missC_Label, missCost);
-        
-        Text stockCost = new Text(Double.toString(g.stockUnitCost));
-        Label stockCost_Label = new Label();
-        LocalizationUtils.bindLocalizationText(stockCost_Label.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_STOCKUC);
-        HBox stockCost_Layout = new HBox(stockCost_Label, stockCost);
-        
-        Text sellProf = new Text(Double.toString(g.sellingUnitProfit));
-        Label sellProf_Label = new Label();
-        LocalizationUtils.bindLocalizationText(sellProf_Label.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_SELLINGP);
-        HBox sellProf_Layout = new HBox(sellProf_Label, sellProf);
-        
-        Text realDur = new Text(Double.toString(g.realDuration));
-        Label realDur_Label = new Label();
-        LocalizationUtils.bindLocalizationText(realDur_Label.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_REAL_DURATION);
-        HBox realDur_Layout = new HBox(realDur_Label, realDur);
-        
-        Text infoDur = new Text(Double.toString(g.informedDuration));
-        Label infoDur_Label = new Label();
-        LocalizationUtils.bindLocalizationText(infoDur_Label.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_INF_DURATION);
-        HBox infoDur_Layout = new HBox(infoDur_Label, infoDur);
-        
-        Text initStock = new Text(Double.toString(g.initialStock));
-        Label initStock_Label = new Label();
-        LocalizationUtils.bindLocalizationText(initStock_Label.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_INITIAL_STOCK);
-        HBox initStock_Layout = new HBox(initStock_Label, initStock);
-        
-        Text deliDelay = new Text(Double.toString(g.deliveryDelay));
-        Label deliDelay_Label = new Label();
-        LocalizationUtils.bindLocalizationText(deliDelay_Label.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_DELIVERY_DELAY);
-        HBox deliDelay_Layout = new HBox(deliDelay_Label, deliDelay);
-        
-        generalInfo.add(missingCost_Layout, 0, 0, 1, 1);
-        generalInfo.add(stockCost_Layout, 1, 0, 2, 1);
-        generalInfo.add(sellProf_Layout, 3, 0, 1, 1);
-        
-        generalInfo.add(realDur_Layout, 0, 1, 2, 1);
-        generalInfo.add(infoDur_Layout, 2, 1, 2, 1);
-        
-        generalInfo.add(initStock_Layout, 0, 2, 2, 1);
-        generalInfo.add(deliDelay_Layout, 2, 2, 2, 1);
-        
-        generalInfo.setAlignment(Pos.CENTER);
-        generalInfo.getRowConstraints().add(new RowConstraints(0.0, 10.0, 200.0, Priority.NEVER, VPos.CENTER, false));
-        generalInfo.getRowConstraints().add(new RowConstraints(0.0, 10.0, 200.0, Priority.NEVER, VPos.CENTER, false));
-        generalInfo.getRowConstraints().add(new RowConstraints(0.0, 10.0, 200.0, Priority.NEVER, VPos.CENTER, false));
-        
-        generalInfo.getColumnConstraints().add(new ColumnConstraints(40.0, 60.0, 300.0, Priority.SOMETIMES, HPos.CENTER, false));
-        generalInfo.getColumnConstraints().add(new ColumnConstraints(40.0, 60.0, 300.0, Priority.SOMETIMES, HPos.CENTER, false));
-        generalInfo.getColumnConstraints().add(new ColumnConstraints(40.0, 60.0, 300.0, Priority.SOMETIMES, HPos.CENTER, false));
-        generalInfo.getColumnConstraints().add(new ColumnConstraints(40.0, 60.0, 300.0, Priority.SOMETIMES, HPos.CENTER, false));
-        
-        GridPane outterPane= new GridPane();
-        outterPane.add(nameInfo, 0, 0);
-        outterPane.add(statusInfo, 0, 1);
-        outterPane.add(generalInfo, 0, 2);
-        outterPane.setAlignment(Pos.CENTER);
-        
-        startFrame.makeAlert(outterPane);
     }
 
     public MainScene(IControllerHost control, StartFrame startFrame) {
@@ -174,7 +237,7 @@ public class MainScene extends BorderPane {
         games = new HashMap<>();
 
         loaderPane = new LoaderPane(this);
-        
+
         this.startFrame = startFrame;
 
         Tab homeTab = new Tab();
@@ -213,12 +276,11 @@ public class MainScene extends BorderPane {
         LocalizationUtils.bindLocalizationText(ip_middle, HostLocalizationKeys.TEXT_IP_MIDDLE);
         StringProperty ip_end = new SimpleStringProperty();
         LocalizationUtils.bindLocalizationText(ip_end, HostLocalizationKeys.TEXT_IP_END);
-        
-        Label ip = new Label();        
+
+        Label ip = new Label();
         ip.textProperty().bind(Bindings.createStringBinding(() -> {
             return ip_begin.get().concat((ips.isEmpty() ? ip_middle_error.get() : ips.get(0))).concat(ip_middle.get().concat("" + ActionService.getService().getPort()).concat(ip_end.get()));
         }, HostLocalizationManager.getInstance().getLang()));
-//        BorderPane top = new BorderPane(new Label("Endereço para jogadores: " + (ips.isEmpty() ? "Erro ao buscar endereço. Porta usada: " : ips.get(0) + ":") + ActionService.getService().getPort()));
         BorderPane top = new BorderPane(ip);
         IconNode refresh = new IconNode(GoogleMaterialDesignIcons.REFRESH);
         refresh.getStyleClass().addAll("icon");
@@ -227,8 +289,8 @@ public class MainScene extends BorderPane {
         rel.setVisited(true);
         rel.setOnAction((ActionEvent event) -> {
             ArrayList<String> ips2 = (ArrayList<String>) IPUtils.findIP();
-            
-            Label ip2 = new Label();        
+
+            Label ip2 = new Label();
             ip2.textProperty().bind(Bindings.createStringBinding(() -> {
                 return ip_begin.get().concat((ips2.isEmpty() ? ip_middle_error.get() : ips2.get(0))).concat(ip_middle.get().concat("" + ActionService.getService().getPort()).concat(ip_end.get()));
             }, HostLocalizationManager.getInstance().getLang()));
@@ -265,8 +327,6 @@ public class MainScene extends BorderPane {
         content.getStyleClass().addAll("hbox-1");
         MenuItem item = new MenuItem("", content);
         item.getStyleClass().addAll("lang-element", "item", "current");
-
-        currentItem = item;
 
         menu.getItems().add(item);
 

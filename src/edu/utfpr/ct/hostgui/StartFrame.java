@@ -61,7 +61,7 @@ public class StartFrame extends Application implements IGUI{
         primaryStage.show();
     }
     
-    public void makeAlert(Node content){
+    public void makeAlert(Node content, String title){
         String stylesheet = getClass().getResource("beergamefx.css").toExternalForm();
 
         StackPane p = new StackPane();
@@ -72,6 +72,7 @@ public class StartFrame extends Application implements IGUI{
         s.getStylesheets().add(stylesheet);
         
         Stage window = new Stage();
+        window.setTitle(title);
         window.setOnCloseRequest((event) -> {
             infos.remove(window);
         });

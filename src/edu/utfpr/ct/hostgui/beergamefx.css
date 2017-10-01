@@ -297,6 +297,37 @@
     -fx-text-fill: #4A4A4A;
 }
 
+.game-info {
+    -fx-padding: 10;
+    -fx-vgap: 10;
+}
+
+.game-info .card.header .label{
+    -fx-font-size: 20;
+    -fx-font-weight: bold;
+    -fx-fill: white;
+}
+
+.game-info .card.data {
+    -fx-vgap: 8;
+    -fx-hgap: 8;
+    -fx-padding: 16;
+}
+
+.game-info .card.data .hbox {
+    -fx-spacing: 6;
+}
+
+.game-info .card.data .label{
+    -fx-font-size: 16;
+    -fx-text-fill: #777;
+}
+
+.game-info .card.data .text-node{
+    -fx-font-size: 16;
+    -fx-font-weigth: bold;
+}
+
 .play-pause {
     -fx-background-color: derive(-header-color, -10%);
 }

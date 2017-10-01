@@ -4,6 +4,7 @@ import edu.utfpr.ct.gamecontroller.Table;
 import edu.utfpr.ct.datamodel.EngineData;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.gamecontroller.Controller;
+import edu.utfpr.ct.interfaces.IControllerHost;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -34,6 +35,7 @@ public class ActionService {
 
     private Tomcat server;
     private IControllerPlayer controler;
+    private IControllerHost controlerHost;
     private Thread listenner;
 
 //    private static boolean stopService = false;
@@ -70,6 +72,7 @@ public class ActionService {
 
     private ActionService() throws ServletException, LifecycleException, IOException {
         this.controler = Controller.getController();
+        this.controlerHost = Controller.getController();
         service = this;
 
         File root = getRootFolder();
@@ -229,5 +232,13 @@ public class ActionService {
         }
 
         return -1;
+    }
+    
+    public Game getGameInfo(String gameName){
+        return controlerHost.getGame(gameName);
+    }
+    
+    public Game getReportInfo(String gameName){
+        return controlerHost.getReport(gameName);
     }
 }
