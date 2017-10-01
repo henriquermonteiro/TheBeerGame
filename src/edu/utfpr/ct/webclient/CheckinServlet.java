@@ -40,7 +40,7 @@ public class CheckinServlet extends HttpServlet {
 
             if (obj instanceof ActionService) {
                 if (((ActionService) obj).isNameAvailable(player)) {
-                    answer(resp, ((ActionService) obj).checkIn(player).equals("")); // -2 significa que o nome está indisponível;
+                    answer(resp, ((ActionService) obj).checkIn(player));
                     return;
                 }
             }

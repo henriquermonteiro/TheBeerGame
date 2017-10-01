@@ -63,14 +63,13 @@ public class Engine
 		return state;
 	}
 
-	public boolean setState(int state)
+	public boolean setState(int newState)
 	{
-		if(this.state == SETUP && ((state == RUNNING && isAllPlayerSet()) || (state == PAUSED)))
-			this.state = state;
-		else if(this.state == RUNNING)
-			this.state = state;
-		else if(this.state == PAUSED && state == RUNNING)
-			this.state = state;
+		if(this.state == FINISHED)
+                    return (this.state == newState);
+
+                if(newState == FINISHED || newState == PAUSED || newState == SETUP || (newState == RUNNING && isAllPlayerSet()))
+                    this.state = newState;
 
 		if(this.state == PAUSED)
 		{
@@ -80,7 +79,7 @@ public class Engine
 			players.clear();
 		}
 
-		return (this.state == state);
+		return (this.state == newState);
 	}
 
 	public String[] getPlayers()
@@ -126,7 +125,7 @@ public class Engine
 	public boolean removePlayerForNode(IFunction function)
 	{
 		getNodeByFunction(function).playerName = "";
-		setState(Engine.SETUP);
+		if(state == RUNNING) setState(Engine.SETUP);
 
 		return true;
 	}
@@ -374,6 +373,6 @@ public class Engine
 		clientTurn = true;
 		turn = turn.first();
 		weeks = 0;
-		state = PAUSED;
+		state = SETUP;
 	}
 }

@@ -179,12 +179,12 @@ public class ActionService {
         }
     }
 
-    public String checkIn(String playerID) {
+    public boolean checkIn(String playerID) {
         return controler.checkIn(playerID);
     }
 
-    public Game[] listAvailableRooms(String playerName) {
-        return controler.listAvailableGameRooms(playerName);
+    public Game[] listAvailableRooms() {
+        return controler.listAvailableGameRooms();
     }
 
     public boolean enterGameRoom(String gameName, String playerID, String password) {

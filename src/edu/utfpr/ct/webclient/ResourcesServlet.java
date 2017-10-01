@@ -31,7 +31,7 @@ public class ResourcesServlet extends HttpServlet{
         String user = (String)req.getSession().getAttribute("USER-ID");
         
         if(service != null){
-            Game[] list = service.listAvailableRooms(user);
+            Game[] list = service.listAvailableRooms();
             
             JSONArray array = new JSONArray();
             
