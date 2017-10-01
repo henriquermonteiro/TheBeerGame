@@ -34,10 +34,11 @@ public class Logger implements ILogger
 		return logger;
 	}
         
-        @Override
-        public void stopLogger(){
-            Database.closeConnection();
-        }
+	@Override
+	public void stopLogger()
+	{
+		Database.closeConnection();
+	}
 
 	@Override
 	public void logGameStart(Game game)

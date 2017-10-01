@@ -18,6 +18,7 @@ import edu.utfpr.ct.interfaces.IControllerHost;
 import edu.utfpr.ct.interfaces.ILogger;
 import java.util.Arrays;
 import edu.utfpr.ct.interfaces.IControllerPlayer;
+import edu.utfpr.ct.webclient.ActionService;
 import java.util.HashSet;
 
 public class Controller implements IControllerHost, IControllerPlayer
@@ -28,7 +29,6 @@ public class Controller implements IControllerHost, IControllerPlayer
 	private final IReport reportManager;
 	private final ILogger logger;
 	private final HashSet<String> players;
-
 	private StartFrame hostGUI;
 
 	private Controller()
@@ -58,7 +58,7 @@ public class Controller implements IControllerHost, IControllerPlayer
 	@Override
 	public void closeApplication()
 	{
-		edu.utfpr.ct.webclient.ActionService.getService().stopService();
+		ActionService.getService().stopService();
 		logger.stopLogger();
 	}
 
@@ -80,16 +80,11 @@ public class Controller implements IControllerHost, IControllerPlayer
 			else
 			{
 				engines.put(game.name, engine);
-
 				engine.setState(Engine.PAUSED);
 			}
 		}
 
-//        Engine builder = new Engine();
 		for(Game game : reportManager.getReports())
-//            builder.setGame(game, Function.RETAILER, false);
-//            builder.rebuildOrders();
-//            reports.putIfAbsent(builder.getGame(), false);
 			reports.putIfAbsent(game, false);
 	}
 
@@ -105,8 +100,6 @@ public class Controller implements IControllerHost, IControllerPlayer
 
 		engine.setGame(game, Function.RETAILER);
 		engine.buildGame();
-		engine.rebuildOrders();
-
 		engine.setState(Engine.PAUSED);
 
 		logger.logGameStart(game);
@@ -115,21 +108,12 @@ public class Controller implements IControllerHost, IControllerPlayer
 		return true;
 	}
 
-//    public void closeGame() {
-//        Database.closeConnection();
-//        //matar o tomcat
-//        System.exit(0);
-//    }
 	@Override
 	public Game[] getGames()
 	{
 		List<Game> unfinishedGames = new ArrayList<>();
 
-//        engines.values().stream().filter((eng) -> (eng.getState() == Engine.SETUP || eng.getState() == Engine.RUNNING || eng.getState() == Engine.FINISHED)).forEachOrdered((eng) -> {
-//            unfinishedGames.add(eng.getGame());
-//        });
-		engines.entrySet().stream().forEach((entry)
-			->
+		engines.entrySet().stream().forEach((entry) ->
 		{
 			unfinishedGames.add(entry.getValue().getGame());
 		});
@@ -141,6 +125,11 @@ public class Controller implements IControllerHost, IControllerPlayer
 	public Game[] getReports()
 	{
 		return reports.keySet().toArray(new Game[0]);
+	}
+
+	public String[] getPoolOfPlayers(String gameName)
+	{
+		return engines.get(gameName).getPlayersOnPool();
 	}
 
 	@Override
@@ -165,8 +154,9 @@ public class Controller implements IControllerHost, IControllerPlayer
 	@Override
 	public int getReportState(String gameName)
 	{
-		Game g = getReport(gameName);
-		return (g == null ? -1 : (reports.get(g) ? 8 : 16));
+		Game report = getReport(gameName);
+
+		return (report == null ? -1 : (reports.get(report) ? 8 : 16));
 	}
 
 	@Override
@@ -178,10 +168,9 @@ public class Controller implements IControllerHost, IControllerPlayer
 	@Override
 	public Game getReport(String gameName)
 	{
-		for(Map.Entry<Game, Boolean> entry : reports.entrySet())
-			if(entry.getKey().name.equals(gameName))
-//                return entry.getValue() ? entry.getKey() : null;
-				return entry.getKey();
+		for(Game report : reports.keySet())
+			if(report.name.equals(gameName))
+				return report;
 
 		return null;
 	}
@@ -190,7 +179,6 @@ public class Controller implements IControllerHost, IControllerPlayer
 	public boolean purgeGame(String gameName)
 	{
 		Engine engine = engines.remove(gameName);
-		reportManager.purgeReport(engine.getGame());
 		logger.purgeGame(engine.getGame().gameID);
 
 		return true;
@@ -199,11 +187,11 @@ public class Controller implements IControllerHost, IControllerPlayer
 	@Override
 	public boolean purgeReport(String gameName)
 	{
-		for(Map.Entry<Game, Boolean> entry : reports.entrySet())
-			if(entry.getKey().name.equals(gameName))
+		for(Game report : reports.keySet())
+			if(report.name.equals(gameName))
 			{
-				reportManager.purgeReport(entry.getKey());
-				reports.remove(entry.getKey());
+				reportManager.purgeReport(report);
+				reports.remove(report);
 				break;
 			}
 
@@ -213,14 +201,6 @@ public class Controller implements IControllerHost, IControllerPlayer
 	@Override
 	public boolean startGame(String gameName)
 	{
-		if(engines.containsKey(gameName))
-		{
-			Game g = engines.get(gameName).getGame();
-			for(int k = 0; k < g.supplyChain.length; k += g.deliveryDelay + 1)
-				if(((Node) g.supplyChain[k]).playerName == null || ((Node) g.supplyChain[k]).playerName.equals(""))
-					return engines.get(gameName).setState(Engine.SETUP);
-		}
-
 		return engines.get(gameName).setState(Engine.RUNNING);
 	}
 
@@ -233,37 +213,21 @@ public class Controller implements IControllerHost, IControllerPlayer
 	@Override
 	public boolean startReport(String gameName)
 	{
-		Game game = null;
+		for(Game report : reports.keySet())
+			if(report.name.equals(gameName))
+				return reports.put(report, true);
 
-		for(Game g : reports.keySet())
-			if(g.name.equals(gameName))
-			{
-				game = g;
-				break;
-			}
-
-		if(game != null)
-			reports.put(game, true);
-
-		return game != null;
+		return false;
 	}
 
 	@Override
 	public boolean pauseReport(String gameName)
 	{
-		Game game = null;
+		for(Game report : reports.keySet())
+			if(report.name.equals(gameName))
+				return reports.put(report, false);
 
-		for(Game g : reports.keySet())
-			if(g.name.equals(gameName))
-			{
-				game = g;
-				break;
-			}
-
-		if(game != null)
-			reports.put(game, false);
-
-		return game != null;
+		return false;
 	}
 
 	@Override
@@ -287,15 +251,10 @@ public class Controller implements IControllerHost, IControllerPlayer
 	@Override
 	public boolean removePlayerFromNode(String gameName, IFunction function)
 	{
-		return engines.get(gameName).changePlayerForNode(function, "");
+		return engines.get(gameName).removePlayerForNode(function);
 	}
 
 	@Override
-	public Table getTableData(String gameName)
-	{
-		return getTable(gameName);
-	}
-
 	public Table getTable(String gameName)
 	{
 		return engines.get(gameName).getTable();
@@ -345,67 +304,46 @@ public class Controller implements IControllerHost, IControllerPlayer
 	@Override
 	public boolean logout(String playerName)
 	{
-		String game = checkIn(playerName);
-
-		if(!game.equals(""))
-		{
-			engines.get(game).removePlayer(playerName);
-			hostGUI.pushGameRoomUpdate(game);
-		}
+		for(Engine engine : engines.values())
+			if(Arrays.asList(engine.getPlayers()).contains(playerName))
+			{
+				engine.removePlayer(playerName);
+				hostGUI.pushGameRoomUpdate(engine.getGame().name);
+				break;
+			}
 
 		return players.remove(playerName);
 	}
 
-	/* IControllerPlayer2 */
 	@Override
-	public String checkIn(String playerName)
+	public boolean checkIn(String playerName)
 	{
-		if(!players.contains(playerName))
-			players.add(playerName);
-
-		for(Engine engine : engines.values())
-			if(Arrays.stream(engine.getPlayers()).anyMatch(playerName::equals))
-				return engine.getGame().name;
-
-		return ""; //null?
+		return players.add(playerName);
 	}
 
 	@Override
 	public Integer postMove(String gameName, String playerName, Integer order)
 	{
-		try
-		{
-			Node node = engines.get(gameName).getNodeOfTurn();
+		Node node = engines.get(gameName).getNodeOfTurn();
 
-//            if (node.function == function && node.playerName.equals(playerName)) {
-			if(node.playerName.equals(playerName))
-				return postMoveForNode(gameName, order);
-		}
-		catch(Exception e)
-		{
-			System.out.println("Controller::postMove(String gameName, IFunction function, String playerName, Integer order): " + e);
-		}
+		if(node.playerName.equals(playerName))
+			return postMoveForNode(gameName, order);
 
 		return -1;
 	}
 
-	/* Pra que eu preciso do nome do usuário? Se for só apra ele ler a lista de 
-	jogos disponíveis é indiferente eu ter ou não o nome */
 	@Override
-	public Game[] listAvailableGameRooms(String playerName)
+	public Game[] listAvailableGameRooms()
 	{
-//        return getGames();
 		List<Game> unfinishedGames = new ArrayList<>();
 
-		engines.values().stream().filter((eng) -> (eng.getState() == Engine.SETUP || eng.getState() == Engine.RUNNING || eng.getState() == Engine.FINISHED)).forEachOrdered((eng)
-			->
-		{
-			unfinishedGames.add(eng.getGame());
-		});
+		for(Engine engine : engines.values())
+			if(engine.getState() != Engine.PAUSED)
+				unfinishedGames.add(engine.getGame());
 
-		for(Game g : reports.keySet())
-			if(reports.get(g))
-				unfinishedGames.add(g);
+		for(Game report : reports.keySet())
+			if(reports.get(report))
+				unfinishedGames.add(report);
 
 		return unfinishedGames.toArray(new Game[0]);
 	}
@@ -413,22 +351,15 @@ public class Controller implements IControllerHost, IControllerPlayer
 	@Override
 	public boolean enterGameRoom(String gameName, String playerName, String password)
 	{
-		Engine engine = engines.get(gameName);
+		if(!engines.containsKey(gameName))
+			return getReport(gameName) != null;
 
-		if(engine == null)
+		if(engines.get(gameName).getGame().password.equals(password)
+		   && engines.get(gameName).addPlayer(playerName))
 		{
-			Game g = getReport(gameName);
-
-			return g != null;
+			hostGUI.pushGameRoomUpdate(gameName);
+			return true;
 		}
-
-		if(engine.getGame().password.equals(password))
-			if(engines.get(gameName).addPlayer(playerName))
-			{
-				hostGUI.pushGameRoomUpdate(gameName);
-
-				return true;
-			}
 
 		return false;
 	}

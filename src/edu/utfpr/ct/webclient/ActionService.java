@@ -200,7 +200,7 @@ public class ActionService {
     }
 
     public Table getTableData(String gameName) {
-        return controler.getTableData(gameName);
+        return controler.getTable(gameName);
     }
 
     public Boolean gameHasFinished(String gameName) {

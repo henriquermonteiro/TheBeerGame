@@ -8,11 +8,11 @@ public class Node extends AbstractNode
 	private static final long serialVersionUID = 8650978713791502113L;
 
 	public String playerName;
+	public Integer latsRequest;
 	public IFunction function;
 	public List<Integer> currentStock;
 	public List<Double> profit;
 	public List<Integer> playerMove;
-	public Integer latsRequest;
 
 	public int getLastStock()
 	{

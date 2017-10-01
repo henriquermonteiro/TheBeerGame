@@ -65,7 +65,7 @@ public class Engine
 
 	public boolean setState(int state)
 	{
-		if(this.state != FINISHED)
+		if((this.state != FINISHED) && (state == RUNNING && isAllPlayerSet()))
 			this.state = state;
 
 		if(this.state == PAUSED)
@@ -101,7 +101,7 @@ public class Engine
 
 		return table;
 	}
-	
+
 	public boolean addPlayer(String playerName)
 	{
 		return players.add(playerName);
@@ -119,6 +119,14 @@ public class Engine
 		return players.remove(playerName);
 	}
 
+	public boolean removePlayerForNode(IFunction function)
+	{
+		getNodeByFunction(function).playerName = "";
+		setState(Engine.SETUP);
+		
+		return true;
+	}
+	
 	//WHATAPORRA?
 	public boolean changePlayerForNode(IFunction function, String playerName)
 	{
@@ -126,16 +134,17 @@ public class Engine
 			return false;
 
 		getNodeByFunction(function).playerName = playerName;
+		if(isAllPlayerSet())
+			setState(Engine.RUNNING);
 
-		for(Function f : Function.values())
-		{
-			Node n = getNodeByFunction(f);
+		return true;
+	}
 
-			if(n.playerName == null || n.playerName.equals(""))
-				return true;
-		}
-
-		setState(Engine.RUNNING);
+	public boolean isAllPlayerSet()
+	{
+		for(IFunction function : turn.getValues())
+			if("".equals(getNodeByFunction(function).playerName))
+				return false;
 
 		return true;
 	}
@@ -192,6 +201,7 @@ public class Engine
 			node.function = value;
 			node.currentStock.add(game.initialStock);
 			node.profit.add(0.0); //POR QUE ESTA PORRA ESTÁ AQUI?
+			node.latsRequest = 0;
 			game.supplyChain[position] = node;
 			position++;
 

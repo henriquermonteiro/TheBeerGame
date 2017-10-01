@@ -14,7 +14,7 @@ public interface IControllerPlayer
 	 * @return ID do jogo que o usuário entrou, -1 caso o usuário não esteja
 	 * ligado a nenhum jogo.
 	 */
-	public String checkIn(String playerName);
+	public boolean checkIn(String playerName);
 
 	/**
 	 * Realiza uma jogada de um jogador. Retorna o montante do pedido atendido.
@@ -36,7 +36,7 @@ public interface IControllerPlayer
 	 * @param playerName
 	 * @return lista de jogos disponíveis.
 	 */
-	public Game[] listAvailableGameRooms(String playerName);
+	public Game[] listAvailableGameRooms();
 
 	/**
 	 * Faz requisição para entrar em um jogo. O jogo pode ser apenas um
@@ -92,7 +92,7 @@ public interface IControllerPlayer
 	
 	public int getReportState(String gameName);
         
-        public Table getTableData(String gameName);
+        public Table getTable(String gameName);
         
         public boolean isNameAvailable(String playerName);
 
