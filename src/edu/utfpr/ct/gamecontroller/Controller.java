@@ -142,7 +142,8 @@ public class Controller implements IControllerHost, IControllerPlayer
 	@Override
 	public Game getGame(String gameName)
 	{
-		return engines.get(gameName).getGame();
+		Engine eng = engines.get(gameName);
+                return (eng == null ? null : eng.getGame());
 	}
 
 	@Override

@@ -209,7 +209,7 @@ public class MainScene extends BorderPane {
                 chart.getEngine().reload();
             });
     
-            String url = "http://127.0.0.1:" + ActionService.getService().getPort() + "/info?game-name=" + URLEncoder.encode(gameName, "UTF-8");
+            String url = "http://127.0.0.1:" + ActionService.getService().getPort() + "/info?order=true&game-name=" + URLEncoder.encode(gameName, "UTF-8");
             chart.getEngine().load(url);
 
             chartPane.add(chart, 0, 0);

@@ -391,7 +391,7 @@ public class PlayGamePane extends BorderPane {
         
         chart = new WebView();
         try {
-            chart.getEngine().load("http://127.0.0.1:" + ActionService.getService().getPort() + "/info?no-legend=true&game-name=" + URLEncoder.encode(game.name, "UTF-8"));
+            chart.getEngine().load("http://127.0.0.1:" + ActionService.getService().getPort() + "/info?order=true&no-legend=true&game-name=" + URLEncoder.encode(game.name, "UTF-8"));
         } catch (UnsupportedEncodingException ex) {
         }
         

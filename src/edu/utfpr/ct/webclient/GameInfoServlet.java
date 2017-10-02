@@ -45,13 +45,18 @@ public class GameInfoServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (!req.getRemoteAddr().equals("127.0.0.1")) {
-//            System.out.println(req.getRemoteAddr());
-            return;
-        }
-
+        
         String gameName = req.getParameter("game-name");
         String legend = req.getParameter("no-legend");
+        
+        boolean order = true;
+        boolean stock = true;
+        
+        String order_s = req.getParameter("order");
+        String stock_s = req.getParameter("stock");
+        
+        order = Boolean.parseBoolean(order_s);
+        stock = Boolean.parseBoolean(stock_s);
 
         ActionService service = null;
         Object obj = req.getServletContext().getAttribute("action-service");
@@ -61,6 +66,11 @@ public class GameInfoServlet extends HttpServlet {
         }
 
         if (service != null) {
+            if (!req.getRemoteAddr().equals("127.0.0.1") && !service.getRoomActive(gameName)) {
+//                System.out.println(req.getRemoteAddr());
+                return;
+            }
+
             Game g = service.getGameInfo(gameName);
 
             if (g == null) {
@@ -80,134 +90,268 @@ public class GameInfoServlet extends HttpServlet {
 
                 int maxV = 0;
 
-                JSONObject chartInfo = new JSONObject();
-                chartInfo.put("type", "line");
-                
-                JSONObject chartData = new JSONObject();
-                chartInfo.put("data", chartData);
-                
-                JSONArray chartLabels = new JSONArray();
-                chartData.put("labels", chartLabels);
-                
-                for (Integer k = 1; k <= g.realDuration; k++) {
-                    chartLabels.add(k.toString());
-                }
-                
-                JSONArray chartDatasets = new JSONArray();
-                chartData.put("datasets", chartDatasets);
-                
-                JSONObject chartOptions = new JSONObject();
-                chartInfo.put("options", chartOptions);
-                
-                for (int k = ((g.supplyChain.length) / (g.deliveryDelay + 1)) - 1; k >= 0 ; k--) {
-                    JSONObject dataset = new JSONObject();
-                    Node n = ((Node) g.supplyChain[k * (g.deliveryDelay + 1)]);
-                    
-                    dataset.put("label", loc.getTextFor(HostLocalizationKeys.CHART_OR_FUNCTION_AX + n.function.getPosition()));
-                    dataset.put("fill", false);
-                    dataset.put("backgroundColor", ChartJSUtils.COLORS_S[k + 1]);
-                    dataset.put("borderColor", ChartJSUtils.COLORS_S[k + 1]);
-                    
-                    JSONArray data = new JSONArray();
-                    int[] vals = new int[n.playerMove.size()];
+                JSONObject ordChartInfo = new JSONObject();
+                if(order){
+                    ordChartInfo.put("type", "line");
 
-                    for (int l = 0; l < vals.length; l++) {
-                        vals[l] = n.playerMove.get(l);
-                        data.add(n.playerMove.get(l));
+                    JSONObject chartData = new JSONObject();
+                    ordChartInfo.put("data", chartData);
 
-                        if (maxV < vals[l]) {
-                            maxV = vals[l];
+                    JSONArray chartLabels = new JSONArray();
+                    chartData.put("labels", chartLabels);
+
+                    for (Integer k = 1; k <= g.realDuration; k++) {
+                        chartLabels.add(k.toString());
+                    }
+
+                    JSONArray chartDatasets = new JSONArray();
+                    chartData.put("datasets", chartDatasets);
+
+                    JSONObject chartOptions = new JSONObject();
+                    ordChartInfo.put("options", chartOptions);
+
+                    for (int k = ((g.supplyChain.length) / (g.deliveryDelay + 1)) - 1; k >= 0 ; k--) {
+                        JSONObject dataset = new JSONObject();
+                        Node n = ((Node) g.supplyChain[k * (g.deliveryDelay + 1)]);
+
+                        dataset.put("label", loc.getTextFor(HostLocalizationKeys.CHART_OR_FUNCTION_AX + n.function.getPosition()));
+                        dataset.put("fill", false);
+                        dataset.put("backgroundColor", ChartJSUtils.COLORS_S[k + 1]);
+                        dataset.put("borderColor", ChartJSUtils.COLORS_S[k + 1]);
+
+                        JSONArray data = new JSONArray();
+                        int[] vals = new int[n.playerMove.size()];
+
+                        for (int l = 0; l < vals.length; l++) {
+                            vals[l] = n.playerMove.get(l);
+                            data.add(n.playerMove.get(l));
+
+                            if (maxV < vals[l]) {
+                                maxV = vals[l];
+                            }
                         }
-                    }
-                    
-                    dataset.put("data", data);
-                    chartDatasets.add(dataset);
-                }
-                
-                JSONObject dataset = new JSONObject();
-                dataset.put("label", loc.getTextFor(HostLocalizationKeys.CHART_OR_FUNCTION_AX + "0"));
-                dataset.put("fill", false);
-                dataset.put("backgroundColor", ChartJSUtils.COLORS_S[0]);
-                dataset.put("borderColor", ChartJSUtils.COLORS_S[0]);
-                JSONArray data =  new JSONArray();
-                for(int k = 0; k < g.demand.length; k++){
-                    data.add(g.demand[k]);
-                    
-                    if (maxV < g.demand[k]) {
-                        maxV = g.demand[k];
-                    }
-                    
-                }
-                dataset.put("data", data);
-                
-                chartDatasets.add(dataset);
 
-                chartOptions.put("responsive", "true");
+                        dataset.put("data", data);
+                        chartDatasets.add(dataset);
+                    }
+
+                    JSONObject dataset = new JSONObject();
+                    dataset.put("label", loc.getTextFor(HostLocalizationKeys.CHART_OR_FUNCTION_AX + "0"));
+                    dataset.put("fill", false);
+                    dataset.put("backgroundColor", ChartJSUtils.COLORS_S[0]);
+                    dataset.put("borderColor", ChartJSUtils.COLORS_S[0]);
+                    JSONArray data =  new JSONArray();
+                    for(int k = 0; k < g.demand.length; k++){
+                        data.add(g.demand[k]);
+
+                        if (maxV < g.demand[k]) {
+                            maxV = g.demand[k];
+                        }
+
+                    }
+                    dataset.put("data", data);
+
+                    chartDatasets.add(dataset);
+
+                    chartOptions.put("responsive", "true");
+
+                    JSONObject ax = new JSONObject();
+                    ax.put("display", "true");
+                    ax.put("text", loc.getTextFor(HostLocalizationKeys.CHART_OR_TITLE));
+
+                    chartOptions.put("title", ax);
+
+                    ax = new JSONObject();
+                    ax.put("display", !noLegend);
+                    ax.put("reverse", "true");
+
+                    chartOptions.put("legend", ax);
+
+                    ax = new JSONObject();
+                    ax.put("mode", "index");
+
+                    chartOptions.put("tooltips", ax);
+
+                    ax = new JSONObject();
+                    ax.put("mode", "nearest");
+
+                    chartOptions.put("hover", ax);
+
+                    JSONObject scales = new JSONObject();
+                    chartOptions.put("scales", scales);
+
+                    JSONArray axes = new JSONArray();
+                    scales.put("xAxes", axes);
+
+                    ax = new JSONObject();
+                    ax.put("display", "true");
+
+                    JSONObject scalLabel = new JSONObject();
+                    scalLabel.put("display", "true");
+                    scalLabel.put("labelString", loc.getTextFor(HostLocalizationKeys.CHART_OR_LABEL_X));
+                    ax.put("scaleLabel", scalLabel);
+
+                    axes.add(ax);
+
+                    axes = new JSONArray();
+                    scales.put("yAxes", axes);
+
+                    ax = new JSONObject();
+                    ax.put("display", "true");
+
+                    scalLabel = new JSONObject();
+                    scalLabel.put("display", "true");
+                    scalLabel.put("labelString", loc.getTextFor(HostLocalizationKeys.CHART_OR_LABEL_Y));
+                    ax.put("scaleLabel", scalLabel);
+
+                    JSONObject ticks = new JSONObject();
+                    ax.put("ticks", ticks);
+
+                    ticks.put("beginAtZero", true);
+                    ticks.put("suggestedMax", maxV + 1);
+
+                    axes.add(ax);
+
+                    JSONObject elements = new JSONObject();
+                    chartOptions.put("elements", elements);
+
+                    ax = new JSONObject();
+                    elements.put("line", ax);
+
+                    ax.put("tension", 0.0);
+                }
                 
-                JSONObject ax = new JSONObject();
-                ax.put("display", "true");
-                ax.put("text", loc.getTextFor(HostLocalizationKeys.CHART_OR_TITLE));
                 
-                chartOptions.put("title", ax);
-                
-                ax = new JSONObject();
-                ax.put("display", !noLegend);
-                ax.put("reverse", "true");
-                
-                chartOptions.put("legend", ax);
-                
-                ax = new JSONObject();
-                ax.put("mode", "index");
-                
-                chartOptions.put("tooltips", ax);
-                
-                ax = new JSONObject();
-                ax.put("mode", "nearest");
-                
-                chartOptions.put("hover", ax);
-                
-                JSONObject scales = new JSONObject();
-                chartOptions.put("scales", scales);
-                
-                JSONArray axes = new JSONArray();
-                scales.put("xAxes", axes);
-                
-                ax = new JSONObject();
-                ax.put("display", "true");
-                
-                JSONObject scalLabel = new JSONObject();
-                scalLabel.put("display", "true");
-                scalLabel.put("labelString", loc.getTextFor(HostLocalizationKeys.CHART_OR_LABEL_X));
-                ax.put("scaleLabel", scalLabel);
-                
-                axes.add(ax);
-                
-                axes = new JSONArray();
-                scales.put("yAxes", axes);
-                
-                ax = new JSONObject();
-                ax.put("display", "true");
-                
-                scalLabel = new JSONObject();
-                scalLabel.put("display", "true");
-                scalLabel.put("labelString", loc.getTextFor(HostLocalizationKeys.CHART_OR_LABEL_Y));
-                ax.put("scaleLabel", scalLabel);
-                
-                JSONObject ticks = new JSONObject();
-                ax.put("ticks", ticks);
-                
-                ticks.put("beginAtZero", true);
-                ticks.put("suggestedMax", maxV + 1);
-                
-                axes.add(ax);
-                
-                JSONObject elements = new JSONObject();
-                chartOptions.put("elements", elements);
-                
-                ax = new JSONObject();
-                elements.put("line", ax);
-                
-                ax.put("tension", 0.0);
+                JSONObject stkChartInfo = new JSONObject();
+                if(stock){
+                    stkChartInfo.put("type", "line");
+
+                    JSONObject chartData = new JSONObject();
+                    stkChartInfo.put("data", chartData);
+
+                    JSONArray chartLabels = new JSONArray();
+                    chartData.put("labels", chartLabels);
+
+                    for (Integer k = 1; k <= g.realDuration; k++) {
+                        chartLabels.add(k.toString());
+                    }
+
+                    JSONArray chartDatasets = new JSONArray();
+                    chartData.put("datasets", chartDatasets);
+
+                    JSONObject chartOptions = new JSONObject();
+                    stkChartInfo.put("options", chartOptions);
+
+                    for (int k = ((g.supplyChain.length) / (g.deliveryDelay + 1)) - 1; k >= 0 ; k--) {
+                        JSONObject dataset = new JSONObject();
+                        Node n = ((Node) g.supplyChain[k * (g.deliveryDelay + 1)]);
+
+                        dataset.put("label", loc.getTextFor(HostLocalizationKeys.CHART_ST_FUNCTION_AX + n.function.getPosition()));
+                        dataset.put("fill", false);
+                        dataset.put("backgroundColor", ChartJSUtils.COLORS_S[k + 1]);
+                        dataset.put("borderColor", ChartJSUtils.COLORS_S[k + 1]);
+
+                        JSONArray data = new JSONArray();
+                        int[] vals = new int[n.currentStock.size()];
+
+                        for (int l = 0; l < vals.length; l++) {
+                            vals[l] = n.currentStock.get(l);
+                            data.add(n.currentStock.get(l));
+
+                            if (maxV < vals[l]) {
+                                maxV = vals[l];
+                            }
+                        }
+
+                        dataset.put("data", data);
+                        chartDatasets.add(dataset);
+                    }
+
+//                    JSONObject dataset = new JSONObject();
+//                    dataset.put("label", loc.getTextFor(HostLocalizationKeys.CHART_ST_FUNCTION_AX + "0"));
+//                    dataset.put("fill", false);
+//                    dataset.put("backgroundColor", ChartJSUtils.COLORS_S[0]);
+//                    dataset.put("borderColor", ChartJSUtils.COLORS_S[0]);
+//                    JSONArray data =  new JSONArray();
+//                    for(int k = 0; k < g.demand.length; k++){
+//                        data.add(g.demand[k]);
+//
+//                        if (maxV < g.demand[k]) {
+//                            maxV = g.demand[k];
+//                        }
+//
+//                    }
+//                    dataset.put("data", data);
+//
+//                    chartDatasets.add(dataset);
+
+                    chartOptions.put("responsive", "true");
+
+                    JSONObject ax = new JSONObject();
+                    ax.put("display", "true");
+                    ax.put("text", loc.getTextFor(HostLocalizationKeys.CHART_ST_TITLE));
+
+                    chartOptions.put("title", ax);
+
+                    ax = new JSONObject();
+                    ax.put("display", !noLegend);
+                    ax.put("reverse", "true");
+
+                    chartOptions.put("legend", ax);
+
+                    ax = new JSONObject();
+                    ax.put("mode", "index");
+
+                    chartOptions.put("tooltips", ax);
+
+                    ax = new JSONObject();
+                    ax.put("mode", "nearest");
+
+                    chartOptions.put("hover", ax);
+
+                    JSONObject scales = new JSONObject();
+                    chartOptions.put("scales", scales);
+
+                    JSONArray axes = new JSONArray();
+                    scales.put("xAxes", axes);
+
+                    ax = new JSONObject();
+                    ax.put("display", "true");
+
+                    JSONObject scalLabel = new JSONObject();
+                    scalLabel.put("display", "true");
+                    scalLabel.put("labelString", loc.getTextFor(HostLocalizationKeys.CHART_ST_LABEL_X));
+                    ax.put("scaleLabel", scalLabel);
+
+                    axes.add(ax);
+
+                    axes = new JSONArray();
+                    scales.put("yAxes", axes);
+
+                    ax = new JSONObject();
+                    ax.put("display", "true");
+
+                    scalLabel = new JSONObject();
+                    scalLabel.put("display", "true");
+                    scalLabel.put("labelString", loc.getTextFor(HostLocalizationKeys.CHART_ST_LABEL_Y));
+                    ax.put("scaleLabel", scalLabel);
+
+                    JSONObject ticks = new JSONObject();
+                    ax.put("ticks", ticks);
+
+                    ticks.put("beginAtZero", true);
+                    ticks.put("suggestedMax", maxV + 1);
+
+                    axes.add(ax);
+
+                    JSONObject elements = new JSONObject();
+                    chartOptions.put("elements", elements);
+
+                    ax = new JSONObject();
+                    elements.put("line", ax);
+
+                    ax.put("tension", 0.0);
+                }
                 
 
                 resp.setContentType("text/html");
@@ -219,11 +363,25 @@ public class GameInfoServlet extends HttpServlet {
                 html.append("<html> <head>");
                 html.append("<script src='/resources/chartjs/Chart.js'></script>");
                 html.append("<style> canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; } </style></head>");
-                html.append("<body><div style=\"width: 95%;\"><canvas id=\"chart\"></canvas> </div> <script>"
-                        + "var ctx = document.getElementById(\"chart\");"
-                        + "var myChart = new Chart(ctx, ");
-                html.append(chartInfo.toJSONString());
-                html.append(");</script>");
+                html.append("<body><div style=\"width: 95%;\">");
+                if(order)
+                    html.append("<canvas id=\"ord_chart\"></canvas>");
+                if(stock)
+                    html.append("<canvas id=\"stock_chart\"></canvas>");
+                html.append("</div> <script>");
+                if(order){
+                    html.append("var ctx = document.getElementById(\"ord_chart\");"
+                            + "var myChart = new Chart(ctx, ");
+                    html.append(ordChartInfo.toJSONString());
+                    html.append(");");
+                }
+                if(stock){
+                    html.append("var ctx = document.getElementById(\"stock_chart\");"
+                            + "var myChart = new Chart(ctx, ");
+                    html.append(stkChartInfo.toJSONString());
+                    html.append(");");
+                }
+                html.append("</script>");
                 html.append("</body></html>");
 
                 resp.setStatus(200);

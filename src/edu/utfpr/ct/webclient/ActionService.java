@@ -4,6 +4,7 @@ import edu.utfpr.ct.gamecontroller.Table;
 import edu.utfpr.ct.datamodel.EngineData;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.gamecontroller.Controller;
+import edu.utfpr.ct.gamecontroller.Engine;
 import edu.utfpr.ct.interfaces.IControllerHost;
 import java.io.File;
 import java.io.IOException;
@@ -244,5 +245,15 @@ public class ActionService {
     
     public Game getReportInfo(String gameName){
         return controlerHost.getReport(gameName);
+    }
+    
+    public boolean getRoomActive(String gameName){
+        int state = controlerHost.getGameState(gameName);
+        
+        if(state == -1){
+            return controlerHost.getReportState(gameName) == 8;
+        }
+        
+        return state != Engine.PAUSED;
     }
 }
