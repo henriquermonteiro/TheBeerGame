@@ -40,13 +40,10 @@
 %>
 <jsp:include page="resources/head_begin.jsp"/>
         <link rel="stylesheet" type="text/css" href="game.css"/>
-        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script src='/resources/chartjs/Chart.js'></script>
+        <style> canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; } </style>
         <script>
-            google.charts.load('current', {'packages': ['corechart']});
-            google.charts.setOnLoadCallback(draw_flag);
-
-            var ready_to_draw = false;
-
+            
             var state = "w";
             var _func = 0;
             var _week = -1;
@@ -164,19 +161,11 @@
                 }
                 delete wait;
                 var game = document.getElementById("game-panel");
-                if (game !== undefined) {
+                if (game !== null) {
                     game.classList.remove("hidden");
                 }
 
                 state = "p";
-            }
-
-            function draw_flag() {
-                if (ready_to_draw) {
-                    draw_chart();
-                }
-
-                ready_to_draw = true;
             }
 
             function goto_report() {
@@ -192,8 +181,6 @@
                 if (report !== undefined) {
                     report.classList.remove("hidden");
                 }
-
-                draw_flag();
 
                 clearInterval(update_interval);
                 state = "r";
@@ -328,15 +315,6 @@
 
             function processReport(json_state) {
                 if (state !== "r") {
-                    report_data = [['Semana', 'Consumidor', 'Varejista', 'Atacadista', 'Distribuidor', 'Produtor']];
-
-                    for (var week in json_state.graph_data) {
-                        var week_ax = json_state.graph_data[week];
-
-                        var array = new Array(week_ax.week, week_ax.c, week_ax.r, week_ax.w, week_ax.d, week_ax.p);
-
-                        report_data.push(array);
-                    }
 
                     document.getElementById("rep_name").innerHTML = json_state.name;
                     if(json_state.informed_chain === true){
@@ -360,6 +338,8 @@
                         document.getElementById("rep_" + func + "_cost").innerHTML = json_state.players[player].cost;
                         document.getElementById("rep_" + func + "_stock").innerHTML = json_state.players[player].stock;
                     }
+                    
+                    document.getElementById("chart_frame").contentWindow.location.reload();
 
                     goto_report();
                 }
@@ -596,8 +576,8 @@
                 </div>
             </div>
             <div class="graph-card mdl-card mdl-shadow--6dp mdl-card--horizontal">
-                <div class="mdl-card__media" id="graph-content">
-
+                <div class="mdl-card__supporting-text" id="rep_ord_chart">
+                    <iframe id="chart_frame" src="/info?order=true&stock=true&game-name=<%=URLEncoder.encode((String)session.getAttribute("LOGGED_GAME"), "UTF-8").replace("+", "%20") %>&lang=<%=lang %>" style="border: 0pt none; height: 610px; width: 580px;"></iframe>
                 </div>
             </div>
         </div>

@@ -22,6 +22,7 @@ import be.ceau.chart.options.scales.ScaleLabel;
 import be.ceau.chart.options.ticks.LinearTicks;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.datamodel.Node;
+import edu.utfpr.ct.localization.ClientLocalizationManager;
 import edu.utfpr.ct.localization.HostLocalizationKeys;
 import edu.utfpr.ct.localization.HostLocalizationManager;
 import edu.utfpr.ct.localization.Localize;
@@ -49,14 +50,15 @@ public class GameInfoServlet extends HttpServlet {
         String gameName = req.getParameter("game-name");
         String legend = req.getParameter("no-legend");
         
-        boolean order = true;
-        boolean stock = true;
-        
         String order_s = req.getParameter("order");
         String stock_s = req.getParameter("stock");
         
-        order = Boolean.parseBoolean(order_s);
-        stock = Boolean.parseBoolean(stock_s);
+        String lang = req.getParameter("lang");
+        
+        boolean order = Boolean.parseBoolean(order_s);
+        boolean stock = Boolean.parseBoolean(stock_s);
+        
+        boolean no_html = Boolean.parseBoolean(req.getParameter("no-html"));
 
         ActionService service = null;
         Object obj = req.getServletContext().getAttribute("action-service");
@@ -86,7 +88,13 @@ public class GameInfoServlet extends HttpServlet {
                 } catch (Exception ex) {
                 }
 
-                Localize loc = HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get());
+                Localize loc;
+                
+                if(lang == null){
+                    loc = HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get());
+                }else{
+                    loc = ClientLocalizationManager.getInstance().getClientFor(lang);
+                }
 
                 int maxV = 0;
 
@@ -358,17 +366,23 @@ public class GameInfoServlet extends HttpServlet {
                 resp.setCharacterEncoding("UTF-8");
 
                 StringBuilder html = new StringBuilder();
-
-                html.append("<!DOCTYPE html>");
-                html.append("<html> <head>");
-                html.append("<script src='/resources/chartjs/Chart.js'></script>");
-                html.append("<style> canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; } </style></head>");
-                html.append("<body><div style=\"width: 95%;\">");
+                
+                if(!no_html){
+                    html.append("<!DOCTYPE html>");
+                    html.append("<html> <head>");
+                    html.append("<script src='/resources/chartjs/Chart.js'></script>");
+                    html.append("<style> canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; } </style></head>");
+                    html.append("<body><div style=\"width: 95%;\">");
+                }
                 if(order)
                     html.append("<canvas id=\"ord_chart\"></canvas>");
                 if(stock)
                     html.append("<canvas id=\"stock_chart\"></canvas>");
-                html.append("</div> <script>");
+                if(!no_html)
+                    html.append("</div>");
+                html.append("<script>");
+                if(no_html)
+                    html.append("function call_chart(){");
                 if(order){
                     html.append("var ctx = document.getElementById(\"ord_chart\");"
                             + "var myChart = new Chart(ctx, ");
@@ -381,9 +395,13 @@ public class GameInfoServlet extends HttpServlet {
                     html.append(stkChartInfo.toJSONString());
                     html.append(");");
                 }
+                if(no_html)
+                    html.append("}");
                 html.append("</script>");
-                html.append("</body></html>");
-
+                if(!no_html){
+                    html.append("</body></html>");
+                }
+                
                 resp.setStatus(200);
                 resp.getOutputStream().write(html.toString().getBytes());
                 resp.getOutputStream().flush();

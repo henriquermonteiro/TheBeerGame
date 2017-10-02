@@ -63,4 +63,24 @@ public class ClientLocalizationKeys {
     public static final String REPORT_NAME_LABEL = "REPORT-NAME-LABEL";
     public static final String REPORT_COST_LABEL = "REPORT-COST-LABEL";
     public static final String REPORT_STOCK_LABEL = "REPORT-STOCK-LABEL";
+        
+    public static String CHART_OR_TITLE = "CHART-ORDER-TITLE";
+    public static String CHART_OR_LABEL_X = "CHART-ORDER-LABEL-X-AXIS";
+    public static String CHART_OR_LABEL_Y = "CHART-ORDER-LABEL-Y-AXIS";
+    public static String CHART_OR_FUNCTION_AX = "CHART-ORDER-FUNCTION-";
+    public static String CHART_OR_FUNCTION_0 = "CHART-ORDER-FUNCTION-0";
+    public static String CHART_OR_FUNCTION_1 = "CHART-ORDER-FUNCTION-1";
+    public static String CHART_OR_FUNCTION_2 = "CHART-ORDER-FUNCTION-2";
+    public static String CHART_OR_FUNCTION_3 = "CHART-ORDER-FUNCTION-3";
+    public static String CHART_OR_FUNCTION_4 = "CHART-ORDER-FUNCTION-4";
+
+    public static String CHART_ST_TITLE = "CHART-STOCK-TITLE";
+    public static String CHART_ST_LABEL_X = "CHART-STOCK-LABEL-X-AXIS";
+    public static String CHART_ST_LABEL_Y = "CHART-STOCK-LABEL-Y-AXIS";
+    public static String CHART_ST_FUNCTION_AX = "CHART-STOCK-FUNCTION-";
+    public static String CHART_ST_FUNCTION_0 = "CHART-STOCK-FUNCTION-0";
+    public static String CHART_ST_FUNCTION_1 = "CHART-STOCK-FUNCTION-1";
+    public static String CHART_ST_FUNCTION_2 = "CHART-STOCK-FUNCTION-2";
+    public static String CHART_ST_FUNCTION_3 = "CHART-STOCK-FUNCTION-3";
+    public static String CHART_ST_FUNCTION_4 = "CHART-STOCK-FUNCTION-4";
 }
