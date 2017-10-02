@@ -172,15 +172,6 @@ public class MainScene extends BorderPane {
             HBox deliDelay_Layout = new HBox(deliDelay_Label, deliDelay);
             deliDelay_Layout.getStyleClass().add("hbox");
             
-//            generalInfo.add(missingCost_Layout, 0, 0, 2, 1);
-//            generalInfo.add(stockCost_Layout, 2, 0, 2, 1);
-//            generalInfo.add(sellProf_Layout, 4, 0, 2, 1);
-//            
-//            generalInfo.add(realDur_Layout, 0, 1, 3, 1);
-//            generalInfo.add(infoDur_Layout, 3, 1, 3, 1);
-//            
-//            generalInfo.add(initStock_Layout, 0, 2, 3, 1);
-//            generalInfo.add(deliDelay_Layout, 3, 2, 3, 1);
             generalInfo.add(missingCost_Layout, 0, 0, 1, 1);
             generalInfo.add(stockCost_Layout, 0, 1, 1, 1);
             generalInfo.add(sellProf_Layout, 0, 2, 1, 1);
@@ -261,10 +252,8 @@ public class MainScene extends BorderPane {
         LocalizationUtils.bindLocalizationText(addGameTab.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_MAIN_CREATE);
 
         tabPane = new TabPane(homeTab, addGameTab);
-        tabPane.getStyleClass().addAll("main-tabs");
+        tabPane.getStyleClass().addAll("main-tabs", "transparent", TabPane.STYLE_CLASS_FLOATING);
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.SELECTED_TAB);
-        tabPane.getStyleClass().add(TabPane.STYLE_CLASS_FLOATING);
-        tabPane.getStyleClass().add("transparent");
 
         ArrayList<String> ips = (ArrayList<String>) IPUtils.findIP();
 

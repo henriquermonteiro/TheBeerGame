@@ -17,17 +17,12 @@ import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -47,7 +42,6 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
@@ -63,7 +57,6 @@ public class PlayGamePane extends BorderPane {
     private ToggleButton playPauseButton;
     private AutoCompleteTextField[] playersInNodes;
     private WebView chart;
-//    private XYChart.Series<Integer, Integer>[] chartData;
     private ListView<String> pool;
     private Set<String> validPlayers;
 
@@ -90,15 +83,6 @@ public class PlayGamePane extends BorderPane {
             }
             playersInNodes[k].getEntries().clear();
             playersInNodes[k].getEntries().addAll(Arrays.asList(newPool));
-
-//            XYChart.Series xyD = chartData[k];
-//
-//            if (xyD.getData().size() != playerNode.playerMove.size()) {
-//                for (int j = xyD.getData().size(); j < playerNode.playerMove.size(); j++) {
-//                    xyD.getData().add(new XYChart.Data<>(j + 1, playerNode.playerMove.get(j)));
-//                }
-//            }
-
         }
 
         byPass_setText = false;
@@ -144,14 +128,9 @@ public class PlayGamePane extends BorderPane {
         });
 
         playersInNodes = new AutoCompleteTextField[game.supplyChain.length / (game.deliveryDelay + 1)];
-//        chart = new LineChart(new NumberAxis(1.0, game.realDuration, 5.0), new NumberAxis());
-//        chartData = new XYChart.Series[playersInNodes.length];
 
         for (int k = 0; k < playersInNodes.length; k++) {
             playersInNodes[k] = new AutoCompleteTextField(k);
-//            chartData[k] = new XYChart.Series<>();
-//
-//            chart.getData().add(chartData[k]);
         }
 
         validPlayers = new HashSet<>();
@@ -196,7 +175,6 @@ public class PlayGamePane extends BorderPane {
 
         GridPane centerPane = new GridPane();
         centerPane.getStyleClass().addAll("card", "left", "shadowed-1");
-//        centerPane.fitToHeightProperty().setValue(Boolean.TRUE);
 
         playerColumns = new GridPane();
 
@@ -278,12 +256,6 @@ public class PlayGamePane extends BorderPane {
 
             gP.add(lTB, 2, 1);
 
-//            Pane spring = new Pane();
-//            spring.setMinWidth(30);
-//            spring.prefWidthProperty().bind(gP.widthProperty().divide(2).subtract(playersInNodes[k].widthProperty().divide(2)));
-//
-//            gP.add(spring, 0, 0);
-
             ImageView iV = new ImageView();
 
             iV.setFitHeight(65);
@@ -326,7 +298,6 @@ public class PlayGamePane extends BorderPane {
             l.setGraphic(iV);
 
             gP.add(l, 1, 2);
-//            GridPane.setConstraints(l, 1, 1, 1, 1, HPos.CENTER, VPos.CENTER);
             
             ColumnConstraints cC1 = new ColumnConstraints();
             cC1.setFillWidth(true);
@@ -375,17 +346,6 @@ public class PlayGamePane extends BorderPane {
         rC.setValignment(VPos.TOP);
         
         playerColumns.getRowConstraints().add(rC);
-
-//        playerColumns.add(chart, 0, 1, playersInNodes.length, 1);
-//
-//        chart.setMinWidth(0);
-//        chart.setLegendVisible(false);
-//
-//        if (playersInNodes.length < 6) {
-//            centerPane.setFitToWidth(true);
-//        }
-//
-//        centerPane.setContent(playerColumns);
 
         centerPane.add(playerColumns, 0, 0);
         

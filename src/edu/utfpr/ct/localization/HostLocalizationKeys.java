@@ -65,6 +65,8 @@ public class HostLocalizationKeys
 
 	public static final String DEFAULT_GAME_NAME = "DEFAULT-GAME-NAME";
 
+        public static String TITLE_REPORT_ORDER = "TITLE-REPORT-ORDER-TAB";
+        public static String TITLE_REPORT_STOCK = "TITLE-REPORT-STOCK-TAB";
 	public static final String TITLE_REPORT_GENERAL = "TITLE-REPORT-GENERAL-TAB";
 	public static final String TITLE_REPORT_RETAILER = "TITLE-REPORT-RETAILER-TAB";
 	public static final String TITLE_REPORT_WHOLESALER = "TITLE-REPORT-WHOLESALER-TAB";
