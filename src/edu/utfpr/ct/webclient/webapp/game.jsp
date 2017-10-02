@@ -26,6 +26,10 @@
     }
     
     
+    if(request.getParameter("lang") != null){
+        session.setAttribute("PREF-LANG", request.getParameter("lang"));
+    }
+    
     String lang = "default";
     if(session.getAttribute("PREF-LANG") != null){ 
         lang = (String) session.getAttribute("PREF-LANG");
@@ -402,6 +406,7 @@
         <body onload="initialize();">
         <jsp:include page="resources/body_begin.jsp">
             <jsp:param name="hide_body" value="true"/>
+            <jsp:param name="source" value="game.jsp"/>
         </jsp:include>
 
     <div class="center-content">

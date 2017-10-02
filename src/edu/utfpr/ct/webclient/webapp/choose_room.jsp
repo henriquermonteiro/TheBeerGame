@@ -15,6 +15,10 @@
         }
     }
     
+    if(request.getParameter("lang") != null){
+        session.setAttribute("PREF-LANG", request.getParameter("lang"));
+    }
+    
     String lang = "default";
     if(session.getAttribute("PREF-LANG") != null){ 
         lang = (String) session.getAttribute("PREF-LANG");
@@ -85,7 +89,9 @@
     <link rel="stylesheet" type="text/css" href="resources/dialog-polyfill.css"/>
     <link rel="stylesheet" type="text/css" href="choose.css"/>
     <jsp:include page="resources/head_finish.jsp"/>
-    <jsp:include page="resources/body_begin.jsp" />
+    <jsp:include page="resources/body_begin.jsp" >
+            <jsp:param name="source" value="choose_room.jsp"/>
+        </jsp:include>
 
         <div class="center-content">
             <div hidden="true">

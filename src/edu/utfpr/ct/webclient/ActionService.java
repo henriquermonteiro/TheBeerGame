@@ -25,6 +25,7 @@ import edu.utfpr.ct.interfaces.IControllerPlayer;
 import edu.utfpr.ct.util.IPUtils;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.catalina.Context;
 import org.apache.catalina.Service;
 import org.apache.catalina.connector.Connector;
 import org.apache.coyote.ProtocolHandler;
@@ -117,6 +118,9 @@ public class ActionService {
             webContentFolder = Files.createTempDirectory("default-doc-base").toFile();
         }
         StandardContext ctx = (StandardContext) tomcat.addWebapp("", webContentFolder.getAbsolutePath());
+        ctx.setSessionTimeout(1);
+        System.out.println("Timeout: " + ctx.getSessionTimeout());
+        ctx.addApplicationListener(SessionTimeoutListener.class.getName());
         ctx.setDelegate(true);
         //Set execution independent of current thread context classloader (compatibility with exec:java mojo)
         ctx.setParentClassLoader(ActionService.class.getClassLoader());

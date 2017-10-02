@@ -30,7 +30,7 @@ public class LogoutServlet extends HttpServlet{
         resp.getOutputStream().close();
     }
 
-    private void checkin(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    private void logout(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String player = req.getParameter("player-name");
 
         if (player != null && !player.isEmpty()) {
@@ -50,11 +50,11 @@ public class LogoutServlet extends HttpServlet{
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        checkin(req, resp);
+        logout(req, resp);
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        checkin(req, resp);
+        logout(req, resp);
     }
 }
