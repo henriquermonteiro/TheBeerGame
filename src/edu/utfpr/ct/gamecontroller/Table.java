@@ -33,11 +33,12 @@ public class Table
 
 		if(lines.size() > 0)
 		{
-			lastKnowWeek = lines.get(lines.size() - 1).week;
+			lastKnowWeek = lines.get(lines.size() - 1).week - 1;
 			lastPlayer = lines.get(lines.size() - 1).function;
 		}
 
-		while(((Node) game.supplyChain[0]).playerMove.size() > lastKnowWeek + 1)
+//		while(((Node) game.supplyChain[0]).playerMove.size() > lastKnowWeek + 1)
+		while((((Node) game.supplyChain[0]).playerMove.size() >= lastKnowWeek + 1) && (lastKnowWeek + 1 == game.realDuration))
 		{
 			if(lastPlayer == -1)
 			{
@@ -50,17 +51,20 @@ public class Table
 				line.incomingOrder = new ArrayList<>(Collections.nCopies(game.deliveryDelay, null));
 
 				lines.add(line);
+                                
+                                lastPlayer = 0;
 			}
 
 			while(true)
 			{
-				int pos = (lastPlayer + 1) * (game.deliveryDelay + 1);
+//				int pos = (lastPlayer + 1) * (game.deliveryDelay + 1);
+				int pos = lastPlayer * (game.deliveryDelay + 1);
 				node = (Node) game.supplyChain[pos];
 
 				if(node.playerMove.size() > lastKnowWeek + 1)
 				{
 					line = new Line();
-					line.function = lastPlayer + 2;
+					line.function = lastPlayer + 1;
 					line.week = lastKnowWeek + 1;
 					line.currentStock = node.currentStock.get(lastKnowWeek + 1);
 					line.profit = node.profit.get(lastKnowWeek + 1);
@@ -75,7 +79,7 @@ public class Table
 
 					lastPlayer++;
 
-					if(lastPlayer >= Function.PRODUCER.getPosition() - 1)
+					if(lastPlayer >= Function.PRODUCER.getPosition())
 					{
 						lastPlayer = -1;
 						lastKnowWeek++;
