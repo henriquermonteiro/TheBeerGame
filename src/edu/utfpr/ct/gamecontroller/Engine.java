@@ -271,8 +271,7 @@ public class Engine
 		{
 			posCurrentNode = (turn.getPosition() - 1) * game.deliveryDelay + (turn.getPosition() - 1);
 			node = (Node) game.supplyChain[posCurrentNode];
-			
-			node.playerMove.add(order);
+
 			qty = makeOrderRecursion(posCurrentNode + 1, order);
 			node.currentStock.add(node.getLastStock() + qty);
 			if(updateTable)

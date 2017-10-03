@@ -279,7 +279,7 @@ public class Controller implements IControllerHost, IControllerPlayer
 		engine = engines.get(gameName);
 		if(!engine.isClientTurn())
 		{
-			//engine.getNodeOfTurn().playerMove.add(order);
+			engine.getNodeOfTurn().playerMove.add(order);
 			logger.logPlayerMove(engine.getGame().gameID, engine.getNodeOfTurn());
 		}
 		qty = engine.makeOrder(order);
