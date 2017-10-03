@@ -43,7 +43,10 @@ public class LoggerTest
 		logger.logGameStart(reference);
 		fillPLayerMoves(logger);
 
-		retrieved = logger.getGames()[0];
+		for(Game game : logger.getGames())
+			if(game.timestamp == reference.timestamp)
+				 retrieved = game;
+
 		comparator.compareAll(reference, retrieved);
 
 		logger.purgeGame(retrieved.gameID);

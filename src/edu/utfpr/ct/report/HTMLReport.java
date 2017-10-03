@@ -27,7 +27,7 @@ class HTMLReport extends AbstractReport
 			bw = new BufferedWriter(new FileWriter(createFile(getFileName(game))));
 			writeHeader(bw);
 			writeGameConfig(bw, game);
-			//writePlayerMoves(bw, game);
+			writeClientData(bw, game);
 			writeNodeData(bw, game);
 			writeFoot(bw);
 			bw.close();
@@ -52,30 +52,6 @@ class HTMLReport extends AbstractReport
 						+ "<html> \n"
 						+ "<head> \n"
 						+ "<meta charset=\"UTF-8\"> \n"
-						+ "<script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script> \n"
-						+ "<script type=\"text/javascript\"> \n"
-						+ "  google.charts.load('current', {'packages':['corechart']}); \n"
-						+ "  google.charts.setOnLoadCallback(drawChart); \n\n"
-						+ "  function drawChart() { \n"
-						+ "    var data = google.visualization.arrayToDataTable([ \n"
-						+ "      ['Year', 'Sales', 'Expenses'],\n"
-						+ "      ['2004',  1000,      400],\n"
-						+ "      ['2005',  1170,      460],\n"
-						+ "      ['2006',  660,       1120],\n"
-						+ "      ['2007',  1030,      540]\n"
-						+ "    ]); \n"
-						+ "\n"
-						+ "    var options = {\n"
-						+ "      title: 'Company Performance',\n"
-						+ "      curveType: 'function',\n"
-						+ "      legend: { position: 'bottom' } \n"
-						+ "    };\n"
-						+ "\n"
-						+ "    var chart = new google.visualization.LineChart(document.getElementById('curve_chart')); \n"
-						+ "\n"
-						+ "    chart.draw(data, options);\n"
-						+ "  }\n"
-						+ "</script>"
 						+ "<style> \n"
 						+ "table \n"
 						+ "{ \n"
@@ -97,43 +73,6 @@ class HTMLReport extends AbstractReport
 
 		bw.write(header);
 		bw.newLine();
-	}
-
-//						+ "  function drawChart() { \n"
-//						+ "    var data = google.visualization.arrayToDataTable([ \n"
-//						+ "      ['Year', 'Sales', 'Expenses'],\n"
-//						+ "      ['2004',  1000,      400],\n"
-//						+ "      ['2005',  1170,      460],\n"
-//						+ "      ['2006',  660,       1120],\n"
-//						+ "      ['2007',  1030,      540]\n"
-//						+ "    ]); \n"
-//						+ "\n"
-//						+ "    var options = {\n"
-//						+ "      title: 'Company Performance',\n"
-//						+ "      curveType: 'function',\n"
-//						+ "      legend: { position: 'bottom' } \n"
-//						+ "    };\n"
-//						+ "\n"
-//						+ "    var chart = new google.visualization.LineChart(document.getElementById('curve_chart')); \n"
-//						+ "\n"
-//						+ "    chart.draw(data, options);\n"
-//						+ "  }\n"
-//		matrix = "[['Stock', 'Move', 'Profit']";	
-	private String createStockMatrix(Game game, BufferedWriter bw)
-	{
-		Node node;
-		String function;
-
-		function = "function drawStock() { \n"
-				   + "var data = google.visualization.arrayToDataTable([ \n";
-
-		function += "[";
-		for(AbstractNode abstractNode : game.supplyChain)
-			if(!(abstractNode instanceof TravellingTime))
-				function += "'" + ((Node) abstractNode).function.getName() + "', \n";
-		function += "]";
-
-		return function;
 	}
 
 	private void writeFoot(BufferedWriter bw) throws IOException
@@ -178,6 +117,28 @@ class HTMLReport extends AbstractReport
 		bw.newLine();
 	}
 
+	private void writeClientData(BufferedWriter bw, Game game) throws IOException
+	{
+		bw.write("<b><h1>Client</h1></b>");
+		bw.newLine();
+
+		bw.write("<table>");
+		bw.newLine();
+
+		/*Header*/
+		bw.write("<tr><th></th>");
+		for(int i = 0; i <= game.realDuration; i++)
+			bw.write("<th>Week " + (i + 1) + "</th>");
+		bw.newLine();
+
+		bw.write("<tr><th>Order</th>");
+		for(int demand : game.demand)
+			bw.write("<th>" + demand + "</th>");
+		bw.write("</tr>");
+		bw.write("</table><br>");
+		bw.newLine();
+	}
+
 	private void writeNodeData(BufferedWriter bw, Game game) throws IOException
 	{
 		Node node;
@@ -196,7 +157,7 @@ class HTMLReport extends AbstractReport
 
 			/*Header*/
 			bw.write("<tr><th></th>");
-			for(int i = 0; i < game.realDuration; i++)
+			for(int i = 0; i <= game.realDuration; i++)
 				bw.write("<th>Week " + (i + 1) + "</th>");
 			bw.newLine();
 
@@ -205,7 +166,7 @@ class HTMLReport extends AbstractReport
 				bw.write("<th>" + value + "</th>");
 			bw.newLine();
 
-			bw.write("<tr><th>Move</th>");
+			bw.write("<tr><th>Order</th>");
 			for(int value : node.playerMove)
 				bw.write("<th>" + value + "</th>");
 			bw.newLine();

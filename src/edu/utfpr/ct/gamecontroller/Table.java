@@ -131,7 +131,6 @@ public class Table
 
 	public class Line
 	{
-
 		public Integer function;
 		public Integer week;
 		public Integer currentStock;

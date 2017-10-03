@@ -113,10 +113,7 @@ public class Controller implements IControllerHost, IControllerPlayer
 	{
 		List<Game> unfinishedGames = new ArrayList<>();
 
-		engines.entrySet().stream().forEach((entry) ->
-		{
-			unfinishedGames.add(entry.getValue().getGame());
-		});
+		engines.entrySet().stream().forEach((entry) -> { unfinishedGames.add(entry.getValue().getGame()); });
 
 		return unfinishedGames.toArray(new Game[0]);
 	}
@@ -202,18 +199,19 @@ public class Controller implements IControllerHost, IControllerPlayer
 	public boolean startGame(String gameName)
 	{
 		if(engines.get(gameName).setState(Engine.RUNNING))
-                    return true;
-                return engines.get(gameName).setState(Engine.SETUP);
+			return true;
+		return engines.get(gameName).setState(Engine.SETUP);
 	}
 
 	@Override
 	public boolean pauseGame(String gameName)
 	{
-		if(engines.get(gameName).setState(Engine.PAUSED)){
-                    hostGUI.pushGameRoomUpdate(gameName);
-                    return true;
-                }
-                return false;
+		if(engines.get(gameName).setState(Engine.PAUSED))
+		{
+			hostGUI.pushGameRoomUpdate(gameName);
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -280,7 +278,7 @@ public class Controller implements IControllerHost, IControllerPlayer
 		engine = engines.get(gameName);
 		if(!engine.isClientTurn())
 		{
-			engine.getNodeOfTurn().playerMove.add(order);
+			//engine.getNodeOfTurn().playerMove.add(order);
 			logger.logPlayerMove(engine.getGame().gameID, engine.getNodeOfTurn());
 		}
 		qty = engine.makeOrder(order);

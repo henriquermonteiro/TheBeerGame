@@ -34,27 +34,13 @@ public class ReportTest
 		game.unitiesOnTravel = 16;
 		game.initialStock = 16;
 		game.informedChainSupply = true;
-                game.supplyChain = new AbstractNode[12];
-                int k = 0;
-                game.supplyChain[k++] = new Node();
-                game.supplyChain[k++] = new TravellingTime();
-                game.supplyChain[k++] = new TravellingTime();
-                game.supplyChain[k++] = new Node();
-                game.supplyChain[k++] = new TravellingTime();
-                game.supplyChain[k++] = new TravellingTime();
-                game.supplyChain[k++] = new Node();
-                game.supplyChain[k++] = new TravellingTime();
-                game.supplyChain[k++] = new TravellingTime();
-                game.supplyChain[k++] = new Node();
-                game.supplyChain[k++] = new TravellingTime();
-                game.supplyChain[k++] = new TravellingTime();
 
 		Engine engine = new Engine();
 		engine.setGame(game, Function.RETAILER);
 		engine.buildGame();
 
 		reportManager.createReport(game);
-		games = reportManager.getReports();
+		//games = reportManager.getReports();
 		//comparator.compareAll(game, games[games.length - 1]);
 		//reportManager.purgeReport(game);
 	}

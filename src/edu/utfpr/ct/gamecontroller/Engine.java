@@ -1,7 +1,6 @@
 package edu.utfpr.ct.gamecontroller;
 
 import edu.utfpr.ct.datamodel.AbstractNode;
-import edu.utfpr.ct.datamodel.Function;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.datamodel.Node;
 import edu.utfpr.ct.datamodel.TravellingTime;
@@ -66,10 +65,13 @@ public class Engine
 	public boolean setState(int newState)
 	{
 		if(this.state == FINISHED)
-                    return (this.state == newState);
+			return (this.state == newState);
 
-                if(newState == FINISHED || newState == PAUSED || newState == SETUP || (newState == RUNNING && isAllPlayerSet()))
-                    this.state = newState;
+		if(newState == FINISHED
+		   || newState == PAUSED
+		   || newState == SETUP
+		   || (newState == RUNNING && isAllPlayerSet()))
+			this.state = newState;
 
 		if(this.state == PAUSED)
 		{
@@ -125,7 +127,8 @@ public class Engine
 	public boolean removePlayerForNode(IFunction function)
 	{
 		getNodeByFunction(function).playerName = "";
-		if(state == RUNNING) setState(Engine.SETUP);
+		if(state == RUNNING)
+			setState(Engine.SETUP);
 
 		return true;
 	}
@@ -201,10 +204,10 @@ public class Engine
 
 			node.travellingStock = 0;
 			node.playerName = "";
+			node.latsRequest = 0;
 			node.function = value;
 			node.currentStock.add(game.initialStock);
-			node.profit.add(0.0); //POR QUE ESTA PORRA ESTÁ AQUI?
-			node.latsRequest = 0;
+			node.profit.add(0.0);
 			game.supplyChain[position] = node;
 			position++;
 
@@ -223,14 +226,12 @@ public class Engine
 
 		if(state != SETUP)
 			return;
-
 		state = RUNNING;
 
 		for(int i = 0; i < game.realDuration; i++)
 		{
 			/* For the client turn */
 			makeOrder(game.demand[i]);
-//            nextTurn();
 
 			while(!clientTurn)
 			{
@@ -244,12 +245,10 @@ public class Engine
 				}
 
 				makeOrder(node.playerMove.get(i), false);
-//                nextTurn();
 			}
 		}
 
 		getTable().updateLines();
-
 		state = FINISHED;
 	}
 
@@ -258,13 +257,6 @@ public class Engine
 		return makeOrder(order, true);
 	}
 
-	/**
-	 * Makes all the order placed go from one Node to the other.
-	 *
-	 * @param order
-	 * @param updateTable
-	 * @return
-	 */
 	public int makeOrder(int order, boolean updateTable)
 	{
 		int posCurrentNode, qty;
@@ -279,6 +271,8 @@ public class Engine
 		{
 			posCurrentNode = (turn.getPosition() - 1) * game.deliveryDelay + (turn.getPosition() - 1);
 			node = (Node) game.supplyChain[posCurrentNode];
+			
+			node.playerMove.add(order);
 			qty = makeOrderRecursion(posCurrentNode + 1, order);
 			node.currentStock.add(node.getLastStock() + qty);
 			if(updateTable)

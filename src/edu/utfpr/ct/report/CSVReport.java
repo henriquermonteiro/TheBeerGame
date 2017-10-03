@@ -26,6 +26,7 @@ class CSVReport extends AbstractReport
 		{
 			bw = new BufferedWriter(new FileWriter(createFile(getFileName(game))));
 			writeGameConfig(bw, game);
+			writeClientData(bw, game);
 			writeNodeData(bw, game);
 			bw.close();
 			return true;
@@ -84,6 +85,22 @@ class CSVReport extends AbstractReport
 		bw.newLine();
 	}
 
+	private void writeClientData(BufferedWriter bw, Game game) throws IOException
+	{
+		bw.write("Client");
+		bw.newLine();
+
+		for(int i = 0; i < game.realDuration; i++)
+			bw.write(", Week " + (i + 1));
+		bw.newLine();
+
+		bw.write("Order");
+		for(int value : game.demand)
+			bw.write(", " + value);
+		bw.newLine();
+		bw.newLine();
+	}
+
 	private void writeNodeData(BufferedWriter bw, Game game) throws IOException
 	{
 		Node node;
@@ -97,7 +114,7 @@ class CSVReport extends AbstractReport
 			bw.write(node.function.getName());
 			bw.newLine();
 
-			for(int i = 0; i < game.realDuration; i++)
+			for(int i = 0; i <= game.realDuration; i++)
 				bw.write(", Week " + (i + 1));
 			bw.newLine();
 
