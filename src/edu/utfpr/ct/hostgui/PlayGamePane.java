@@ -12,17 +12,22 @@ import edu.utfpr.ct.localization.HostLocalizationManager;
 import edu.utfpr.ct.localization.LocalizationUtils;
 import edu.utfpr.ct.util.ChartJSUtils;
 import edu.utfpr.ct.webclient.ActionService;
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -30,9 +35,11 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.Tooltip;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.Light;
 import javafx.scene.effect.Lighting;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
@@ -46,6 +53,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 import jiconfont.icons.GoogleMaterialDesignIcons;
 import jiconfont.javafx.IconNode;
 
@@ -63,6 +71,7 @@ public class PlayGamePane extends BorderPane {
     private boolean byPass_setText = false;
 
     private IconNode playPauseIcon;
+    private IconNode tabPlayIcon;
     private GridPane playerColumns;
 
     private final MainScene mainScene;
@@ -112,19 +121,53 @@ public class PlayGamePane extends BorderPane {
     }
 
     private void createContent() {
-        playPauseIcon = new IconNode(GoogleMaterialDesignIcons.STOP);
+        playPauseIcon = new IconNode(GoogleMaterialDesignIcons.PLAY_ARROW);
         playPauseIcon.getStyleClass().addAll("icon");
+        
+        tabPlayIcon = new IconNode(GoogleMaterialDesignIcons.PLAY_ARROW);
+        tabPlayIcon.getStyleClass().addAll("icon", "small");
 
         gameName = new Label();
 
         playPauseButton = new ToggleButton();
         playPauseButton.getStyleClass().addAll("play-pause");
         playPauseButton.setGraphic(playPauseIcon);
+        playPauseButton.setTooltip(new Tooltip());
+        playPauseButton.getTooltip().textProperty().bind(Bindings.createStringBinding(() -> {
+            return (playPauseButton.selectedProperty().get() ? 
+                    HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.TOOLTIP_PLAY_GAME_BUTTON_START) : 
+                    HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.TOOLTIP_PLAY_GAME_BUTTON_PAUSE));
+        }, HostLocalizationManager.getInstance().getLang(), playPauseButton.selectedProperty()));
 
         playPauseButton.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            playPauseIcon.setIconCode((newValue ? GoogleMaterialDesignIcons.PLAY_ARROW : GoogleMaterialDesignIcons.STOP));
-
+            if(!newValue){
+                Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.MESSAGE_STOPGAME_WARN));
+                Label icon = new Label();
+                icon.getStyleClass().addAll("warning", "dialog-pane", "alert");
+                confirm.setGraphic(icon);
+                ((Stage)confirm.getDialogPane().getScene().getWindow()).getIcons().add(new Image(new File("icon" + File.separator + "Beer_mug_transparent2.png").toURI().toString()));
+                confirm.setHeaderText(HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.MESSAGE_STOPGAME_WARN_TITLE));
+                confirm.setTitle(HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.MESSAGE_STOPGAME_WARN_TITLE));
+                Optional<ButtonType> res = confirm.showAndWait();
+                
+                if (res.get() != ButtonType.OK) {
+                    playPauseButton.setSelected(oldValue);
+                    return;
+                }
+            }
+            
             mainScene.changeGameState(game, newValue);
+
+            if(getParent() instanceof GamePane)
+                ((GamePane)getParent()).getTab().setGraphic((newValue ? tabPlayIcon : null));
+        });
+        
+        playPauseButton.hoverProperty().addListener((observable, oldValue, newValue) -> {
+            if(playPauseButton.isSelected()){
+                playPauseIcon.setIconCode((newValue ? GoogleMaterialDesignIcons.STOP : GoogleMaterialDesignIcons.PLAY_ARROW));
+            }else{
+                playPauseIcon.setIconCode((newValue ? GoogleMaterialDesignIcons.PLAY_ARROW : GoogleMaterialDesignIcons.STOP));
+            }
         });
 
         playersInNodes = new AutoCompleteTextField[game.supplyChain.length / (game.deliveryDelay + 1)];
@@ -137,6 +180,8 @@ public class PlayGamePane extends BorderPane {
 
         pool = new ListView<>();
         pool.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        pool.setTooltip(new Tooltip());
+        LocalizationUtils.bindLocalizationText(pool.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_PLAY_GAME_PL_POOL);
 
         pool.setOnDragDetected((MouseEvent event) -> {
             Dragboard db = pool.startDragAndDrop(TransferMode.MOVE);
@@ -154,6 +199,10 @@ public class PlayGamePane extends BorderPane {
         Hyperlink info = new Hyperlink();
         IconNode infoIcon = new IconNode(GoogleMaterialDesignIcons.INFO_OUTLINE);
         infoIcon.getStyleClass().addAll("icon");
+        
+        Tooltip infoTooltip = new Tooltip();
+        LocalizationUtils.bindLocalizationText(infoTooltip.textProperty(), HostLocalizationKeys.TOOLTIP_PLAY_GAME_INFO);
+        Tooltip.install(info, infoTooltip);
         
         info.setGraphic(infoIcon);
         info.setOnAction((event) -> {
@@ -189,6 +238,13 @@ public class PlayGamePane extends BorderPane {
             gP.add(playersInNodes[k], 1, 1);
 
             LockedToggleButton lTB = new LockedToggleButton();
+            lTB.setTooltip(new Tooltip());
+            int function = k+1;
+            lTB.getTooltip().textProperty().bind(Bindings.createStringBinding(() -> {
+                return HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.TOOLTIP_PLAY_GAME_LOCKUN_BEGIN).concat(
+                    HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.CHART_OR_FUNCTION_AX+function)).concat(
+                    HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.TOOLTIP_PLAY_GAME_LOCKUN_END));
+            }, HostLocalizationManager.getInstance().getLang()));
 
             playersInNodes[k].disableProperty().bind(lTB.selectedProperty());
             playersInNodes[k].setOnDragOver((DragEvent event) -> {
@@ -253,6 +309,13 @@ public class PlayGamePane extends BorderPane {
                     }
                 }
             });
+            
+            playersInNodes[k].setTooltip(new Tooltip());
+            playersInNodes[k].getTooltip().textProperty().bind(Bindings.createStringBinding(() -> {
+                return HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.TOOLTIP_PLAY_GAME_POSIT_BEGIN).concat(
+                    HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.CHART_OR_FUNCTION_AX+function)).concat(
+                    HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.TOOLTIP_PLAY_GAME_POSIT_END));
+            }, HostLocalizationManager.getInstance().getLang()));
 
             gP.add(lTB, 2, 1);
 
@@ -434,4 +497,7 @@ public class PlayGamePane extends BorderPane {
         updateGame(game, state, pool);
     }
 
+    public boolean isGameRunning(){
+        return playPauseButton.isSelected();
+    }
 }

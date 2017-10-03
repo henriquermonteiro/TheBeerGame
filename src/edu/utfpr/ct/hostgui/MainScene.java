@@ -267,12 +267,16 @@ public class MainScene extends BorderPane {
         LocalizationUtils.bindLocalizationText(ip_end, HostLocalizationKeys.TEXT_IP_END);
 
         Label ip = new Label();
+        
         ip.textProperty().bind(Bindings.createStringBinding(() -> {
             return ip_begin.get().concat((ips.isEmpty() ? ip_middle_error.get() : ips.get(0))).concat(ip_middle.get().concat("" + ActionService.getService().getPort()).concat(ip_end.get()));
         }, HostLocalizationManager.getInstance().getLang()));
         GridPane top = new GridPane();
         IconNode refresh = new IconNode(GoogleMaterialDesignIcons.REFRESH);
         refresh.getStyleClass().addAll("icon");
+        Tooltip ipTooltip = new Tooltip();
+        Tooltip.install(refresh, ipTooltip);
+        LocalizationUtils.bindLocalizationText(ipTooltip.textProperty(), HostLocalizationKeys.TOOLTIP_COMMON_IP);
 
         Hyperlink rel = new Hyperlink("", refresh);
         rel.setVisited(true);
@@ -289,6 +293,9 @@ public class MainScene extends BorderPane {
         });
 
         langMenuButton = new MenuButton();
+        langMenuButton.setTooltip(new Tooltip());
+        LocalizationUtils.bindLocalizationText(langMenuButton.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_COMMON_LANG_BUTTON);
+        
         updateLanguageMenuButton();
         makeLanguageMenuItens(langMenuButton);
         top.add(langMenuButton, 0, 0);
@@ -397,12 +404,18 @@ public class MainScene extends BorderPane {
     public void makeGameTab(Game game) {
         int state = control.getGameState(game.name);
 
+        Tab gameTab = new Tab(game.name);
+         
         if (state != -1) {
-            games.put(game.name, new GamePane(game, control.getGameState(game.name), control.getPlayersOnGame(game.name), this));
+            games.put(game.name, new GamePane(game, control.getGameState(game.name), control.getPlayersOnGame(game.name), this, gameTab));
         } else {
-            games.put(game.name, new GamePane(game, control.getReportState(game.name), null, this));
+            games.put(game.name, new GamePane(game, control.getReportState(game.name), null, this, gameTab));
         }
-        Tab gameTab = new Tab(game.name, games.get(game.name));
+        
+        gameTab.setContent(games.get(game.name));
+        gameTab.setTooltip(new Tooltip());
+        LocalizationUtils.bindLocalizationText(gameTab.getTooltip().textProperty(), (state != -1 ? HostLocalizationKeys.TOOLTIP_MAIN_GAME : HostLocalizationKeys.TOOLTIP_MAIN_REPO));
+        
         gameTab.setOnClosed(new EventHandler<Event>() {
             @Override
             public void handle(Event event) {
@@ -416,6 +429,17 @@ public class MainScene extends BorderPane {
 
         this.tabPane.getTabs().add(tabPane.getTabs().size() - 1, gameTab);
         this.tabPane.getSelectionModel().select(gameTab);
+    }
+    
+    public boolean isAnyGameRunning(){
+        for(GamePane g : games.values()){
+            if(g.isGame()){
+                if(((PlayGamePane)g.getCenter()).isGameRunning()) 
+                    return true;
+            }
+        }
+        
+        return false;
     }
 
     public Game[] gameAvailableGames() {

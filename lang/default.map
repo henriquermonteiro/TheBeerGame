@@ -22,8 +22,20 @@ GUI-TITLE-CREATEGAME-DEMAND-BORDER<>Demand
 GUI-TITLE-CREATEGAME-COSTS-BORDER<>Cost/Profit
 GUI-TITLE-CREATEGAME-DURATION-BORDER<>Duration
 GUI-TITLE-CREATEGAME-SUPPLYCHAIN-BORDER<>Supply chain topology
-GUI-WARNING-CREATEGAME-FAILED<>It was not possible to create a new game. \n We apologize for the inconvenience. \n If the problem persists, contact the developers.
+GUI-WARNING-CREATEGAME-FAILED<>It was not possible to create a new game. We apologize for the inconvenience. If the problem persists, contact the developers.
 GUI-WARNING-CREATEGAME-FAILED-TITLE<>Error while creating a new game
+GUI-WARNING-STOPGAME<>If the game is stoped, all players will be removed from their positions. It will be required to set them back. Do you wanto to proceed?
+GUI-WARNING-STOPGAME-TITLE<>Atention
+GUI-WARNING-CLOSEAPPLICATION<>There're still running sessions. No data will be lost with the application close. Do you want to close the application?
+GUI-WARNING-CLOSEAPPLICATION-TITLE<>Atention
+GUI-WARNING-DELETE-GAME-BEGIN<>Do you want to delete the game  
+GUI-WARNING-DELETE-GAME-END<>? The operation cannot be undone.
+GUI-WARNING-DELETE-GAME-TITLE-BEGIN<>Delete 
+GUI-WARNING-DELETE-GAME-TITLE-END<>?
+GUI-WARNING-DELETE-REPORT-BEGIN<>Do you want to delete the report 
+GUI-WARNING-DELETE-REPORT-END<>? The operation connot be undone.
+GUI-WARNING-DELETE-REPORT-TITLE-BEGIN<>Delete 
+GUI-WARNING-DELETE-REPORT-TITLE-END<>?
 GUI-ICON-RELOAD-BUTTON<>icon//reload_icon.png
 GUI-ICON-TRASH-BUTTON<>icon//trash_icon.png
 GUI-ICON-CONFIRM-BUTTON<>icon//whitecheckmark.png
@@ -57,12 +69,52 @@ TITLE-REPORT-WHOLESALER-TAB<>Wholesaler
 TITLE-REPORT-DISTRIBUTOR-TAB<>Distributor
 TITLE-REPORT-PRODUCER-TAB<>Producer
 TITLE-REPORT-UNKNOWN-TAB<>Unknown
+TOOLTIP-COMMON-REFRESH-IP<>Refresh IP information
+TOOLTIP-COMMON-LANGUAGE-CHANGE-BUTTON<>Change language
+TOOLTIP-COMMON-LANGUAGE-CHANGE-OPTION<> 
 TOOLTIP-MAINSCENE-HOME-TAB<>Home screen
 TOOLTIP-MAINSCENE-CREATE-GAME-TAB<>Create new game
+TOOLTIP-MAINSCENE-PLAY-GAME-TAB<>Administrate game session
+TOOLTIP-MAINSCENE-SHOW-REPORT-TAB<>Administrate report session
 TOOLTIP-GAME-COMPONENT-LOAD-GAME<>Load game
 TOOLTIP-GAME-COMPONENT-LOAD-REPO<>Load report
 TOOLTIP-GAME-COMPONENT-REMOVE-GAME<>Delete game
 TOOLTIP-GAME-COMPONENT-REMOVE-REPO<>Delete report
+TOOLTIP-CREATE-GAME-INPUT-NAME<>Name of game. Must be unique.
+TOOLTIP-CREATE-GAME-INPUT-INFORMED<>Informed chain: Players can see each others information.
+TOOLTIP-CREATE-GAME-INPUT-USE-PASSWORD<>Use password for players access the game.
+TOOLTIP-CREATE-GAME-INPUT-PASSWORD<>Password of game.
+TOOLTIP-CREATE-GAME-INPUT-DEMAND-TYPE-CHOOSER<>Change demand profile.
+TOOLTIP-CREATE-GAME-INPUT-DEMAND-TYPE-SINGLESTEP-INITIAL-VALUE<>Initial value.
+TOOLTIP-CREATE-GAME-INPUT-DEMAND-TYPE-SINGLESTEP-FINAL-VALUE<>Final value.
+TOOLTIP-CREATE-GAME-INPUT-DEMAND-TYPE-SINGLESTEP-STEP-WEEK<>Week of demand change.
+TOOLTIP-CREATE-GAME-INPUT-DEMAND-TYPE-PREVIEW-CHART<>Preview of the demand.
+TOOLTIP-CREATE-GAME-INPUT-COST-MISSING<>Unit cost of unattended order.
+TOOLTIP-CREATE-GAME-INPUT-COST-STOCKING<>Unit cost of stock.
+TOOLTIP-CREATE-GAME-INPUT-PROFIT-SELLING<>Unit profit.
+TOOLTIP-CREATE-GAME-INPUT-REAL-DURATION<>Real duration of game.
+TOOLTIP-CREATE-GAME-INPUT-INFORMED-DURATION<>Duration informed to players. Must be equal or bigger than real duration.
+TOOLTIP-CREATE-GAME-INPUT-DELIVERY-DELAY<>Product delivery delay. The effect tends to be stronger the bigger the delay time.
+TOOLTIP-CREATE-GAME-INPUT-STARTING-STOCK<>Initial stock of players.
+TOOLTIP-CREATE-GAME-INPUT-SUPPLYCHAIN-CHOOSER<>Select chain topology.
+TOOLTIP-CREATE-GAME-BUTTON-SIMPLE-ACCEPT<>Create game
+TOOLTIP-CREATE-GAME-BUTTON-SIMPLE-CLEAR<>Clear fields
+TOOLTIP-CREATE-GAME-BUTTON-SIMPLE-ADVANCED<>Advanced options
+TOOLTIP-CREATE-GAME-BUTTON-ADVANCED-ACCEPT<>Create game
+TOOLTIP-CREATE-GAME-BUTTON-ADVANCED-CLEAR<>Clear fields and return
+TOOLTIP-PLAY-GAME-INFORMATION<>Show game information
+TOOLTIP-PLAY-GAME-START-BUTTON<>Stop game. All players will be removed.
+TOOLTIP-PLAY-GAME-PAUSE-BUTTON<>Start game.
+TOOLTIP-PLAY-GAME-PLAYERS-POOL<>Available players
+TOOLTIP-PLAY-GAME-PLAYERS-PLAYER-POSITIONER-BEGIN<>Set player for 
+TOOLTIP-PLAY-GAME-PLAYERS-PLAYER-POSITIONER-END<> position
+TOOLTIP-PLAY-GAME-PLAYERS-PLAYER-LOCK-UNLOCK-BEGIN<>Lock/Unlock player on 
+TOOLTIP-PLAY-GAME-PLAYERS-PLAYER-LOCK-UNLOCK-END<> position. Avoids acidental player removal.
+TOOLTIP-SHOW-REPORT-INFORMATION<>Show report information
+TOOLTIP-SHOW-REPORT-START-BUTTON<>Hide report from players
+TOOLTIP-SHOW-REPORT-PAUSE-BUTTON<>Show report to players
+TOOLTIP-SHOW-REPORT-ORDER-TAB<>Order chart
+TOOLTIP-SHOW-REPORT-STOCK-TAB<>Stock chart
 GUI-LABEL-INFORMATION-GAME-STATUS<>Game status: 
 IP-TEXT-BEGIN<>Players access address: 
 IP-TEXT-MIDDLE-IP-ERROR<>Error while searching address. Using port: 

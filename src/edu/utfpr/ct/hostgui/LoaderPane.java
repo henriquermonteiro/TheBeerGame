@@ -3,6 +3,10 @@ package edu.utfpr.ct.hostgui;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.hostgui.utils.GameComponent;
 import edu.utfpr.ct.hostgui.utils.ParameterEventHandler;
+import edu.utfpr.ct.localization.HostLocalizationKeys;
+import edu.utfpr.ct.localization.HostLocalizationManager;
+import edu.utfpr.ct.localization.Localize;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
@@ -15,11 +19,13 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.stage.Stage;
 
 public class LoaderPane extends BorderPane {
 
@@ -50,9 +56,14 @@ public class LoaderPane extends BorderPane {
                 public void handle(ActionEvent event) {
                     if ((params[0] instanceof String)) {
                         Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
-                        confirmation.setContentText("Deseja eliminar o jogo '" + params[0] + "'? A operação não poderá ser desfeita.");
-                        confirmation.setHeaderText("Atenção!");
-                        confirmation.setTitle("Deletar '" + params[0] + "'?");
+                        
+                        Localize loc = HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get());
+                        String message = loc.getTextFor(HostLocalizationKeys.MESSAGE_DELETE_GAME_WARN_BEG) + params[0] + loc.getTextFor(HostLocalizationKeys.MESSAGE_DELETE_GAME_WARN_END);
+                        String title = loc.getTextFor(HostLocalizationKeys.MESSAGE_DELETE_GAME_WARN_TITLE_BEG) + params[0] + loc.getTextFor(HostLocalizationKeys.MESSAGE_DELETE_GAME_WARN_TITLE_END);
+                        confirmation.setContentText(message);
+                        confirmation.setHeaderText(title);
+                        confirmation.setTitle(title);
+                        ((Stage)confirmation.getDialogPane().getScene().getWindow()).getIcons().add(new Image(new File("icon" + File.separator + "Beer_mug_transparent2.png").toURI().toString()));
                         Label icon = new Label();
                         icon.getStyleClass().addAll("warning", "dialog-pane", "alert");
                         confirmation.setGraphic(icon);
@@ -88,9 +99,14 @@ public class LoaderPane extends BorderPane {
                 public void handle(ActionEvent event) {
                     if ((params[0] instanceof String)) {
                         Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
-                        confirmation.setContentText("Deseja eliminar o relatório '" + params[0] + "'? A operação não poderá ser desfeita.");
-                        confirmation.setHeaderText("Atenção!");
-                        confirmation.setTitle("Deletar '" + params[0] + "'?");
+                        
+                        Localize loc = HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get());
+                        String message = loc.getTextFor(HostLocalizationKeys.MESSAGE_DELETE_REPO_WARN_BEG) + params[0] + loc.getTextFor(HostLocalizationKeys.MESSAGE_DELETE_REPO_WARN_END);
+                        String title = loc.getTextFor(HostLocalizationKeys.MESSAGE_DELETE_REPO_WARN_TITLE_BEG) + params[0] + loc.getTextFor(HostLocalizationKeys.MESSAGE_DELETE_REPO_WARN_TITLE_END);
+                        confirmation.setContentText(message);
+                        confirmation.setHeaderText(title);
+                        confirmation.setTitle(title);
+                        ((Stage)confirmation.getDialogPane().getScene().getWindow()).getIcons().add(new Image(new File("icon" + File.separator + "Beer_mug_transparent2.png").toURI().toString()));
                         Label icon = new Label();
                         icon.getStyleClass().addAll("warning", "dialog-pane", "alert");
                         confirmation.setGraphic(icon);

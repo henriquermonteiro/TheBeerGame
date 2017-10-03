@@ -22,8 +22,20 @@ GUI-TITLE-CREATEGAME-DEMAND-BORDER<>Demanda
 GUI-TITLE-CREATEGAME-COSTS-BORDER<>Custo/Lucro
 GUI-TITLE-CREATEGAME-DURATION-BORDER<>Duração
 GUI-TITLE-CREATEGAME-SUPPLYCHAIN-BORDER<>Topologia da cadeia
-GUI-WARNING-CREATEGAME-FAILED<>Não foi possível criar um novo jogo. \n Pedimos desculpas pelo inconveniente. \n Se o problema persistir contate os desenvolvedores.
+GUI-WARNING-CREATEGAME-FAILED<>Não foi possível criar um novo jogo. Pedimos desculpas pelo inconveniente. Se o problema persistir contate os desenvolvedores.
 GUI-WARNING-CREATEGAME-FAILED-TITLE<>Erro durante a criação do jogo
+GUI-WARNING-STOPGAME<>Se o jogo for parado, todos jogadores serão removidos. Será necessário recolocá-los nas posições. Deseja continuar?
+GUI-WARNING-STOPGAME-TITLE<>Atenção
+GUI-WARNING-CLOSEAPPLICATION<>Foram detectadas sessões em execução. Nenhuma informação será perdida com o fechamento da aplicação. Deseja encerrar a aplicação?
+GUI-WARNING-CLOSEAPPLICATION-TITLE<>Atenção
+GUI-WARNING-DELETE-GAME-BEGIN<>Deseja eliminar o jogo 
+GUI-WARNING-DELETE-GAME-END<>? A operação não poderá ser desfeita.
+GUI-WARNING-DELETE-GAME-TITLE-BEGIN<>Deletar 
+GUI-WARNING-DELETE-GAME-TITLE-END<>?
+GUI-WARNING-DELETE-REPORT-BEGIN<>Deseja eliminar o relatório 
+GUI-WARNING-DELETE-REPORT-END<>? A operação não poderá ser desfeita.
+GUI-WARNING-DELETE-REPORT-TITLE-BEGIN<>Deletar 
+GUI-WARNING-DELETE-REPORT-TITLE-END<>?
 GUI-ICON-RELOAD-BUTTON<>icon//reload_icon.png
 GUI-ICON-TRASH-BUTTON<>icon//trash_icon.png
 GUI-ICON-CONFIRM-BUTTON<>icon//whitecheckmark.png
@@ -57,12 +69,52 @@ TITLE-REPORT-WHOLESALER-TAB<>Atacadista
 TITLE-REPORT-DISTRIBUTOR-TAB<>Distribuidor
 TITLE-REPORT-PRODUCER-TAB<>Fabricante
 TITLE-REPORT-UNKNOWN-TAB<>Desconhecido
+TOOLTIP-COMMON-REFRESH-IP<>Atualizar informações de IP
+TOOLTIP-COMMON-LANGUAGE-CHANGE-BUTTON<>Alterar idioma
+TOOLTIP-COMMON-LANGUAGE-CHANGE-OPTION<> 
 TOOLTIP-MAINSCENE-HOME-TAB<>Tela inicial
 TOOLTIP-MAINSCENE-CREATE-GAME-TAB<>Criar novo jogo
+TOOLTIP-MAINSCENE-PLAY-GAME-TAB<>Administrar sessão de jogo
+TOOLTIP-MAINSCENE-SHOW-REPORT-TAB<>Administrar sessão de relatório
 TOOLTIP-GAME-COMPONENT-LOAD-GAME<>Carregar jogo
 TOOLTIP-GAME-COMPONENT-LOAD-REPO<>Carregar relatório
 TOOLTIP-GAME-COMPONENT-REMOVE-GAME<>Apagar jogo
 TOOLTIP-GAME-COMPONENT-REMOVE-REPO<>Apagar relatório
+TOOLTIP-CREATE-GAME-INPUT-NAME<>Nome do jogo. Deve ser único.
+TOOLTIP-CREATE-GAME-INPUT-INFORMED<>Cadeia informada: os jogadores podem ver as informações uns dos outros.
+TOOLTIP-CREATE-GAME-INPUT-USE-PASSWORD<>Usar para acessar o jogo.
+TOOLTIP-CREATE-GAME-INPUT-PASSWORD<>Senha para acesso ao jogo.
+TOOLTIP-CREATE-GAME-INPUT-DEMAND-TYPE-CHOOSER<>Selecionar tipo de perfil de demanda.
+TOOLTIP-CREATE-GAME-INPUT-DEMAND-TYPE-SINGLESTEP-INITIAL-VALUE<>Valor inicial da demanda.
+TOOLTIP-CREATE-GAME-INPUT-DEMAND-TYPE-SINGLESTEP-FINAL-VALUE<>Valor final da demanda.
+TOOLTIP-CREATE-GAME-INPUT-DEMAND-TYPE-SINGLESTEP-STEP-WEEK<>Semana de mudança da demanda.
+TOOLTIP-CREATE-GAME-INPUT-DEMAND-TYPE-PREVIEW-CHART<>Pré-visualização da demanda.
+TOOLTIP-CREATE-GAME-INPUT-COST-MISSING<>Custo unitário de não atender um pedido.
+TOOLTIP-CREATE-GAME-INPUT-COST-STOCKING<>Custo unitário de armazenamento.
+TOOLTIP-CREATE-GAME-INPUT-PROFIT-SELLING<>Lucro unitário da venda.
+TOOLTIP-CREATE-GAME-INPUT-REAL-DURATION<>Duração real do jogo.
+TOOLTIP-CREATE-GAME-INPUT-INFORMED-DURATION<>Duração informada aos jogadores. Deve ser igual ou maior a duração real. Evita estratégia suicída.
+TOOLTIP-CREATE-GAME-INPUT-DELIVERY-DELAY<>Atraso na entrega dos produtos. A tendência é do efeito chicote ser mais forte quanto maior o atraso. 
+TOOLTIP-CREATE-GAME-INPUT-STARTING-STOCK<>Estoque inicial dos jogadores.
+TOOLTIP-CREATE-GAME-INPUT-SUPPLYCHAIN-CHOOSER<>Selecionar topologia da cadeia.
+TOOLTIP-CREATE-GAME-BUTTON-SIMPLE-ACCEPT<>Criar jogo
+TOOLTIP-CREATE-GAME-BUTTON-SIMPLE-CLEAR<>Limpar campos
+TOOLTIP-CREATE-GAME-BUTTON-SIMPLE-ADVANCED<>Opções avançadas
+TOOLTIP-CREATE-GAME-BUTTON-ADVANCED-ACCEPT<>Criar jogo
+TOOLTIP-CREATE-GAME-BUTTON-ADVANCED-CLEAR<>Limpar campos e retornar
+TOOLTIP-PLAY-GAME-INFORMATION<>Mostrar informações do jogo
+TOOLTIP-PLAY-GAME-START-BUTTON<>Parar jogo. Todos jogadores serão removidos
+TOOLTIP-PLAY-GAME-PAUSE-BUTTON<>Iniciar jogo
+TOOLTIP-PLAY-GAME-PLAYERS-POOL<>Jogadores disponíveis
+TOOLTIP-PLAY-GAME-PLAYERS-PLAYER-POSITIONER-BEGIN<>Definir jogador para a posição de 
+TOOLTIP-PLAY-GAME-PLAYERS-PLAYER-POSITIONER-END<>.
+TOOLTIP-PLAY-GAME-PLAYERS-PLAYER-LOCK-UNLOCK-BEGIN<>Trava/Libera jogador na posição de 
+TOOLTIP-PLAY-GAME-PLAYERS-PLAYER-LOCK-UNLOCK-END<>. Evita remover acidentamente o jogador.
+TOOLTIP-SHOW-REPORT-INFORMATION<>Mostrar informações do relatório
+TOOLTIP-SHOW-REPORT-START-BUTTON<>Ocultar relatório aos jogadores
+TOOLTIP-SHOW-REPORT-PAUSE-BUTTON<>Mostrar relatório dos jogadores
+TOOLTIP-SHOW-REPORT-ORDER-TAB<>Gráfico de pedidos
+TOOLTIP-SHOW-REPORT-STOCK-TAB<>Gráfico de estoque
 GUI-LABEL-INFORMATION-GAME-STATUS<>Status de jogo: 
 IP-TEXT-BEGIN<>Endereço para jogadores: 
 IP-TEXT-MIDDLE-IP-ERROR<>Erro ao buscar endereço. Porta usada: 

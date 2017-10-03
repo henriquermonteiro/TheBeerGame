@@ -4,6 +4,8 @@ public class ClientLocalizationKeys {
     public static final String FLAG_PATH = "WEB-FLAG-PATH";
     public static final String LANG_ID = "WEB-LANG-IDENTIFIER";
     
+    public static final String COMMON_RETURN_TEXT = "COMMON-RETURN-TEXT";
+    public static final String COMMON_RETURN_TOOLTIP = "COMMON-RETURN-TOOLTIP";
     public static final String COMMON_LOGOUT_TOOLTIP = "COMMON-LOGOUT-TOOLTIP";
     
     public static final String CHECKIN_TITLE = "CHECKIN-CARD-GAMENAME";

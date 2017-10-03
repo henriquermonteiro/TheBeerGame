@@ -8,10 +8,15 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import edu.utfpr.ct.interfaces.IControllerHost;
+import edu.utfpr.ct.localization.HostLocalizationManager;
 import edu.utfpr.ct.localization.LocalizationUtils;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Optional;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import jiconfont.icons.GoogleMaterialDesignIcons;
@@ -60,8 +65,30 @@ public class StartFrame extends Application implements IGUI{
         s.getStylesheets().add(stylesheet);
         LocalizationUtils.bindLocalizationText(primaryStage.titleProperty(), HostLocalizationKeys.FRAME_NAME);
         primaryStage.setScene(s);
-        Image ic = new Image(new File("icon" + File.separator + "Beer_mug_transparent2.png").toURI().toString());
         primaryStage.getIcons().add(new Image(new File("icon" + File.separator + "Beer_mug_transparent2.png").toURI().toString()));
+        
+        this.primaryStage.setOnCloseRequest((event) -> {
+            if(mainScene.isAnyGameRunning()){
+                Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.MESSAGE_CLOSEAPP_WARN));
+                Label icon = new Label();
+                icon.getStyleClass().addAll("warning", "dialog-pane", "alert");
+                confirm.setGraphic(icon);
+                ((Stage)confirm.getDialogPane().getScene().getWindow()).getIcons().add(new Image(new File("icon" + File.separator + "Beer_mug_transparent2.png").toURI().toString()));
+                confirm.setHeaderText(HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.MESSAGE_CLOSEAPP_WARN_TITLE));
+                confirm.setTitle(HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.MESSAGE_CLOSEAPP_WARN_TITLE));
+                Optional<ButtonType> res = confirm.showAndWait();
+
+                if (res.get() != ButtonType.OK) {
+                    event.consume();
+                    return;
+                }
+            }
+
+            infos.forEach((st) -> {
+                st.close();
+            });
+        });
+        
         primaryStage.show();
     }
     
@@ -82,11 +109,7 @@ public class StartFrame extends Application implements IGUI{
         });
         
         infos.add(window);
-        mainScene.getScene().getWindow().onCloseRequestProperty().set((observable) -> {
-            infos.forEach((st) -> {
-                st.close();
-            });
-        });
+        
         window.setScene(s);
         window.getIcons().add(new Image(new File("icon" + File.separator + "Beer_mug_transparent2.png").toURI().toString()));
         window.show();

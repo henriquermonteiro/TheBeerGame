@@ -35,6 +35,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -113,11 +114,7 @@ public class CreateGamePane extends BorderPane {
 
     private Parent getDemandParametersBox(Object[] parameterDef) {
         if (parameterDef.length % 3 == 0) {
-//            FlowPane ret = new FlowPane(Orientation.VERTICAL);
-//            ret.setAlignment(Pos.TOP_LEFT);
             VBox ret = new VBox(8);
-//            ret.setHgap(15.0);
-//            ret.setVgap(8.0);
             ret.setPadding(new Insets(15));
 
             parametersElements = new Node[parameterDef.length / 3];
@@ -125,7 +122,6 @@ public class CreateGamePane extends BorderPane {
             for (int k = 0; k < parameterDef.length; k += 3) {
                 VBox v = new VBox(3.0);
 
-//                Label l = new Label(Localize.getTextFor((String) parameterDef[k]));
                 Label l = new Label();
                 LocalizationUtils.bindLocalizationText(l.textProperty(), (String) parameterDef[k]);
                 v.getChildren().add(l);
@@ -139,6 +135,13 @@ public class CreateGamePane extends BorderPane {
                     });
 
                     v.getChildren().add(spin);
+                    
+                    Tooltip tooltip = new Tooltip();
+                    LocalizationUtils.bindLocalizationText(tooltip.textProperty(), (k == 0 ? HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_DEM_SS_INITVAL : (k == 3? HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_DEM_SS_FINALVAL : 
+                            (k == 6 ? HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_DEM_SS_STEPWEEK : "Error"))));
+                    
+                    Tooltip.install(v, tooltip);
+                    
                     parametersElements[k / 3] = spin;
                 }
 
@@ -288,7 +291,6 @@ public class CreateGamePane extends BorderPane {
                 if (k > 0) {
                     if (k % elemRow == 0) {
                         double arrowW = imgL / 5;
-//                        double arrowInitX = (k % (elemRow * 2) == 0 ? (5 + (imgL / 2)) : (w - (imgL / 2) - 5)) - (arrowW / 2);
                         double arrowInitX = (k % (elemRow * 2) == 0 ? (5 + (imgL / 2)) : ((elemRow * imgL) + ((elemRow - 1) * (imgL / 2)) + 5 - (imgL / 2))) - (arrowW / 2);
                         double arrowXUnit = arrowW / 4;
 
@@ -416,13 +418,25 @@ public class CreateGamePane extends BorderPane {
 
     private void createSimpleContent() {
         simpleName = new TextField();
-//        simpleInformedSupplyChain = new CheckBox(Localize.getTextFor(HostLocalizationKeys.LABEL_CREATEGAME_INFORMED_SC));
-//        simpleUsePassword = new CheckBox(Localize.getTextFor(HostLocalizationKeys.LABEL_CREATEGAME_PASSWORD_CHECK));
+        simpleName.setTooltip(new Tooltip());
+        LocalizationUtils.bindLocalizationText(simpleName.promptTextProperty(), HostLocalizationKeys.LABEL_CREATEGAME_NAME);
+        LocalizationUtils.bindLocalizationText(simpleName.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_NAME);
+        
         simpleInformedSupplyChain = new CheckBox();
+        simpleInformedSupplyChain.setTooltip(new Tooltip());
         LocalizationUtils.bindLocalizationText(simpleInformedSupplyChain.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_INFORMED_SC);
+        LocalizationUtils.bindLocalizationText(simpleInformedSupplyChain.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_ISINFO);
+        
         simpleUsePassword = new CheckBox();
+        simpleUsePassword.setTooltip(new Tooltip());
         LocalizationUtils.bindLocalizationText(simpleUsePassword.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_PASSWORD_CHECK);
+        LocalizationUtils.bindLocalizationText(simpleUsePassword.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_USEPASSW);
+        
         simplePassword = new TextField();
+        simplePassword.setTooltip(new Tooltip());
+        LocalizationUtils.bindLocalizationText(simplePassword.promptTextProperty(), HostLocalizationKeys.LABEL_CREATEGAME_PASSWORD_FIELD);
+        LocalizationUtils.bindLocalizationText(simplePassword.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_PASSW);
+        
         simpleDemandChart = new LineChart(new NumberAxis(), new NumberAxis());
         simpleChainCanvas = new Canvas() {
             @Override
@@ -431,10 +445,6 @@ public class CreateGamePane extends BorderPane {
             }
         };
 
-//        simpleName.setPromptText(Localize.getTextFor(HostLocalizationKeys.LABEL_CREATEGAME_NAME));
-        LocalizationUtils.bindLocalizationText(simpleName.promptTextProperty(), HostLocalizationKeys.LABEL_CREATEGAME_NAME);
-//        simplePassword.setPromptText(Localize.getTextFor(HostLocalizationKeys.LABEL_CREATEGAME_PASSWORD_FIELD));
-        LocalizationUtils.bindLocalizationText(simplePassword.promptTextProperty(), HostLocalizationKeys.LABEL_CREATEGAME_PASSWORD_FIELD);
         simplePassword.setDisable(true);
 
         simpleUsePassword.setOnAction((ActionEvent event) -> {
@@ -463,6 +473,9 @@ public class CreateGamePane extends BorderPane {
         ((NumberAxis) simpleDemandChart.getXAxis()).setUpperBound(demand.length);
         ((NumberAxis) simpleDemandChart.getXAxis()).setMinorTickCount(1);
         simpleDemandChart.getData().add(serie);
+        
+        Tooltip chartTooltip = new Tooltip();
+        LocalizationUtils.bindLocalizationText(chartTooltip.textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_DEM_CHART);
 
         HBox b = new HBox();
         b.setMinSize(0, 0);
@@ -532,6 +545,8 @@ public class CreateGamePane extends BorderPane {
         fP.getStyleClass().addAll("creation-buttons");
 
         Button createButton = new Button();
+        createButton.setTooltip(new Tooltip());
+        LocalizationUtils.bindLocalizationText(createButton.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_BUTTON_SACCEP);
         createButton.getStyleClass().addAll("create");
         IconNode create = new IconNode(GoogleMaterialDesignIcons.DONE);
         create.getStyleClass().addAll("icon");
@@ -541,6 +556,8 @@ public class CreateGamePane extends BorderPane {
         });
 
         Button cancelButton = new Button();
+        cancelButton.setTooltip(new Tooltip());
+        LocalizationUtils.bindLocalizationText(cancelButton.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_BUTTON_SCLEAR);
         IconNode cancel = new IconNode(GoogleMaterialDesignIcons.CLEAR);
         cancel.getStyleClass().addAll("icon");
         cancelButton.setGraphic(cancel);
@@ -550,6 +567,8 @@ public class CreateGamePane extends BorderPane {
         });
 
         Button advButton = new Button();
+        advButton.setTooltip(new Tooltip());
+        LocalizationUtils.bindLocalizationText(advButton.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_BUTTON_SADVAN);
         advButton.getStyleClass().addAll("config");
         IconNode conf = new IconNode(GoogleMaterialDesignIcons.BUILD);
         conf.getStyleClass().addAll("icon");
@@ -577,24 +596,28 @@ public class CreateGamePane extends BorderPane {
         grid1.getColumnConstraints().add(cConsG1);
 
         nameField = new TextField();
-//        nameField.setPromptText(Localize.getTextFor(HostLocalizationKeys.LABEL_CREATEGAME_NAME));
+        nameField.setTooltip(new Tooltip());
         LocalizationUtils.bindLocalizationText(nameField.promptTextProperty(), HostLocalizationKeys.LABEL_CREATEGAME_NAME);
+        LocalizationUtils.bindLocalizationText(nameField.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_NAME);
 
         grid1.add(nameField, 0, 0);
 
-//        informedSupplyChain = new CheckBox(Localize.getTextFor(HostLocalizationKeys.LABEL_CREATEGAME_INFORMED_SC));
         informedSupplyChain = new CheckBox();
+        informedSupplyChain.setTooltip(new Tooltip());
         LocalizationUtils.bindLocalizationText(informedSupplyChain.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_INFORMED_SC);
+        LocalizationUtils.bindLocalizationText(informedSupplyChain.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_ISINFO);
 
         grid1.add(informedSupplyChain, 0, 1);
 
-//        usePassword = new CheckBox(Localize.getTextFor(HostLocalizationKeys.LABEL_CREATEGAME_PASSWORD_CHECK));
         usePassword = new CheckBox();
+        usePassword.setTooltip(new Tooltip());
         LocalizationUtils.bindLocalizationText(usePassword.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_PASSWORD_CHECK);
+        LocalizationUtils.bindLocalizationText(usePassword.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_USEPASSW);
 
         password = new PasswordField();
-//        password.setPromptText(Localize.getTextFor(HostLocalizationKeys.LABEL_CREATEGAME_PASSWORD_FIELD));
+        password.setTooltip(new Tooltip());
         LocalizationUtils.bindLocalizationText(password.promptTextProperty(), HostLocalizationKeys.LABEL_CREATEGAME_PASSWORD_FIELD);
+        LocalizationUtils.bindLocalizationText(password.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_PASSW);
         password.setDisable(true);
 
         usePassword.setOnAction((ActionEvent event) -> {
@@ -628,6 +651,8 @@ public class CreateGamePane extends BorderPane {
         grid4.getColumnConstraints().add(cConsG2);
 
         demandTypeSelect = new ComboBox<>();
+        demandTypeSelect.setTooltip(new Tooltip());
+        LocalizationUtils.bindLocalizationText(demandTypeSelect.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_DEM_CHOOSER);
         demandTypeSelect.getItems().addAll(DemandTypes.values());
         demandTypeSelect.setValue(DemandTypes.SINGLE_STEP);
 
@@ -637,6 +662,9 @@ public class CreateGamePane extends BorderPane {
         demandChart.setPrefSize(600, 300);
         demandChart.legendVisibleProperty().setValue(Boolean.FALSE);
         demandChart.setCreateSymbols(false);
+        
+        Tooltip chartTooltip = new Tooltip();
+        LocalizationUtils.bindLocalizationText(chartTooltip.textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_DEM_CHART);
 
         grid4.add(demandChart, 1, 0, 1, 2);
 
@@ -659,66 +687,86 @@ public class CreateGamePane extends BorderPane {
         GridPane grid2 = new GridPane();
         grid2.setAlignment(Pos.TOP_CENTER);
 
-//        Label l = new Label(Localize.getTextFor(HostLocalizationKeys.LABEL_CREATEGAME_MISSINGUC));
         Label l = new Label();
+        l.setTooltip(new Tooltip());
         LocalizationUtils.bindLocalizationText(l.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_MISSINGUC);
+        LocalizationUtils.bindLocalizationText(l.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_MISSC);
         l.setAlignment(Pos.CENTER_RIGHT);
 
         GridPane.setConstraints(l, 0, 0, 1, 1, HPos.RIGHT, VPos.CENTER);
         grid2.add(l, 0, 0);
 
         missingUnitCost = new NumberChooserFX("", 0.0, 3.0, 1.0, 0.01);
+        Tooltip sliderT = new Tooltip();
+        LocalizationUtils.bindLocalizationText(sliderT.textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_MISSC);
+        Tooltip.install(missingUnitCost, sliderT);
 
         grid2.add(missingUnitCost, 1, 0);
 
-//        l = new Label(Localize.getTextFor(HostLocalizationKeys.LABEL_CREATEGAME_STOCKUC));
         l = new Label();
+        l.setTooltip(new Tooltip());
         LocalizationUtils.bindLocalizationText(l.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_STOCKUC);
+        LocalizationUtils.bindLocalizationText(l.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_STOCKC);
         l.setAlignment(Pos.CENTER_RIGHT);
 
         GridPane.setConstraints(l, 0, 1, 1, 1, HPos.RIGHT, VPos.CENTER);
         grid2.add(l, 0, 1);
 
         stockUnitCost = new NumberChooserFX("", 0.0, 3.0, 0.5, 0.01);
+        sliderT = new Tooltip();
+        LocalizationUtils.bindLocalizationText(sliderT.textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_STOCKC);
+        Tooltip.install(stockUnitCost, sliderT);
 
         grid2.add(stockUnitCost, 1, 1);
 
-//        l = new Label(Localize.getTextFor(HostLocalizationKeys.LABEL_CREATEGAME_SELLINGP));
         l = new Label();
+        l.setTooltip(new Tooltip());
         LocalizationUtils.bindLocalizationText(l.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_SELLINGP);
+        LocalizationUtils.bindLocalizationText(l.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_SELLP);
         l.setAlignment(Pos.CENTER_RIGHT);
 
         GridPane.setConstraints(l, 0, 2, 1, 1, HPos.RIGHT, VPos.CENTER);
         grid2.add(l, 0, 2);
 
         sellingUnitProffit = new NumberChooserFX("", 0.0, 3.0, 0.0, 0.01);
+        sliderT = new Tooltip();
+        LocalizationUtils.bindLocalizationText(sliderT.textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_SELLP);
+        Tooltip.install(sellingUnitProffit, sliderT);
 
         grid2.add(sellingUnitProffit, 1, 2);
 
-//        l = new Label(Localize.getTextFor(HostLocalizationKeys.LABEL_CREATEGAME_REAL_DURATION));
         l = new Label();
+        l.setTooltip(new Tooltip());
         LocalizationUtils.bindLocalizationText(l.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_REAL_DURATION);
+        LocalizationUtils.bindLocalizationText(l.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_REAL_DUR);
         l.setAlignment(Pos.CENTER_RIGHT);
 
         GridPane.setConstraints(l, 0, 3, 1, 1, HPos.RIGHT, VPos.CENTER);
         grid2.add(l, 0, 3);
 
         realDuration = new NumberChooserFX("", 0.0, 100.0, 40.0, 1.0);
+        sliderT = new Tooltip();
+        LocalizationUtils.bindLocalizationText(sliderT.textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_REAL_DUR);
+        Tooltip.install(realDuration, sliderT);
         realDuration.addValuePropertyListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
             updateChart();
         });
 
         grid2.add(realDuration, 1, 3);
 
-//        l = new Label(Localize.getTextFor(HostLocalizationKeys.LABEL_CREATEGAME_INF_DURATION));
         l = new Label();
+        l.setTooltip(new Tooltip());
         LocalizationUtils.bindLocalizationText(l.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_INF_DURATION);
+        LocalizationUtils.bindLocalizationText(l.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_INF_DUR);
         l.setAlignment(Pos.CENTER_RIGHT);
 
         GridPane.setConstraints(l, 0, 4, 1, 1, HPos.RIGHT, VPos.CENTER);
         grid2.add(l, 0, 4);
 
         informedDuration = new NumberChooserFX("", 0.0, 100.0, 60.0, 1.0);
+        sliderT = new Tooltip();
+        LocalizationUtils.bindLocalizationText(sliderT.textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_INF_DUR);
+        Tooltip.install(informedDuration, sliderT);
 
         grid2.add(informedDuration, 1, 4);
         
@@ -730,27 +778,35 @@ public class CreateGamePane extends BorderPane {
             if(newValue.doubleValue() > informedDuration.getValue()) informedDuration.setValue(newValue.doubleValue());
         });
 
-//        l = new Label(Localize.getTextFor(HostLocalizationKeys.LABEL_CREATEGAME_DELIVERY_DELAY));
         l = new Label();
+        l.setTooltip(new Tooltip());
         LocalizationUtils.bindLocalizationText(l.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_DELIVERY_DELAY);
+        LocalizationUtils.bindLocalizationText(l.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_DELI_DELAY);
         l.setAlignment(Pos.CENTER_RIGHT);
 
         GridPane.setConstraints(l, 0, 5, 1, 1, HPos.RIGHT, VPos.CENTER);
         grid2.add(l, 0, 5);
 
         deliveryDelay = new NumberChooserFX("", 0.0, 7.0, 2.0, 1.0);
+        sliderT = new Tooltip();
+        LocalizationUtils.bindLocalizationText(sliderT.textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_DELI_DELAY);
+        Tooltip.install(deliveryDelay, sliderT);
 
         grid2.add(deliveryDelay, 1, 5);
 
-//        l = new Label(Localize.getTextFor(HostLocalizationKeys.LABEL_CREATEGAME_INITIAL_STOCK));
         l = new Label();
+        l.setTooltip(new Tooltip());
         LocalizationUtils.bindLocalizationText(l.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_INITIAL_STOCK);
+        LocalizationUtils.bindLocalizationText(l.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_START_STOCK);
         l.setAlignment(Pos.CENTER_RIGHT);
 
         GridPane.setConstraints(l, 0, 6, 1, 1, HPos.RIGHT, VPos.CENTER);
         grid2.add(l, 0, 6);
 
         initialStock = new NumberChooserFX("", 0.0, 100.0, 10.0, 1.0);
+        sliderT = new Tooltip();
+        LocalizationUtils.bindLocalizationText(sliderT.textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_START_STOCK);
+        Tooltip.install(initialStock, sliderT);
 
         grid2.add(initialStock, 1, 6);
         
@@ -767,6 +823,8 @@ public class CreateGamePane extends BorderPane {
         BorderPane grid3 = new BorderPane();
 
         supplyChainTypeSelect = new ComboBox<>();
+        supplyChainTypeSelect.setTooltip(new Tooltip());
+        LocalizationUtils.bindLocalizationText(supplyChainTypeSelect.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_SCHAIN_CHOOSER);
         supplyChainTypeSelect.getItems().addAll(SupplyChainTypes.values());
         supplyChainTypeSelect.setValue(SupplyChainTypes.CLASSIC_CHAIN);
         supplyChainTypeSelect.setDisable(true);
@@ -821,17 +879,21 @@ public class CreateGamePane extends BorderPane {
         demandPane.getStyleClass().addAll("card", "shadowed-1", "bottom-left");
 
         FlowPane buttonsBox = new FlowPane(Orientation.HORIZONTAL);
-        buttonsBox.setAlignment(Pos.BASELINE_RIGHT);
+        buttonsBox.setAlignment(Pos.BASELINE_CENTER);
         buttonsBox.getStyleClass().addAll("creation-buttons");
 
         IconNode cancel = new IconNode(GoogleMaterialDesignIcons.CLEAR);
         cancel.getStyleClass().addAll("icon");
         Button cancelButton = new Button("", cancel);
+        cancelButton.setTooltip(new Tooltip());
+        LocalizationUtils.bindLocalizationText(cancelButton.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_BUTTON_ACLEAR);
         cancelButton.getStyleClass().addAll("clear");
 
         IconNode create = new IconNode(GoogleMaterialDesignIcons.DONE);
         create.getStyleClass().addAll("icon");
         Button confirmButton = new Button("", create);
+        confirmButton.setTooltip(new Tooltip());
+        LocalizationUtils.bindLocalizationText(confirmButton.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_BUTTON_AACCEP);
         confirmButton.getStyleClass().addAll("create");
 
         cancelButton.setOnAction((ActionEvent event) -> {
@@ -873,7 +935,6 @@ public class CreateGamePane extends BorderPane {
         gP.add(sliderPane, 1, 0, 1, 1);
         gP.add(chainPane, 2, 0, 1, 2);
 
-//        gP.setGridLinesVisible(true);
         gP.setVgap(5.0);
         gP.setHgap(5.0);
 

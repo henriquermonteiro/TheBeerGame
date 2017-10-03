@@ -9,6 +9,12 @@
         response.sendRedirect("/check_in.jsp");
         return;
     }else{
+        boolean returned = Boolean.parseBoolean(request.getParameter("returned"));
+        
+        if(returned){
+            session.removeAttribute("LOGGED_GAME");
+        }
+        
         if(session.getAttribute("LOGGED_GAME") != null && !((String)session.getAttribute("LOGGED_GAME")).isEmpty()){
             response.sendRedirect("/game.jsp");
             return;

@@ -7,6 +7,7 @@ import edu.utfpr.ct.localization.LocalizationUtils;
 import edu.utfpr.ct.webclient.ActionService;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.control.Hyperlink;
@@ -14,6 +15,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebView;
 import jiconfont.icons.GoogleMaterialDesignIcons;
@@ -26,11 +28,15 @@ public class ReportGamePane extends BorderPane{
     private ToggleButton webStart;
 
     private final MainScene mainScene;
+    private IconNode tabPlayIcon;
     
     private void createContent(){
         getStyleClass().add("transparent");
         
         gameName = new Label(game.name);
+        
+        tabPlayIcon = new IconNode(GoogleMaterialDesignIcons.PLAY_ARROW);
+        tabPlayIcon.getStyleClass().addAll("icon", "small");
         
         webStart = new ToggleButton();
 
@@ -38,15 +44,28 @@ public class ReportGamePane extends BorderPane{
         web_icon.getStyleClass().addAll("icon");
         webStart.setGraphic(web_icon);
         webStart.getStyleClass().addAll("play-pause");
+        webStart.setTooltip(new Tooltip());
+        webStart.getTooltip().textProperty().bind(Bindings.createStringBinding(() -> {
+            return (webStart.selectedProperty().get() ? 
+                    HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.TOOLTIP_SHOW_REPO_BUTT_START) : 
+                    HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.TOOLTIP_SHOW_REPO_BUTT_PAUSE));
+        }, HostLocalizationManager.getInstance().getLang(), webStart.selectedProperty()));
         
         webStart.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             mainScene.changeReportState(game, newValue);
+            
+            if(getParent() instanceof GamePane)
+                ((GamePane)getParent()).getTab().setGraphic((newValue ? tabPlayIcon : null));
         });
         
         
         Hyperlink info = new Hyperlink();
         IconNode infoIcon = new IconNode(GoogleMaterialDesignIcons.INFO_OUTLINE);
         infoIcon.getStyleClass().addAll("icon");
+        
+        Tooltip infoTooltip = new Tooltip();
+        LocalizationUtils.bindLocalizationText(infoTooltip.textProperty(), HostLocalizationKeys.TOOLTIP_SHOW_REPO_INFO);
+        Tooltip.install(info, infoTooltip);
         
         info.setGraphic(infoIcon);
         info.setOnAction((event) -> {
@@ -86,6 +105,8 @@ public class ReportGamePane extends BorderPane{
         chartsTab.setContent(marginPane);
         chartsTab.setClosable(false);
         chartsTab.getStyleClass().add("transparent");
+        chartsTab.setTooltip(new Tooltip());
+        LocalizationUtils.bindLocalizationText(chartsTab.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_SHOW_REPO_TAB_ORDER);
         
         reports.getTabs().add(chartsTab);
         
@@ -112,6 +133,8 @@ public class ReportGamePane extends BorderPane{
         chartsTab.setContent(marginPane);
         chartsTab.setClosable(false);
         chartsTab.getStyleClass().add("transparent");
+        chartsTab.setTooltip(new Tooltip());
+        LocalizationUtils.bindLocalizationText(chartsTab.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_SHOW_REPO_TAB_STOCK);
         
         reports.getTabs().add(chartsTab);
         

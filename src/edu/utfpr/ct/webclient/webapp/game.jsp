@@ -19,10 +19,12 @@
         if(json.get("state") == null){
             session.removeAttribute("LOGGED_GAME");
             response.sendRedirect("/choose_room.jsp");
+            return;
         }
     }catch(ParseException ex){
         session.removeAttribute("LOGGED_GAME");
         response.sendRedirect("/choose_room.jsp");
+        return;
     }
     
     
@@ -387,6 +389,7 @@
         <jsp:include page="resources/body_begin.jsp">
             <jsp:param name="hide_body" value="true"/>
             <jsp:param name="source" value="game.jsp"/>
+            <jsp:param name="show_return" value="false"/>
         </jsp:include>
 
     <div class="center-content">

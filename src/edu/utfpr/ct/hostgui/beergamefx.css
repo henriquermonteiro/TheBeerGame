@@ -204,6 +204,10 @@
     -fx-fill: white;
 }
 
+.main-tabs > .tab-header-area .icon.small {
+    -fx-icon-size: 16px;
+}
+
 .main-tabs > .tab-header-area .tab {
     -fx-tab-background: -header-color;
     -fx-background-color: -fx-tab-background;
@@ -351,7 +355,7 @@
 }
 
 .play-pause:hover {
-    -fx-background-color: derive(-header-color, -20%);
+    -fx-background-color: derive(mediumspringgreen, -40%);
 }
 
 .play-pause:selected {
@@ -359,7 +363,7 @@
 }
 
 .play-pause:selected:hover {
-    -fx-background-color: derive(mediumspringgreen, -40%);
+    -fx-background-color: derive(#ff6666, -20%);
 }
 
 .play-pause .icon {

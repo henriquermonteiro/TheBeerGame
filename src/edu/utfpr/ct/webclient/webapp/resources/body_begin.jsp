@@ -10,6 +10,8 @@
     }
     
     Localize localize = ClientLocalizationManager.getInstance().getClientFor(lang);
+    
+    boolean has_return = Boolean.parseBoolean(request.getParameter("show_return"));
 %>
     <% if(!"true".equals(request.getParameter("hide_body"))){ %><body onload="bubbles();"><% }%>
         <div class="mdl-layout mdl-js-layout">
@@ -22,6 +24,10 @@
                     %>
                     <div class="mdl-layout-spacer"></div>
                     <nav class="mdl-navigation">
+                        <%if(has_return){%>
+                        <a id="return" class="mdl-navigation__link" href="choose_room.jsp?returned=true"><i class="material-icons md-24">power_settings_new</i><%=(localize.getTextFor(ClientLocalizationKeys.COMMON_RETURN_TEXT)) %></a>
+                        <div class="mdl-tooltip" for="return"><%=(localize.getTextFor(ClientLocalizationKeys.COMMON_RETURN_TOOLTIP)) %></div>
+                        <%}%>
                         <a id="logout" class="mdl-navigation__link" href="logout.jsp"><i class="material-icons md-24">power_settings_new</i>&nbsp;&nbsp;&nbsp;<%=name %></a>
                         <div class="mdl-tooltip" for="logout"><%=(localize.getTextFor(ClientLocalizationKeys.COMMON_LOGOUT_TOOLTIP)) %></div>
                     </nav>
