@@ -4,6 +4,7 @@ import edu.utfpr.ct.gamecontroller.Table;
 import edu.utfpr.ct.datamodel.EngineData;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.gamecontroller.Controller;
+import edu.utfpr.ct.gamecontroller.Engine;
 import edu.utfpr.ct.interfaces.IControllerHost;
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +26,7 @@ import edu.utfpr.ct.interfaces.IControllerPlayer;
 import edu.utfpr.ct.util.IPUtils;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.catalina.Context;
 import org.apache.catalina.Service;
 import org.apache.catalina.connector.Connector;
 import org.apache.coyote.ProtocolHandler;
@@ -117,6 +119,9 @@ public class ActionService {
             webContentFolder = Files.createTempDirectory("default-doc-base").toFile();
         }
         StandardContext ctx = (StandardContext) tomcat.addWebapp("", webContentFolder.getAbsolutePath());
+        ctx.setSessionTimeout(1);
+        System.out.println("Timeout: " + ctx.getSessionTimeout());
+        ctx.addApplicationListener(SessionTimeoutListener.class.getName());
         ctx.setDelegate(true);
         //Set execution independent of current thread context classloader (compatibility with exec:java mojo)
         ctx.setParentClassLoader(ActionService.class.getClassLoader());
@@ -240,5 +245,15 @@ public class ActionService {
     
     public Game getReportInfo(String gameName){
         return controlerHost.getReport(gameName);
+    }
+    
+    public boolean getRoomActive(String gameName){
+        int state = controlerHost.getGameState(gameName);
+        
+        if(state == -1){
+            return controlerHost.getReportState(gameName) == 8;
+        }
+        
+        return state != Engine.PAUSED;
     }
 }

@@ -10,6 +10,7 @@
 .transparent > .viewport{
     -fx-border-color: #003399; 
     -fx-border-radius: 10;
+    -fx-background-radius: 10;
 }
 
 .left > .viewport {
@@ -30,6 +31,10 @@
     -fx-border-color: #777777; 
     -fx-border-radius: 8 8 0 0;
     -fx-border-width: 2px;
+}
+
+.transparent.center > .tab-content-area{
+    -fx-border-radius: 8;
 }
 
 .padded-10{
@@ -360,6 +365,10 @@
 .play-pause .icon {
     -fx-fill: white;
     -fx-icon-size: 40px;
+}
+
+.chart-view {
+    -fx-background-radius: 8;
 }
 
 .creation-buttons {

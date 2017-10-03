@@ -65,6 +65,8 @@ public class HostLocalizationKeys
 
 	public static final String DEFAULT_GAME_NAME = "DEFAULT-GAME-NAME";
 
+        public static String TITLE_REPORT_ORDER = "TITLE-REPORT-ORDER-TAB";
+        public static String TITLE_REPORT_STOCK = "TITLE-REPORT-STOCK-TAB";
 	public static final String TITLE_REPORT_GENERAL = "TITLE-REPORT-GENERAL-TAB";
 	public static final String TITLE_REPORT_RETAILER = "TITLE-REPORT-RETAILER-TAB";
 	public static final String TITLE_REPORT_WHOLESALER = "TITLE-REPORT-WHOLESALER-TAB";
@@ -99,4 +101,14 @@ public class HostLocalizationKeys
         public static String CHART_OR_FUNCTION_2 = "CHART-ORDER-FUNCTION-2";
         public static String CHART_OR_FUNCTION_3 = "CHART-ORDER-FUNCTION-3";
         public static String CHART_OR_FUNCTION_4 = "CHART-ORDER-FUNCTION-4";
+        
+        public static String CHART_ST_TITLE = "CHART-STOCK-TITLE";
+        public static String CHART_ST_LABEL_X = "CHART-STOCK-LABEL-X-AXIS";
+        public static String CHART_ST_LABEL_Y = "CHART-STOCK-LABEL-Y-AXIS";
+        public static String CHART_ST_FUNCTION_AX = "CHART-STOCK-FUNCTION-";
+        public static String CHART_ST_FUNCTION_0 = "CHART-STOCK-FUNCTION-0";
+        public static String CHART_ST_FUNCTION_1 = "CHART-STOCK-FUNCTION-1";
+        public static String CHART_ST_FUNCTION_2 = "CHART-STOCK-FUNCTION-2";
+        public static String CHART_ST_FUNCTION_3 = "CHART-STOCK-FUNCTION-3";
+        public static String CHART_ST_FUNCTION_4 = "CHART-STOCK-FUNCTION-4";
 }

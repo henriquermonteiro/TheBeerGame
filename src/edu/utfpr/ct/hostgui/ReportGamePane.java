@@ -1,28 +1,25 @@
 package edu.utfpr.ct.hostgui;
 
-import edu.utfpr.ct.datamodel.AbstractNode;
 import edu.utfpr.ct.datamodel.Game;
-import edu.utfpr.ct.datamodel.Node;
 import edu.utfpr.ct.localization.HostLocalizationKeys;
+import edu.utfpr.ct.localization.HostLocalizationManager;
 import edu.utfpr.ct.localization.LocalizationUtils;
-import edu.utfpr.ct.localization.Localize;
-import java.io.File;
+import edu.utfpr.ct.webclient.ActionService;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.Parent;
+import javafx.geometry.Insets;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.web.WebView;
 import jiconfont.icons.GoogleMaterialDesignIcons;
 import jiconfont.javafx.IconNode;
 
 public class ReportGamePane extends BorderPane{
-//    private static final Image webImage = new Image(new File(Localize.getTextFor(HostLocalizationKeys.WEB_ICON)).toURI().toString());
-    
     private final Game game;
     
     private Label gameName;
@@ -30,76 +27,98 @@ public class ReportGamePane extends BorderPane{
 
     private final MainScene mainScene;
     
-    private Parent nodePane(Node node){
-        return new ScrollPane();
-    }
-    
-    private Parent generalPane(){
-        return new ScrollPane();
-    }
-    
     private void createContent(){
+        getStyleClass().add("transparent");
+        
         gameName = new Label(game.name);
         
         webStart = new ToggleButton();
-//        webStart.setGraphic(new ImageView(webImage));
-        webStart.setGraphic(new IconNode(GoogleMaterialDesignIcons.CAST_CONNECTED));
+
+        IconNode web_icon = new IconNode(GoogleMaterialDesignIcons.CAST_CONNECTED);
+        web_icon.getStyleClass().addAll("icon");
+        webStart.setGraphic(web_icon);
+        webStart.getStyleClass().addAll("play-pause");
         
         webStart.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             mainScene.changeReportState(game, newValue);
         });
         
+        
+        Hyperlink info = new Hyperlink();
+        IconNode infoIcon = new IconNode(GoogleMaterialDesignIcons.INFO_OUTLINE);
+        infoIcon.getStyleClass().addAll("icon");
+        
+        info.setGraphic(infoIcon);
+        info.setOnAction((event) -> {
+            mainScene.makeGameInfo(game.name);
+        });
+        
         BorderPane topPane = new BorderPane();
+        topPane.getStyleClass().addAll("card", "header", "shadowed-1");
         topPane.setCenter(gameName);
         topPane.setRight(webStart);
+        topPane.setLeft(info);
         
         TabPane reports = new TabPane();
+        reports.getStyleClass().addAll("main-tabs", "transparent", "center", TabPane.STYLE_CLASS_FLOATING);
+        reports.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         
-//        Tab general = new Tab(Localize.getTextFor(HostLocalizationKeys.TITLE_REPORT_GENERAL));
-        Tab general = new Tab();
-        LocalizationUtils.bindLocalizationText(general.textProperty(), HostLocalizationKeys.TITLE_REPORT_GENERAL);
-        general.setContent(generalPane());
-        general.setClosable(false);
-        
-        reports.getTabs().add(general);
-        
-        for(AbstractNode n : game.supplyChain){
-            if(n instanceof Node){
-//                String s = "UNKNOW";
-                
-                Tab nodeTab = new Tab();
-                
-                switch(((Node) n).function.getPosition()){
-                    case 1:
-                        LocalizationUtils.bindLocalizationText(nodeTab.textProperty(), HostLocalizationKeys.TITLE_REPORT_RETAILER);
-//                        s = Localize.getTextFor(HostLocalizationKeys.TITLE_REPORT_RETAILER);
-                        break;
-                    case 2:
-                        LocalizationUtils.bindLocalizationText(nodeTab.textProperty(), HostLocalizationKeys.TITLE_REPORT_WHOLESALER);
-//                        s = Localize.getTextFor(HostLocalizationKeys.TITLE_REPORT_WHOLESALER);
-                        break;
-                    case 3:
-                        LocalizationUtils.bindLocalizationText(nodeTab.textProperty(), HostLocalizationKeys.TITLE_REPORT_DISTRIBUTOR);
-//                        s = Localize.getTextFor(HostLocalizationKeys.TITLE_REPORT_DISTRIBUTOR);
-                        break;
-                    case 4:
-                        LocalizationUtils.bindLocalizationText(nodeTab.textProperty(), HostLocalizationKeys.TITLE_REPORT_PRODUCER);
-//                        s = Localize.getTextFor(HostLocalizationKeys.TITLE_REPORT_PRODUCER);
-                        break;
-                        default:
-                            LocalizationUtils.bindLocalizationText(nodeTab.textProperty(), HostLocalizationKeys.TITLE_REPORT_UNKNOWN);
-                }
-                
-//                Tab nodeTab = new Tab(s);
-                nodeTab.setContent(nodePane((Node) n));
-                nodeTab.setClosable(false);
-                
-                reports.getTabs().add(nodeTab);
-            }
+        WebView chartViewOrder = new WebView();
+        try {
+            chartViewOrder.getEngine().load("http://127.0.0.1:"+ActionService.getService().getPort()+"/info?order=true&game-name="+URLEncoder.encode(game.name, "UTF-8"));
+        } catch (UnsupportedEncodingException ex) {
         }
+        
+        HostLocalizationManager.getInstance().getLang().addListener((observable) -> {
+            chartViewOrder.getEngine().reload();
+        });
+        
+        chartViewOrder.getStyleClass().addAll("chart-view");
+        
+        BorderPane chartContainer = new BorderPane(chartViewOrder);
+        chartContainer.getStyleClass().addAll("card", "padded-10");
+        
+        BorderPane marginPane = new BorderPane(chartContainer);
+        marginPane.getStyleClass().addAll("transparent", "padded-10");
+        
+        Tab chartsTab = new Tab();
+        LocalizationUtils.bindLocalizationText(chartsTab.textProperty(), HostLocalizationKeys.TITLE_REPORT_ORDER);
+        chartsTab.setContent(marginPane);
+        chartsTab.setClosable(false);
+        chartsTab.getStyleClass().add("transparent");
+        
+        reports.getTabs().add(chartsTab);
+        
+        WebView chartViewStock = new WebView();
+        try {
+            chartViewStock.getEngine().load("http://127.0.0.1:"+ActionService.getService().getPort()+"/info?stock=true&game-name="+URLEncoder.encode(game.name, "UTF-8"));
+        } catch (UnsupportedEncodingException ex) {
+        }
+        
+        HostLocalizationManager.getInstance().getLang().addListener((observable) -> {
+            chartViewStock.getEngine().reload();
+        });
+        
+        chartViewStock.getStyleClass().addAll("chart-view");
+        
+        chartContainer = new BorderPane(chartViewStock);
+        chartContainer.getStyleClass().addAll("card", "padded-10");
+        
+        marginPane = new BorderPane(chartContainer);
+        marginPane.getStyleClass().addAll("transparent", "padded-10");
+        
+        chartsTab = new Tab();
+        LocalizationUtils.bindLocalizationText(chartsTab.textProperty(), HostLocalizationKeys.TITLE_REPORT_STOCK);
+        chartsTab.setContent(marginPane);
+        chartsTab.setClosable(false);
+        chartsTab.getStyleClass().add("transparent");
+        
+        reports.getTabs().add(chartsTab);
         
         this.setTop(topPane);
         this.setCenter(reports);
+        BorderPane.setMargin(topPane, new Insets(10.0, 10.0, 5.0, 10.0));
+        BorderPane.setMargin(reports, new Insets(0.0, 10.0, 10.0, 10.0));
     }
 
     public ReportGamePane(Game game, boolean isStreaming, MainScene mainScene) {

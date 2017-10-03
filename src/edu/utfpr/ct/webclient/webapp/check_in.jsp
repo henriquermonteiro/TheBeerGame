@@ -9,6 +9,10 @@
         response.sendRedirect("/choose_room.jsp");
     }
     
+    if(request.getParameter("lang") != null){
+        session.setAttribute("PREF-LANG", request.getParameter("lang"));
+    }
+    
     String lang = "default";
     if(session.getAttribute("PREF-LANG") != null){ 
         lang = (String) session.getAttribute("PREF-LANG");
@@ -68,7 +72,9 @@
             }
         </script>
         <jsp:include page="resources/head_finish.jsp"/>
-        <jsp:include page="resources/body_begin.jsp"/>
+        <jsp:include page="resources/body_begin.jsp">
+            <jsp:param name="source" value="check_in.jsp"/>
+        </jsp:include>
                 <div class="center-content">
                     <div class="login-card mdl-card mdl-shadow--2dp">
                         <div class="mdl-card__title mdl-card--expand">

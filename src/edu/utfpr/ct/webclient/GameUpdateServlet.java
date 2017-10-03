@@ -5,7 +5,12 @@ import edu.utfpr.ct.datamodel.AbstractNode;
 import edu.utfpr.ct.datamodel.EngineData;
 import edu.utfpr.ct.datamodel.Node;
 import edu.utfpr.ct.gamecontroller.Engine;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -102,29 +107,6 @@ public class GameUpdateServlet extends HttpServlet {
                         case Engine.FINISHED:
                             json.put("state", "reporting");
                             json.put("real_duration", g.game.realDuration);
-
-                            JSONArray stocks = new JSONArray();
-
-                            int max_size = ((((Node) g.game.supplyChain[0]).currentStock.size() - 1) / 10) + 1;
-
-                            for (int k = 0; k < ((Node) g.game.supplyChain[0]).playerMove.size(); k++) {
-                                JSONObject weekData = new JSONObject();
-
-                                String week_text = String.format("%" + max_size + "d", k);
-
-//                                weekData.put("week", k);
-                                weekData.put("week", week_text);
-//                                weekData.put("c", (k == 0 ? 0 : g.game.demand[k - 1]));
-                                weekData.put("c", g.game.demand[k]);
-                                weekData.put("r", ((Node) g.game.supplyChain[0]).playerMove.get(k));
-                                weekData.put("w", ((Node) g.game.supplyChain[g.game.deliveryDelay + 1]).playerMove.get(k));
-                                weekData.put("d", ((Node) g.game.supplyChain[2 * g.game.deliveryDelay + 2]).playerMove.get(k));
-                                weekData.put("p", ((Node) g.game.supplyChain[3 * g.game.deliveryDelay + 3]).playerMove.get(k));
-
-                                stocks.add(k, weekData);
-                            }
-
-                            json.put("graph_data", stocks);
                     }
                     json.put("id", g.game.gameID);
                     json.put("name", g.game.name);

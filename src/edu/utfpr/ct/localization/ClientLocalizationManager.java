@@ -70,25 +70,25 @@ public class ClientLocalizationManager {
         return getInstance().localizeMap.keySet().toArray(new String[0]);
     }
     
-    public static String[] getValidLanguagesNames() {
-        File f = new File("lang");
-
-        String[] langs = null;
-
-        if (f.isDirectory()) {
-            ArrayList<String> a_lang = new ArrayList<>();
-            
-            a_lang.add("English");
-            
-            for (File l : f.listFiles((File file, String string) -> { return string.endsWith(".map");} )) {
-                if (!l.getName().equals("default.map")) {
-                    a_lang.add(new Locale(l.getName().replace(".map", "")).getDisplayLanguage());
-                }
-            }
-            
-            langs = a_lang.toArray(new String[0]);
-        }
-
-        return langs;
-    }
+//    public static String[] getValidLanguagesNames() {
+//        File f = new File("lang");
+//
+//        String[] langs = null;
+//
+//        if (f.isDirectory()) {
+//            ArrayList<String> a_lang = new ArrayList<>();
+//            
+//            a_lang.add("English");
+//            
+//            for (File l : f.listFiles((File file, String string) -> { return string.endsWith(".map");} )) {
+//                if (!l.getName().equals("default.map")) {
+//                    a_lang.add(new Locale(l.getName().replace(".map", "")).getDisplayLanguage());
+//                }
+//            }
+//            
+//            langs = a_lang.toArray(new String[0]);
+//        }
+//
+//        return langs;
+//    }
 }

@@ -32,9 +32,9 @@
                 <span class="mdl-layout__title"><img id="flag" src="resources/flags/<%=(localize.getTextFor(ClientLocalizationKeys.FLAG_PATH))%>" ><%=(localize.getTextFor(ClientLocalizationKeys.LANG_ID)) %></span>
                 <nav class="mdl-navigation">
                     <%
-                        for(String l : ClientLocalizationManager.getValidLanguagesNames()){
+                        for(String l : ClientLocalizationManager.getValidLanguages()){
                     %>
-                    <a class="mdl-navigation__link" href="#"><%=l %></a>
+                    <a class="mdl-navigation__link" href="<%=(request.getParameter("source") == null ? "#" : request.getParameter("source")) %>?lang=<%=l %>"><img id="flag" src="resources/flags/<%=(ClientLocalizationManager.getInstance().getClientFor(l).getTextFor(ClientLocalizationKeys.FLAG_PATH))%>" ><%=ClientLocalizationManager.getInstance().getClientFor(l).getTextFor(ClientLocalizationKeys.LANG_ID) %></a>
                     <% } %>
                 </nav>
             </div>
