@@ -4,6 +4,7 @@ public class ClientLocalizationKeys {
     public static final String FLAG_PATH = "WEB-FLAG-PATH";
     public static final String LANG_ID = "WEB-LANG-IDENTIFIER";
     
+    public static final String COMMON_CURRENT_LANGUAGE_TOOLTIP = "COMMON-CURRENT-LANGUAGE-TOOLTIP";
     public static final String COMMON_RETURN_TEXT = "COMMON-RETURN-TEXT";
     public static final String COMMON_RETURN_TOOLTIP = "COMMON-RETURN-TOOLTIP";
     public static final String COMMON_LOGOUT_TOOLTIP = "COMMON-LOGOUT-TOOLTIP";
@@ -13,6 +14,8 @@ public class ClientLocalizationKeys {
     public static final String CHECKIN_TEXT_ERROR = "CHECKIN-TEXT-ERROR";
     public static final String CHECKIN_WARNING = "CHECKIN-TEXT-WARNING";
     public static final String CHECKIN_SUBMIT = "CHECKIN-ENTER-BUTTON";
+    public static final String CHECKIN_INPUT_TOOLTIP = "CHECKIN-INPUT-TOOLTIP";
+    public static final String CHECKIN_BUTTON_TOOLTIP = "CHECKIN-BUTTON-TOOLTIP";
     
     public static final String CHOOSE_SUBMIT = "CHOOSE-ENTER-BUTTON";
     public static final String CHOOSE_PW_TEXT = "CHOOSE-PASSWORD-TEXT";
@@ -20,8 +23,17 @@ public class ClientLocalizationKeys {
     public static final String CHOOSE_PW_WARNING = "CHOOSE-PASSWORD-WARNING";
     public static final String CHOOSE_PW_ENTER = "CHOOSE-PASSWORD-ENTER";
     public static final String CHOOSE_PW_CLOSE = "CHOOSE-PASSWORD-CLOSE";
+    public static final String CHOOSE_GAME_TOOLTIP = "CHOOSE-GAMEROOM-TOOLTIP";
+    public static final String CHOOSE_REPO_TOOLTIP = "CHOOSE-REPORTROOM-TOOLTIP";
+    public static final String CHOOSE_PASSW_INP_TOOLTIP = "CHOOSE-PASSWORD-INPUT-TOOLTIP";
+    public static final String CHOOSE_PASSW_CALL_TOOLTIP = "CHOOSE-PASSWORD-BUTTON-ENTER-TOOLTIP";
+    public static final String CHOOSE_PASSW_CANCEL_TOOLTIP = "CHOOSE-PASSWORD-BUTTON-CANCEL-TOOLTIP";
     
     public static final String WAIT_TITLE = "WAIT-TITLE";
+    public static final String WAIT_RET_TOOLTIP = "WAIT-RETAILER-TOOLTIP";
+    public static final String WAIT_WHO_TOOLTIP = "WAIT-WHOLESALER-TOOLTIP";
+    public static final String WAIT_DIS_TOOLTIP = "WAIT-DISTRIBUTOR-TOOLTIP";
+    public static final String WAIT_PRO_TOOLTIP = "WAIT-PRODUCER-TOOLTIP";
 
     public static final String GAME_INFO_WEEKS = "GAME-INFO-WEEKS";
     public static final String GAME_INFO_RET = "GAME-INFO-RETAILER";
@@ -31,6 +43,7 @@ public class ClientLocalizationKeys {
     public static final String GAME_NAME_LABEL = "GAME-NAME-LABEL";
     public static final String GAME_COST_LABEL = "GAME-COST-LABEL";
     public static final String GAME_STOCK_LABEL = "GAME-STOCK-LABEL";
+    public static final String GAME_LAST_REQUEST_LABEL = "GAME-LAST-REQUEST-LABEL";
     public static final String GAME_TABLE_NAME = "GAME-TABLE-NAME";
     public static final String GAME_TABLE_FUNC = "GAME-TABLE-FUNCTION";
     public static final String GAME_TABLE_WEEK = "GAME-TABLE-WEEK";
@@ -47,6 +60,8 @@ public class ClientLocalizationKeys {
     public static final String GAME_CONTROL_LABEL_BLOCK = "GAME-CONTROL-LABEL-BLOCK";
     public static final String GAME_CONTROL_BUTTON = "GAME-CONTROL-BUTTON";
     public static final String GAME_CONTROL_ERROR = "GAME-CONTROL-ERROR";
+    public static final String PLAY_ORDER_INPUT_TOOLTIP = "GAME-CONTROL-INPUT-TOOLTIP";
+    public static final String PLAY_ORDER_BUTTON_TOOLTIP = "GAME-CONTROL-BUTTON-TOOLTIP";
 
     public static final String REPORT_INFO_NAME = "REPORT-INFO-NAME";
     public static final String REPORT_INFO_TYPE = "REPORT-INFO-TYPE";

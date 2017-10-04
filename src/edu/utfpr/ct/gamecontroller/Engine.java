@@ -248,7 +248,7 @@ public class Engine
 			}
 		}
 
-		getTable().updateLines();
+//		getTable().updateLines();
 		state = FINISHED;
 	}
 

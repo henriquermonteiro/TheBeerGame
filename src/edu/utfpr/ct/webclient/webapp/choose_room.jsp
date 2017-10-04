@@ -119,7 +119,7 @@
                     <h2 class="mdl-card__title-text"><%=((JSONObject)jsonObj).get("name")%></h2>
                 </div>
                 <div class="mdl-card__actions mdl-card--border">
-                    <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" data-upgraded=",MaterialButton,MaterialRipple" <% if((Boolean)((JSONObject)jsonObj).get("use_pw")){ %>data-pw="required" <% } %> data-id="<%=((JSONObject)jsonObj).get("id")%>" data-game="<%=((JSONObject)jsonObj).get("name")%>" name="gmbutton"><%=(localize.getTextFor(ClientLocalizationKeys.CHOOSE_SUBMIT)) %></a>
+                    <a id="join-<%=((JSONObject)jsonObj).get("name")%>" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" data-upgraded=",MaterialButton,MaterialRipple" <% if((Boolean)((JSONObject)jsonObj).get("use_pw")){ %>data-pw="required" <% } %> data-id="<%=((JSONObject)jsonObj).get("id")%>" data-game="<%=((JSONObject)jsonObj).get("name")%>" name="gmbutton"><%=(localize.getTextFor(ClientLocalizationKeys.CHOOSE_SUBMIT)) %></a>
                     <%
                         if((Boolean)((JSONObject)jsonObj).get("use_pw")){
                     %>
@@ -129,6 +129,7 @@
                     %>
                 </div>
             </div>
+            <div class="mdl-tooltip" for="join-<%=((JSONObject)jsonObj).get("name")%>"><%=(((Boolean)((JSONObject)jsonObj).get("finished"))? (localize.getTextFor(ClientLocalizationKeys.CHOOSE_REPO_TOOLTIP)) : (localize.getTextFor(ClientLocalizationKeys.CHOOSE_GAME_TOOLTIP))) %></div>
             <%
                     }
                 }
@@ -144,17 +145,20 @@
                     <%=(localize.getTextFor(ClientLocalizationKeys.CHOOSE_PW_TEXT)) %>
                 </p>
                 <form method="post" action="">
-                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <div id="passw_input" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                         <input class="mdl-textfield__input" type="text" pattern="[A-Z,a-z,0-9]" id="password">
                         <label class="mdl-textfield__label" for="password"><%=(localize.getTextFor(ClientLocalizationKeys.CHOOSE_PW_LABEL)) %></label>
                     </div>
+                    <div class="mdl-tooltip" for="passw_input"><%=(localize.getTextFor(ClientLocalizationKeys.CHOOSE_PASSW_INP_TOOLTIP)) %></div>
                     <span id="warning_pw" class="warning hidden"><%=(localize.getTextFor(ClientLocalizationKeys.CHOOSE_PW_WARNING)) %></span>
                 </form>
             </div>
             <div class="mdl-dialog__actions">
                 <button id="call_button" type="button" class="mdl-button" onclick="enter_room()"><%=(localize.getTextFor(ClientLocalizationKeys.CHOOSE_PW_ENTER)) %></button>
-                <button type="button" class="mdl-button close" onclick="close_dialog()"><%=(localize.getTextFor(ClientLocalizationKeys.CHOOSE_PW_CLOSE)) %></button>
+                <button id="cancel_button" type="button" class="mdl-button close" onclick="close_dialog()"><%=(localize.getTextFor(ClientLocalizationKeys.CHOOSE_PW_CLOSE)) %></button>
             </div>
+            <div class="mdl-tooltip" for="call_button"><%=(localize.getTextFor(ClientLocalizationKeys.CHOOSE_PASSW_CALL_TOOLTIP)) %></div>
+            <div class="mdl-tooltip" for="cancel_button"><%=(localize.getTextFor(ClientLocalizationKeys.CHOOSE_PASSW_CANCEL_TOOLTIP)) %></div>
         </dialog>
 
         <script>
@@ -206,6 +210,12 @@
 
                 document.access.submit();
             }
+            
+            function reload(){
+                location.reload();
+            }
+            
+            setInterval(reload, 45*1000);
         </script>
     </body>
 </html>

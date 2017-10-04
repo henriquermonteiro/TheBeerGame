@@ -9,9 +9,6 @@ import edu.utfpr.ct.hostgui.utils.StaticImages;
 import edu.utfpr.ct.localization.HostLocalizationKeys;
 import edu.utfpr.ct.localization.HostLocalizationManager;
 import edu.utfpr.ct.localization.LocalizationUtils;
-import edu.utfpr.ct.localization.Localize;
-import java.io.File;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
@@ -37,11 +34,8 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -57,11 +51,6 @@ import jiconfont.javafx.IconNode;
 
 public class CreateGamePane extends BorderPane {
     
-//    private static final Image RETAILER_ICON = new Image(new File("icon" + File.separator + "retailer.png").toURI().toString());
-//    private static final Image WHOLESALER_ICON = new Image(new File("icon" + File.separator + "wholesaler.png").toURI().toString());
-//    private static final Image DISTRIBUTOR_ICON = new Image(new File("icon" + File.separator + "distributor.png").toURI().toString());
-//    private static final Image PRODUCER_ICON = new Image(new File("icon" + File.separator + "Industry.png").toURI().toString());
-
     private TextField nameField;
     private CheckBox informedSupplyChain;
     private CheckBox usePassword;

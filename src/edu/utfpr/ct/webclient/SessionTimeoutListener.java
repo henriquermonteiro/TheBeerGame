@@ -31,7 +31,7 @@ public class SessionTimeoutListener implements HttpSessionListener{
 
             if (obj instanceof ActionService) {
                 ((ActionService) obj).logout((String)user);
-                System.out.println("killed " + user);
+//                System.out.println("killed " + user);
             }
         }
     }

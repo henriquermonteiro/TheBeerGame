@@ -14,8 +14,9 @@
     HttpURLConnection urlcon = (HttpURLConnection)checkin_json.openConnection();
     urlcon.setRequestMethod("GET");
     
+    JSONObject json = null;
     try{
-        JSONObject json = (JSONObject)new JSONParser().parse(new BufferedReader(new InputStreamReader(urlcon.getInputStream())));
+        json = (JSONObject)new JSONParser().parse(new BufferedReader(new InputStreamReader(urlcon.getInputStream())));
         if(json.get("state") == null){
             session.removeAttribute("LOGGED_GAME");
             response.sendRedirect("/choose_room.jsp");
@@ -127,7 +128,7 @@
                     
                 
                 var cell = row.insertCell(k++);
-                cell.innerHTML = week;
+                cell.innerHTML = week + 1;
                 
                 var cell = row.insertCell(k++);
                 if(func === 0){
@@ -184,7 +185,7 @@
                     report.classList.remove("hidden");
                 }
 
-                clearInterval(update_interval);
+                //clearInterval(update_interval);
                 state = "r";
             }
 
@@ -272,6 +273,9 @@
                     }
                 }
             }
+            
+            var is_set = false;
+            var my_func;
 
             function processPlay(json_state) {
                 if (state === "w") {
@@ -287,15 +291,28 @@
                     block_move();
                 }
 
-                document.getElementById("curweek").innerHTML = json_state.current_week;
+                document.getElementById("curweek").innerHTML = json_state.current_week + 1;
                 document.getElementById("totweek").innerHTML = json_state.total_week;
 
                 for (var player in json_state.players) {
                     var func = json_state.players[player].function;
+                    
+                    if(is_set === false){
+                        if(json_state.players[player].name === "<%=(String)session.getAttribute("USER-ID") %>"){
+                            document.getElementById("game_"+func+"_img").style.opacity = "1.0";
+                            document.getElementById("game_"+func+"_img").style.filter = "alpha(opacity=100)";
+                            is_set = true;
+                        }
+                    }
+                    
+                    var cost = json_state.players[player].cost;
+                    if(cost !== "---")
+                        cost = Number(json_state.players[player].cost).toFixed(2);
 
                     document.getElementById(func + "_name2").innerHTML = json_state.players[player].name;
-                    document.getElementById(func + "_cost").innerHTML = json_state.players[player].cost;
+                    document.getElementById(func + "_cost").innerHTML = cost;
                     document.getElementById(func + "_stock").innerHTML = json_state.players[player].stock;
+                    document.getElementById(func + "_last-req").innerHTML = json_state.players[player].last_request;
 
                     for (var inc in json_state.players[player].incoming) {
                         var dist = json_state.players[player].incoming[inc].distance;
@@ -308,7 +325,7 @@
                         json_state.history[line].function,
                         json_state.history[line].week,
                         json_state.history[line].current_stock,
-                        json_state.history[line].profit,
+                        Number(json_state.history[line].profit).toFixed(2),
                         json_state.history[line].order,
                         json_state.history[line].move
                     );
@@ -326,7 +343,7 @@
                     }
 
                     document.getElementById("rep_stockcost").innerHTML = json_state.stock_cost;
-                    document.getElementById("rep_missingcost").innerHTML = json_state.missing_cost;
+                    document.getElementById("rep_missingcost").innerHTML = Number(json_state.missing_cost).toFixed(2);
                     document.getElementById("rep_saleprofit").innerHTML = json_state.selling_profit;
 
                     document.getElementById("rep_delay").innerHTML = json_state.delay;
@@ -353,6 +370,8 @@
                 jsonHttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
                 jsonHttp.onreadystatechange = function () {
+                    if(state === "r") return;
+                    
                     var json = JSON.parse(jsonHttp.responseText);
 
                     if (json !== null) {
@@ -366,7 +385,7 @@
                             case "reporting":
                                 processReport(json);
                                 break;
-                            default : // para testes
+                            default :
                                 if(json.state === undefined){
                                     location.reload();
                                 }
@@ -401,24 +420,28 @@
                 <div class="mdl-card__media">
                     <div class="table">
                         <div class="row">
-                            <div class="cell">
-                                <img id="PRODUCER_img" src="resources/Industry.png" style="width: 120px; height: 120px;">
-                                <p id="PRODUCER_name"></p>
-                            </div>
-                            <div class="cell">
-                                <img id="DISTRIBUTOR_img" src="resources/distributor.png" style="width: 120px; height: 120px;">
-                                <p id="DISTRIBUTOR_name"></p>
-                            </div>
-                            <div class="cell">
-                                <img id="WHOLESALER_img" src="resources/wholesaler.png" style="width: 120px; height: 120px;">
-                                <p id="WHOLESALER_name"></p>
-                            </div>
-                            <div class="cell">
+                            <div id="ret_cell" class="cell">
                                 <img id="RETAILER_img" src="resources/retailer.png" style="width: 120px; height: 120px;">
                                 <p id="RETAILER_name"></p>
                             </div>
+                            <div id="who_cell" class="cell">
+                                <img id="WHOLESALER_img" src="resources/wholesaler.png" style="width: 120px; height: 120px;">
+                                <p id="WHOLESALER_name"></p>
+                            </div>
+                            <div id="dis_cell" class="cell">
+                                <img id="DISTRIBUTOR_img" src="resources/distributor.png" style="width: 120px; height: 120px;">
+                                <p id="DISTRIBUTOR_name"></p>
+                            </div>
+                            <div id="pro_cell" class="cell">
+                                <img id="PRODUCER_img" src="resources/Industry.png" style="width: 120px; height: 120px;">
+                                <p id="PRODUCER_name"></p>
+                            </div>
                         </div>
                     </div>
+                    <div class="mdl-tooltip" for="ret_cell"><%=(localize.getTextFor(ClientLocalizationKeys.WAIT_RET_TOOLTIP)) %></div>
+                    <div class="mdl-tooltip" for="who_cell"><%=(localize.getTextFor(ClientLocalizationKeys.WAIT_WHO_TOOLTIP)) %></div>
+                    <div class="mdl-tooltip" for="dis_cell"><%=(localize.getTextFor(ClientLocalizationKeys.WAIT_DIS_TOOLTIP)) %></div>
+                    <div class="mdl-tooltip" for="pro_cell"><%=(localize.getTextFor(ClientLocalizationKeys.WAIT_PRO_TOOLTIP)) %></div>
                     <div class="waiting-spinner">
                         <div class="spinner-sizer">
                             <div class="mdl-spinner mdl-js-spinner is-active"></div>
@@ -442,51 +465,63 @@
                             <th><%=(localize.getTextFor(ClientLocalizationKeys.GAME_INFO_PRO)) %>
                         </tr>
                         <tr id="image">
-                            <td><img src="resources\retailer.png" alt="Retailer">
-                            <td><img src="resources\wholesaler.png" alt="Wholesaler">
-                            <td><img src="resources\distributor.png" alt="Distributor">
-                            <td><img src="resources\Industry.png" alt="Producer">
+                            <td><img id="game_RETAILER_img"    style="opacity: 0.5; filter: alpha(opacity=50);"  src="resources\retailer.png"    alt="<%=(localize.getTextFor(ClientLocalizationKeys.GAME_INFO_RET)) %>">
+                            <td><img id="game_WHOLESALER_img"  style="opacity: 0.5; filter: alpha(opacity=50);"  src="resources\wholesaler.png"  alt="<%=(localize.getTextFor(ClientLocalizationKeys.GAME_INFO_WHO)) %>">
+                            <td><img id="game_DISTRIBUTOR_img" style="opacity: 0.5; filter: alpha(opacity=50);"  src="resources\distributor.png" alt="<%=(localize.getTextFor(ClientLocalizationKeys.GAME_INFO_DIS)) %>">
+                            <td><img id="game_PRODUCER_img"    style="opacity: 0.5; filter: alpha(opacity=50);"  src="resources\Industry.png"    alt="<%=(localize.getTextFor(ClientLocalizationKeys.GAME_INFO_PRO)) %>">
 
                         <tr id="name">
-                            <td id="retailer"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_NAME_LABEL)) %></b><span id="RETAILER_name2">Name 1</span>
-                            <td id="wholesaler"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_NAME_LABEL)) %></b><span id="WHOLESALER_name2">Name 2</span>
-                            <td id="distributor"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_NAME_LABEL)) %></b><span id="DISTRIBUTOR_name2">Name 3</span>
-                            <td id="producer"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_NAME_LABEL)) %></b><span id="PRODUCER_name2">Name 4</span>
+                            <td id="retailer_name">   <b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_NAME_LABEL)) %></b><span id="RETAILER_name2">Name 1</span>
+                            <td id="wholesaler_name"> <b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_NAME_LABEL)) %></b><span id="WHOLESALER_name2">Name 2</span>
+                            <td id="distributor_name"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_NAME_LABEL)) %></b><span id="DISTRIBUTOR_name2">Name 3</span>
+                            <td id="producer_name">   <b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_NAME_LABEL)) %></b><span id="PRODUCER_name2">Name 4</span>
 
                         <tr id="profit">
-                            <td id="retailer"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_COST_LABEL)) %></b><span id="RETAILER_cost">0.00</span>
-                            <td id="wholesaler"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_COST_LABEL)) %></b><span id="WHOLESALER_cost">0.00</span>
-                            <td id="distributor"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_COST_LABEL)) %></b><span id="DISTRIBUTOR_cost">0.00</span>
-                            <td id="producer"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_COST_LABEL)) %></b><span id="PRODUCER_cost">0.00</span>
+                            <td id="retailer_profit"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_COST_LABEL)) %></b><span id="RETAILER_cost">0.00</span>
+                            <td id="wholesaler_profit"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_COST_LABEL)) %></b><span id="WHOLESALER_cost">0.00</span>
+                            <td id="distributor_profit"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_COST_LABEL)) %></b><span id="DISTRIBUTOR_cost">0.00</span>
+                            <td id="producer_profit"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_COST_LABEL)) %></b><span id="PRODUCER_cost">0.00</span>
 
                         <tr id="stock">
-                            <td id="retailer"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_STOCK_LABEL)) %></b><span id="RETAILER_stock">16</span>
-                            <td id="wholesaler"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_STOCK_LABEL)) %></b><span id="WHOLESALER_stock">16</span>
-                            <td id="distributor"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_STOCK_LABEL)) %></b><span id="DISTRIBUTOR_stock">16</span>
-                            <td id="producer"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_STOCK_LABEL)) %></b><span id="PRODUCER_stock">16</span>
+                            <td id="retailer_stock"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_STOCK_LABEL)) %></b><span id="RETAILER_stock">16</span>
+                            <td id="wholesaler_stock"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_STOCK_LABEL)) %></b><span id="WHOLESALER_stock">16</span>
+                            <td id="distributor_stock"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_STOCK_LABEL)) %></b><span id="DISTRIBUTOR_stock">16</span>
+                            <td id="producer_stock"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_STOCK_LABEL)) %></b><span id="PRODUCER_stock">16</span>
+                                
+                        <tr id="las-request">
+                            <td id="retailer_last-req"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_LAST_REQUEST_LABEL)) %></b><span id="RETAILER_last-req">-</span>
+                            <td id="wolesaler_last-req"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_LAST_REQUEST_LABEL)) %></b><span id="WHOLESALER_last-req">-</span>
+                            <td id="distributor_last-req"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_LAST_REQUEST_LABEL)) %></b><span id="DISTRIBUTOR_last-req">-</span>
+                            <td id="producer_last-req"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_LAST_REQUEST_LABEL)) %></b><span id="PRODUCER_last-req">-</span>
+                        </tr>
+                        
                         <tr id="incoming-order">
                             <td id="retailer">
                                 <table>
-                                    <tr> <td> <td id="RETAILER_inc_1">4
-                                    <tr> <td>  <td id="RETAILER_inc_2">&nbsp</td>
+                                    <% for(int r = 0; r < ((Long)json.get("delay")); r++){ %>
+                                    <tr> <td> <td id="RETAILER_inc_<%=r+1%>"> ---
+                                    <%}%>
                                 </table>
 
                             <td id="wholesaler">
                                 <table>
-                                    <tr> <td> <td id="WHOLESALER_inc_1">4
-                                    <tr> <td> <td id="WHOLESALER_inc_2">4
+                                    <% for(int r = 0; r < ((Long)json.get("delay")); r++){ %>
+                                    <tr> <td> <td id="WHOLESALER_inc_<%=r+1%>"> ---
+                                    <%}%>
                                 </table>
 
                             <td id="distributor">
                                 <table>
-                                    <tr> <td> <td id="DISTRIBUTOR_inc_1">4
-                                    <tr> <td> <td id="DISTRIBUTOR_inc_2">4
+                                    <% for(int r = 0; r < ((Long)json.get("delay")); r++){ %>
+                                    <tr> <td> <td id="DISTRIBUTOR_inc_<%=r+1%>"> ---
+                                    <%}%>
                                 </table>
 
                             <td id="producer">
                                 <table>
-                                    <tr> <td> <td id="PRODUCER_inc_1">4
-                                    <tr> <td> <td id="PRODUCER_inc_2">4
+                                    <% for(int r = 0; r < ((Long)json.get("delay")); r++){ %>
+                                    <tr> <td> <td id="PRODUCER_inc_<%=r+1%>"> ---
+                                    <%}%>
                                 </table>
                     </table>
                 </div>
@@ -500,24 +535,28 @@
                             <th><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_WEEK)) %>
                             <th><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_STOCK)) %>
                             <th><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_PROFIT)) %>
-                            <th colspan="2"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_INCORDER)) %>
+                        <% if(((Long)json.get("delay")) > 0){ %>
+                            <th colspan="<%=json.get("delay")%>"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_INCORDER)) %>
+                        <% } %>
                             <th><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_REQUEST)) %>
                     </table>
                 </div>
             </div>
             <div class="control-panel page-content">
                 <div class="half-oval-shaped drop-shadow">
-                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <div id="order_input" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                         <input class="mdl-textfield__input" type="text" pattern="[0-9]{1,9}" id="order__input">
                         <label class="mdl-textfield__label" for="order_input" id="order__label"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_CONTROL_LABEL_ALLOW)) %></label>
                         <span class="mdl-textfield__error"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_CONTROL_ERROR)) %></span>
                     </div>
+                    <div class="mdl-tooltip" for="order_input"><%=(localize.getTextFor(ClientLocalizationKeys.PLAY_ORDER_INPUT_TOOLTIP)) %></div>
                     <span style="display: inline-block;">
-                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" id="order__button" onclick="send_request();">
+                        <button id="order__button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" onclick="send_request();">
                             <%=(localize.getTextFor(ClientLocalizationKeys.GAME_CONTROL_BUTTON)) %>
                         </button>
                     </span>
                 </div>
+                <div class="mdl-tooltip mdl-tooltip--right" for="order__button"><%=(localize.getTextFor(ClientLocalizationKeys.PLAY_ORDER_BUTTON_TOOLTIP)) %></div>
             </div>
         </div>
 
@@ -558,22 +597,22 @@
                             <td><img src="resources\Industry.png" alt="Producer">
 
                         <tr id="name">
-                            <td id="retailer"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_NAME_LABEL)) %></b><span id="rep_RETAILER_name">Name 1</span>
-                            <td id="wholesaler"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_NAME_LABEL)) %></b><span id="rep_WHOLESALER_name">Name 2</span>
-                            <td id="distributor"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_NAME_LABEL)) %></b><span id="rep_DISTRIBUTOR_name">Name 3</span>
-                            <td id="producer"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_NAME_LABEL)) %></b><span id="rep_PRODUCER_name">Name 4</span>
+                            <td id="retailer_name"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_NAME_LABEL)) %></b><span id="rep_RETAILER_name">Name 1</span>
+                            <td id="wholesaler_name"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_NAME_LABEL)) %></b><span id="rep_WHOLESALER_name">Name 2</span>
+                            <td id="distributor_name"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_NAME_LABEL)) %></b><span id="rep_DISTRIBUTOR_name">Name 3</span>
+                            <td id="producer_name"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_NAME_LABEL)) %></b><span id="rep_PRODUCER_name">Name 4</span>
 
                         <tr id="profit">
-                            <td id="retailer"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_COST_LABEL)) %></b><span id="rep_RETAILER_cost">0.00</span>
-                            <td id="wholesaler"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_COST_LABEL)) %></b><span id="rep_WHOLESALER_cost">0.00</span>
-                            <td id="distributor"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_COST_LABEL)) %></b><span id="rep_DISTRIBUTOR_cost">0.00</span>
-                            <td id="producer"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_COST_LABEL)) %></b><span id="rep_PRODUCER_cost">0.00</span>
+                            <td id="retailer_profit"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_COST_LABEL)) %></b><span id="rep_RETAILER_cost">0.00</span>
+                            <td id="wholesaler_profit"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_COST_LABEL)) %></b><span id="rep_WHOLESALER_cost">0.00</span>
+                            <td id="distributor_profit"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_COST_LABEL)) %></b><span id="rep_DISTRIBUTOR_cost">0.00</span>
+                            <td id="producer_profit"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_COST_LABEL)) %></b><span id="rep_PRODUCER_cost">0.00</span>
 
                         <tr id="stock">
-                            <td id="retailer"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_STOCK_LABEL)) %></b><span id="rep_RETAILER_stock">16</span>
-                            <td id="wholesaler"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_STOCK_LABEL)) %></b><span id="rep_WHOLESALER_stock">16</span>
-                            <td id="distributor"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_STOCK_LABEL)) %></b><span id="rep_DISTRIBUTOR_stock">16</span>
-                            <td id="producer"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_STOCK_LABEL)) %></b><span id="rep_PRODUCER_stock">16</span>
+                            <td id="retailer_stock"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_STOCK_LABEL)) %></b><span id="rep_RETAILER_stock">16</span>
+                            <td id="wholesaler_stock"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_STOCK_LABEL)) %></b><span id="rep_WHOLESALER_stock">16</span>
+                            <td id="distributor_stock"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_STOCK_LABEL)) %></b><span id="rep_DISTRIBUTOR_stock">16</span>
+                            <td id="producer_stock"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_STOCK_LABEL)) %></b><span id="rep_PRODUCER_stock">16</span>
                     </table>
                     </table>
                 </div>

@@ -1,6 +1,7 @@
 package edu.utfpr.ct.hostgui;
 
 import edu.utfpr.ct.datamodel.Game;
+import javafx.application.Platform;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.BorderPane;
 
@@ -34,9 +35,11 @@ public class GamePane extends BorderPane {
             ((PlayGamePane) center).updateGame(game, state <= 2, pool);
 
         } else if (isGame) {
-            center = new ReportGamePane(game, state == 8, mainScene);
-            this.setCenter(center);
-            isGame = false;
+            Platform.runLater(() -> {
+                center = new ReportGamePane(game, state == 8, mainScene);
+                this.setCenter(center);
+                isGame = false;
+            });
         } else {
             ((ReportGamePane) center).updateReport(game, state == 8);
         }

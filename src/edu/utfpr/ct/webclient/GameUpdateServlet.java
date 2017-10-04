@@ -83,6 +83,14 @@ public class GameUpdateServlet extends HttpServlet {
 
                             JSONArray table = new JSONArray();
                             
+                            if(g.game.informedChainSupply){
+                                json.put("last_request-who", ((Node)g.game.supplyChain[3]).latsRequest);
+                                json.put("last_request-dist", ((Node)g.game.supplyChain[6]).latsRequest);
+                                json.put("last_request-pro", ((Node)g.game.supplyChain[9]).latsRequest);
+                            }else{
+                                
+                            }
+                            
                             for (Table.Line line : service.getTableData(gameName).getNewLines(playerName, func, week)) {
                                 JSONObject lineData = new JSONObject();
                                 
@@ -131,6 +139,9 @@ public class GameUpdateServlet extends HttpServlet {
                         player.put("function", n_aux.function.getName());
                         player.put("cost", (n_aux.profit != null ? n_aux.getLastProfit() : "---"));
                         player.put("stock", (n_aux.currentStock != null ? n_aux.getLastStock() : "---"));
+                        
+                        if(g.state == Engine.RUNNING)
+                            player.put("last_request", (n_aux.latsRequest != null ? n_aux.latsRequest : "---"));
 
                         JSONArray receiving = new JSONArray();
 

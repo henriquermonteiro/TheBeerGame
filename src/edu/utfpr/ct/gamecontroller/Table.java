@@ -22,8 +22,12 @@ public class Table
 	{
 		return lines;
 	}
+        
+        public void updateLines(){
+            updateLines(game.realDuration - 1);
+        }
 
-	public void updateLines()
+	public void updateLines(int stopWeek)
 	{
 		Line line;
 		Node node;
@@ -35,10 +39,12 @@ public class Table
 		{
 			lastKnowWeek = lines.get(lines.size() - 1).week - 1;
 			lastPlayer = lines.get(lines.size() - 1).function;
+                        
+                        if(lastPlayer == 4) lastPlayer = -1;
 		}
 
 //		while(((Node) game.supplyChain[0]).playerMove.size() > lastKnowWeek + 1)
-		while((((Node) game.supplyChain[0]).playerMove.size() >= lastKnowWeek + 1) && (lastKnowWeek + 1 == game.realDuration))
+		while((((Node) game.supplyChain[0]).playerMove.size() >= lastKnowWeek + 1) && (lastKnowWeek != stopWeek))
 		{
 			if(lastPlayer == -1)
 			{

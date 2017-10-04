@@ -100,6 +100,7 @@ public class Controller implements IControllerHost, IControllerPlayer
 
 		engine.setGame(game, Function.RETAILER);
 		engine.buildGame();
+                engine.rebuildOrders();
 		engine.setState(Engine.PAUSED);
 
 		logger.logGameStart(game);
@@ -132,8 +133,12 @@ public class Controller implements IControllerHost, IControllerPlayer
 	@Override
 	public String[] getPlayersOnGame(String gameName)
 	{
-//        return engines.get(gameName).getPlayers();
-		return engines.get(gameName).getPlayersOnPool();
+                Engine eng = engines.get(gameName);
+                
+                if(eng != null)
+                    return eng.getPlayersOnPool();
+                
+                return null;
 	}
 
 	@Override
@@ -289,7 +294,7 @@ public class Controller implements IControllerHost, IControllerPlayer
 			logger.purgeGame(engine.getGame().gameID);
 			engines.remove(gameName);
 			reportManager.createReport(engine.getGame());
-			reports.putIfAbsent(engine.getGame(), false);
+			reports.putIfAbsent(engine.getGame(), true);
 		}
 
 		if(engine.isClientTurn())

@@ -16,6 +16,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Objects;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -473,7 +474,24 @@ public class MainScene extends BorderPane {
         GamePane p = games.get(gameName);
 
         if (p != null) {
-            p.updateGame(control.getGame(gameName), control.getGameState(gameName), control.getPlayersOnGame(gameName));
+            int state = (p.isGame() ? control.getGameState(gameName) : control.getReportState(gameName));
+            Game g = control.getGame(gameName);
+            
+            if(g == null){
+                Platform.runLater(() -> {
+                    loaderPane.update();
+                });
+                
+                if(state == -1){
+                    state = control.getReportState(gameName);
+                    g = control.getReport(gameName);
+                }else{
+                    tabPane.getTabs().remove(p.getTab());
+                    return;
+                }
+            }
+            
+            p.updateGame(g, state, control.getPlayersOnGame(gameName));
         }
     }
 

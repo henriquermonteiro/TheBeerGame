@@ -280,7 +280,7 @@ body{
 }
 
 .table-card{
-  position: absolute;
+  position: relative;
   left: 50%;
   margin-top: 20px;
   margin-left: -300px;
