@@ -114,7 +114,8 @@ public class ActionService {
 
         tomcat.setPort(port);
 
-        File webContentFolder = new File(root.getAbsolutePath(), "src/edu/utfpr/ct/webclient/webapp/");
+//        File webContentFolder = new File(root.getAbsolutePath(), "src/edu/utfpr/ct/webclient/webapp/");
+        File webContentFolder = new File(root.getAbsolutePath(), "webapp/");
         if (!webContentFolder.exists()) {
             webContentFolder = Files.createTempDirectory("default-doc-base").toFile();
         }
