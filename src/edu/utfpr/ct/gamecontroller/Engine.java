@@ -199,6 +199,7 @@ public class Engine
 		{
 			node = new Node();
 			node.currentStock = new ArrayList<>();
+			node.debt = new ArrayList<>();
 			node.profit = new ArrayList<>();
 			node.playerMove = new ArrayList<>();
 
@@ -208,6 +209,7 @@ public class Engine
 			node.function = value;
 			node.currentStock.add(game.initialStock);
 			node.profit.add(0.0);
+			node.debt.add(0);
 			game.supplyChain[position] = node;
 			position++;
 
@@ -232,7 +234,6 @@ public class Engine
 		{
 			/* For the client turn */
 			makeOrder(game.demand[i]);
-
 			while(!clientTurn)
 			{
 				node = getNodeByFunction(turn);
@@ -248,7 +249,6 @@ public class Engine
 			}
 		}
 
-//		getTable().updateLines();
 		state = FINISHED;
 	}
 
@@ -302,9 +302,18 @@ public class Engine
 		{
 			node = (Node) game.supplyChain[posCurrentNode];
 			calculateProfit(node, order);
+
 			node.travellingStock = node.getLastStock() >= order ? order : node.getLastStock();
-//			node.currentStock.add(node.getLastStock() >= order ? node.getLastStock() - order : 0);
 			node.currentStock.set(node.currentStock.size() - 1, node.getLastStock() >= order ? node.getLastStock() - order : 0);
+
+			node.debt.add(node.getLastDebt() + order - node.travellingStock);
+			if(!isClientTurn() && node.getLastStock() > 0 && node.getLastDebt() > 0)
+			{
+				calculateDebtProfit(node);
+				node.travellingStock += node.getLastStock() >= node.getLastDebt() ? node.getLastDebt() : node.getLastStock();
+				node.currentStock.set(node.currentStock.size() - 1, node.getLastStock() >= node.getLastDebt() ? node.getLastStock() - node.getLastDebt() : 0);
+			}
+
 			node.latsRequest = order; // Save the amount requested for rendering purposes.
 
 			return node.travellingStock;
@@ -324,6 +333,14 @@ public class Engine
 		profit -= node.getLastStock() >= order ? (node.getLastStock() - order) * game.stockUnitCost : 0;
 
 		node.profit.add(profit);
+	}
+
+	private void calculateDebtProfit(Node node)
+	{
+		double profit = node.getLastProfit();
+
+		profit += node.getLastStock() >= node.getLastDebt() ? node.getLastDebt() * game.sellingUnitProfit : node.getLastStock() * game.sellingUnitProfit;
+		node.profit.set(node.profit.size() - 1, profit);
 	}
 
 	private Node getNodeByFunction(IFunction function)

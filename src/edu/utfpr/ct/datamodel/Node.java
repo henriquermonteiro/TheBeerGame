@@ -5,12 +5,13 @@ import java.util.List;
 
 public class Node extends AbstractNode
 {
-	private static final long serialVersionUID = 8650978713791502113L;
+	private static final long serialVersionUID = -8611404346155745421L;
 
 	public String playerName;
 	public Integer latsRequest;
 	public IFunction function;
 	public List<Integer> currentStock;
+	public List<Integer> debt;
 	public List<Double> profit;
 	public List<Integer> playerMove;
 
@@ -22,5 +23,10 @@ public class Node extends AbstractNode
 	public double getLastProfit()
 	{
 		return profit.isEmpty() ? -1 : profit.get(profit.size() - 1);
+	}
+
+	public int getLastDebt()
+	{
+		return debt.isEmpty() ? -1 : debt.get(debt.size() - 1);
 	}
 }
