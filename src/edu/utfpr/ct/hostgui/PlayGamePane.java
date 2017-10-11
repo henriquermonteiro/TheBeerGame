@@ -66,7 +66,7 @@ public class PlayGamePane extends BorderPane {
     private Label gameName;
     private ToggleButton playPauseButton;
     private AutoCompleteTextField[] playersInNodes;
-    private WebView chart;
+    private WebView[] charts;
     private ListView<String> pool;
     private Set<String> validPlayers;
 
@@ -101,7 +101,9 @@ public class PlayGamePane extends BorderPane {
         Platform.runLater(() -> {
             playPauseButton.setSelected(state);
             pool.setItems(FXCollections.observableList(Arrays.asList(newPool)));
-            chart.getEngine().reload();
+            for(WebView wV : charts){
+                wV.getEngine().reload();
+            }
         });
 
     }
@@ -407,45 +409,46 @@ public class PlayGamePane extends BorderPane {
 
         centerPane.add(playerColumns, 0, 0);
         
-        TabPane charts = new TabPane();
-        charts.getStyleClass().addAll("main-tabs", "transparent", TabPane.STYLE_CLASS_FLOATING);
+        TabPane charts_tab = new TabPane();
+        charts_tab.getStyleClass().addAll("main-tabs", "transparent", TabPane.STYLE_CLASS_FLOATING);
+        
+        charts = new WebView[2];
         
         Tab orders = new Tab();
         orders.setClosable(false);
         LocalizationUtils.bindLocalizationText(orders.textProperty(), HostLocalizationKeys.CHART_OR_TITLE);
         
-        chart = new WebView();
+        charts[0] = new WebView();
         try {
-            chart.getEngine().load("http://127.0.0.1:" + ActionService.getService().getPort() + "/info?order=true&no-legend=true&game-name=" + URLEncoder.encode(game.name, "UTF-8"));
+            charts[0].getEngine().load("http://127.0.0.1:" + ActionService.getService().getPort() + "/info?order=true&no-legend=true&game-name=" + URLEncoder.encode(game.name, "UTF-8"));
         } catch (UnsupportedEncodingException ex) {
         }
         
         HostLocalizationManager.getInstance().getLang().addListener((observable) -> {
-            chart.getEngine().reload();
+            charts[0].getEngine().reload();
         });
         
-        orders.setContent(chart);
+        orders.setContent(charts[0]);
         
         Tab stock = new Tab();
         stock.setClosable(false);
         LocalizationUtils.bindLocalizationText(stock.textProperty(), HostLocalizationKeys.CHART_ST_TITLE);
         
-        chart = new WebView();
+        charts[1] = new WebView();
         try {
-            chart.getEngine().load("http://127.0.0.1:" + ActionService.getService().getPort() + "/info?stock=true&no-legend=true&game-name=" + URLEncoder.encode(game.name, "UTF-8"));
+            charts[1].getEngine().load("http://127.0.0.1:" + ActionService.getService().getPort() + "/info?stock=true&no-legend=true&game-name=" + URLEncoder.encode(game.name, "UTF-8"));
         } catch (UnsupportedEncodingException ex) {
         }
         
         HostLocalizationManager.getInstance().getLang().addListener((observable) -> {
-            chart.getEngine().reload();
+            charts[1].getEngine().reload();
         });
         
-        stock.setContent(chart);
+        stock.setContent(charts[1]);
         
-        charts.getTabs().addAll(orders, stock);
+        charts_tab.getTabs().addAll(orders, stock);
         
-//        BorderPane chartP = new BorderPane(chart);
-        BorderPane chartP = new BorderPane(charts);
+        BorderPane chartP = new BorderPane(charts_tab);
         chartP.setPadding(new Insets(5));
         
         centerPane.add(chartP, 0, 1);
