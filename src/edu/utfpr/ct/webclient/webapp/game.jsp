@@ -105,14 +105,14 @@
                 jsonHttp.send("move=" + move);
             }
 
-            function add_history_info(func, week, stock, profit, orders, move) {
+            function add_history_info(func, week, init_stock, rec_order, prev_pend_ord, expec_del, act_del, ord_unf, fin_stock, conf_del, cost_unf, cost_stock, profit, week_bal, orders, move) {
                 var history = document.getElementById("history");
                 
                 _func = func;
                 _week = week;
 
                 var k = 0;
-                var row = history.insertRow(1);
+                var row = history.insertRow(2);
                 var cell = row.insertCell(k++);
                 if(func === 0){
                     cell.innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_FUNC_CON)) %>";
@@ -134,7 +134,70 @@
                 if(func === 0){
                     cell.innerHTML = "---";
                 }else{
-                    cell.innerHTML = stock;
+                    cell.innerHTML = init_stock;
+                }
+                
+                var cell = row.insertCell(k++);
+                if(func === 0){
+                    cell.innerHTML = "---";
+                }else{
+                    cell.innerHTML = rec_order;
+                }
+                
+                var cell = row.insertCell(k++);
+                if(func === 0){
+                    cell.innerHTML = "---";
+                }else{
+                    cell.innerHTML = prev_pend_ord;
+                }
+                
+                var cell = row.insertCell(k++);
+                if(func === 0){
+                    cell.innerHTML = "---";
+                }else{
+                    cell.innerHTML = expec_del;
+                }
+                
+                var cell = row.insertCell(k++);
+                if(func === 0){
+                    cell.innerHTML = "---";
+                }else{
+                    cell.innerHTML = act_del;
+                }
+                
+                var cell = row.insertCell(k++);
+                if(func === 0){
+                    cell.innerHTML = "---";
+                }else{
+                    cell.innerHTML = ord_unf;
+                }
+                
+                var cell = row.insertCell(k++);
+                if(func === 0){
+                    cell.innerHTML = "---";
+                }else{
+                    cell.innerHTML = fin_stock;
+                }
+                
+                var cell = row.insertCell(k++);
+                if(func === 0){
+                    cell.innerHTML = "---";
+                }else{
+                    cell.innerHTML = conf_del;
+                }
+                
+                var cell = row.insertCell(k++);
+                if(func === 0){
+                    cell.innerHTML = "---";
+                }else{
+                    cell.innerHTML = cost_unf;
+                }
+                
+                var cell = row.insertCell(k++);
+                if(func === 0){
+                    cell.innerHTML = "---";
+                }else{
+                    cell.innerHTML = cost_stock;
                 }
                 
                 var cell = row.insertCell(k++);
@@ -142,6 +205,13 @@
                     cell.innerHTML = "---";
                 }else{
                     cell.innerHTML = profit;
+                }
+                
+                var cell = row.insertCell(k++);
+                if(func === 0){
+                    cell.innerHTML = "---";
+                }else{
+                    cell.innerHTML = week_bal;
                 }
                 
                 for( var ord in orders){
@@ -312,6 +382,7 @@
                     document.getElementById(func + "_name2").innerHTML = json_state.players[player].name;
                     document.getElementById(func + "_cost").innerHTML = cost;
                     document.getElementById(func + "_stock").innerHTML = json_state.players[player].stock;
+                    document.getElementById(func + "_debt").innerHTML = json_state.players[player].debt;
                     document.getElementById(func + "_last-req").innerHTML = json_state.players[player].last_request;
 
                     for (var inc in json_state.players[player].incoming) {
@@ -324,8 +395,18 @@
                     add_history_info(
                         json_state.history[line].function,
                         json_state.history[line].week,
-                        json_state.history[line].current_stock,
+                        json_state.history[line].initial_stock,
+                        json_state.history[line].received_order,
+                        json_state.history[line].previously_pending_orders,
+                        json_state.history[line].expected_delivery,
+                        json_state.history[line].actual_delivery,
+                        json_state.history[line].order_unfulfilled,
+                        json_state.history[line].final_stock,
+                        json_state.history[line].confirmed_delivery,
+                        Number(json_state.history[line].cost_unfulfillment).toFixed(2),
+                        Number(json_state.history[line].cost_stock).toFixed(2),
                         Number(json_state.history[line].profit).toFixed(2),
+                        Number(json_state.history[line].week_balance).toFixed(2),
                         json_state.history[line].order,
                         json_state.history[line].move
                     );
@@ -488,6 +569,12 @@
                             <td id="distributor_stock"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_STOCK_LABEL)) %></b><span id="DISTRIBUTOR_stock">16</span>
                             <td id="producer_stock"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_STOCK_LABEL)) %></b><span id="PRODUCER_stock">16</span>
                                 
+                        <tr id="debt">
+                            <td id="retailer_debt"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_DEBT_LABEL)) %></b><span id="RETAILER_debt">0</span>
+                            <td id="wholesaler_debt"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_DEBT_LABEL)) %></b><span id="WHOLESALER_debt">0</span>
+                            <td id="distributor_debt"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_DEBT_LABEL)) %></b><span id="DISTRIBUTOR_debt">0</span>
+                            <td id="producer_debt"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_DEBT_LABEL)) %></b><span id="PRODUCER_debt">0</span>
+                                
                         <tr id="las-request">
                             <td id="retailer_last-req"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_LAST_REQUEST_LABEL)) %></b><span id="RETAILER_last-req">-</span>
                             <td id="wolesaler_last-req"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_LAST_REQUEST_LABEL)) %></b><span id="WHOLESALER_last-req">-</span>
@@ -531,14 +618,34 @@
                 <div class="mdl-card__media mdl-card--border">
                     <table id="history">
                         <tr>
-                            <th><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_FUNC)) %>
-                            <th><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_WEEK)) %>
-                            <th><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_STOCK)) %>
-                            <th><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_PROFIT)) %>
+                            <th rowspan="2"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_FUNC)) %>
+                            <th rowspan="2"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_WEEK)) %>
+                            <th rowspan="2">Initial Stock
+                            <th rowspan="2">Received Order
+                            <th rowspan="2">Unfulfilled Order
+                            <th rowspan="2">Expected Delivery
+                            <th rowspan="2">Actual Delivery
+                            <th rowspan="2">Unfulfilled Order this Week
+                            <th rowspan="2">Final Stock
+                            <th rowspan="2">Order Confirmed
+                            <th rowspan="2">Cost of Delayed Deliveries
+                            <th rowspan="2">Cost of Stock
+                            <th rowspan="2">Profit from Sales
+                            <th rowspan="2">Balance
                         <% if(((Long)json.get("delay")) > 0){ %>
                             <th colspan="<%=json.get("delay")%>"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_INCORDER)) %>
                         <% } %>
-                            <th><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_REQUEST)) %>
+                            <th rowspan="2"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_REQUEST)) %>
+                        
+                        <% if(((Long)json.get("delay")) > 0){ %>
+                        <tr>
+                        <%
+                            for(int u = 1; u <= ((Long)json.get("delay")); u++){
+                        %>
+                            <th><%=u%> Week
+                        <%  } 
+                           } %>
+                            
                     </table>
                 </div>
             </div>

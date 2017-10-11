@@ -40,6 +40,7 @@ GAME-INFO-PRODUCER<>Fabricante
 GAME-NAME-LABEL<>Nome:
 GAME-COST-LABEL<>Custo:
 GAME-STOCK-LABEL<>Estoque:
+GAME-DEBT-LABEL<>Entrega Pendente:
 GAME-LAST-REQUEST-LABEL<>Último <br/>pedido recebido:
 GAME-TABLE-NAME<>Histórico:
 GAME-TABLE-FUNCTION<>Função

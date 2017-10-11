@@ -43,6 +43,7 @@ public class ClientLocalizationKeys {
     public static final String GAME_NAME_LABEL = "GAME-NAME-LABEL";
     public static final String GAME_COST_LABEL = "GAME-COST-LABEL";
     public static final String GAME_STOCK_LABEL = "GAME-STOCK-LABEL";
+    public static final String GAME_DEBT_LABEL = "GAME-DEBT-LABEL";
     public static final String GAME_LAST_REQUEST_LABEL = "GAME-LAST-REQUEST-LABEL";
     public static final String GAME_TABLE_NAME = "GAME-TABLE-NAME";
     public static final String GAME_TABLE_FUNC = "GAME-TABLE-FUNCTION";

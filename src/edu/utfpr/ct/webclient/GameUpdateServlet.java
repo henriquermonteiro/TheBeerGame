@@ -5,12 +5,7 @@ import edu.utfpr.ct.datamodel.AbstractNode;
 import edu.utfpr.ct.datamodel.EngineData;
 import edu.utfpr.ct.datamodel.Node;
 import edu.utfpr.ct.gamecontroller.Engine;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -83,22 +78,24 @@ public class GameUpdateServlet extends HttpServlet {
 
                             JSONArray table = new JSONArray();
                             
-                            if(g.game.informedChainSupply){
-                                json.put("last_request-who", ((Node)g.game.supplyChain[3]).latsRequest);
-                                json.put("last_request-dist", ((Node)g.game.supplyChain[6]).latsRequest);
-                                json.put("last_request-pro", ((Node)g.game.supplyChain[9]).latsRequest);
-                            }else{
-                                
-                            }
-                            
                             for (Table.Line line : service.getTableData(gameName).getNewLines(playerName, func, week)) {
                                 JSONObject lineData = new JSONObject();
                                 
                                 lineData.put("function", line.function);
                                 lineData.put("week", line.week);
-                                lineData.put("current_stock", line.currentStock);
-                                lineData.put("profit", line.profit);
+                                lineData.put("initial_stock", line.initialStock);
+                                lineData.put("received_order", line.orderReceived);
+                                lineData.put("previously_pending_orders", line.orderPreviousPending);
+                                lineData.put("expected_delivery", line.expectedDelivery);
+                                lineData.put("actual_delivery", line.actualyDelivery);
+                                lineData.put("order_unfulfilled", line.orderUnfullfiled);
+                                lineData.put("final_stock", line.finalStock);
                                 lineData.put("move", line.playerMove);
+                                lineData.put("confirmed_delivery", line.confirmedOrderDelivery);
+                                lineData.put("cost_unfulfillment", line.costUnfulfillment);
+                                lineData.put("cost_stock", line.costStock);
+                                lineData.put("profit", line.profit);
+                                lineData.put("week_balance", line.weekBalance);
                                 
                                 JSONArray orders = new JSONArray();
                                 for(Integer order : line.incomingOrder){
@@ -137,11 +134,12 @@ public class GameUpdateServlet extends HttpServlet {
 
                         player.put("name", n_aux.playerName);
                         player.put("function", n_aux.function.getName());
-                        player.put("cost", (n_aux.profit != null ? n_aux.getLastProfit() : "---"));
+                        player.put("cost", (n_aux.profit != null ? (n_aux.getLastProfit() + n_aux.getLastUnfullfilmentCost() + n_aux.getLastStockingCost()) : "---"));
                         player.put("stock", (n_aux.currentStock != null ? n_aux.getLastStock() : "---"));
+                        player.put("debt", (n_aux.debt != null ? n_aux.getLastDebt(): "---"));
                         
                         if(g.state == Engine.RUNNING)
-                            player.put("last_request", (n_aux.latsRequest != null ? n_aux.latsRequest : "---"));
+                            player.put("last_request", (n_aux.lastRequest != null ? n_aux.lastRequest : "---"));
 
                         JSONArray receiving = new JSONArray();
 

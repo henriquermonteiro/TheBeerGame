@@ -24,7 +24,7 @@ public class Table
 	}
         
         public void updateLines(){
-            updateLines(game.realDuration - 1);
+            updateLines(game.realDuration);
         }
 
 	public void updateLines(int stopWeek)
@@ -32,32 +32,48 @@ public class Table
 		Line line;
 		Node node;
 
-		int lastKnowWeek = -1;
+		int lastKnowWeek = 0;
 		int lastPlayer = -1;
 
+                //Se já há registros, carrega o último;
 		if(lines.size() > 0)
 		{
-			lastKnowWeek = lines.get(lines.size() - 1).week - 1;
+			lastKnowWeek = lines.get(lines.size() - 1).week;
 			lastPlayer = lines.get(lines.size() - 1).function;
                         
-                        if(lastPlayer == 4) lastPlayer = -1;
+                        if(lastPlayer == 4){
+                            lastPlayer = -1;
+                            lastKnowWeek ++;
+                        }
 		}
 
-//		while(((Node) game.supplyChain[0]).playerMove.size() > lastKnowWeek + 1)
-		while((((Node) game.supplyChain[0]).playerMove.size() >= lastKnowWeek + 1) && (lastKnowWeek != stopWeek))
+                //Enquanto o primeiro jogador já fez uma jogada no turno atualmente averiguado
+		while((((Node) game.supplyChain[0]).playerMove.size() > lastKnowWeek) && (lastKnowWeek != stopWeek))
 		{
+                        //Se o último jogador do turno é desconhecido, é a vez do consumidor
 			if(lastPlayer == -1)
 			{
 				line = new Line();
 				line.function = 0;
-				line.week = lastKnowWeek + 1;
-				line.currentStock = null;
-				line.profit = null;
-				line.playerMove = game.demand[lastKnowWeek + 1];
+				line.week = lastKnowWeek;
+				line.initialStock = null;
+				line.orderReceived = null;
+				line.orderPreviousPending = null;
+				line.expectedDelivery = null;
+				line.actualyDelivery = null;
+				line.orderUnfullfiled = null;
+				line.finalStock = null;
+				line.playerMove = game.demand[lastKnowWeek];
+				line.confirmedOrderDelivery = null;
 				line.incomingOrder = new ArrayList<>(Collections.nCopies(game.deliveryDelay, null));
+				line.costUnfulfillment = null;
+				line.costStock = null;
+				line.profit = null;
+				line.weekBalance = null;
 
 				lines.add(line);
                                 
+                                //Último jogador foi o consumidor
                                 lastPlayer = 0;
 			}
 
@@ -67,19 +83,34 @@ public class Table
 				int pos = lastPlayer * (game.deliveryDelay + 1);
 				node = (Node) game.supplyChain[pos];
 
-				if(node.playerMove.size() > lastKnowWeek + 1)
+                                //Se próximo jogador esperado já fez uma jogada no turno averiguado; Senão encerra o método
+				if(node.playerMove.size() > lastKnowWeek)
 				{
 					line = new Line();
 					line.function = lastPlayer + 1;
-					line.week = lastKnowWeek + 1;
-					line.currentStock = node.currentStock.get(lastKnowWeek + 1);
-					line.profit = node.profit.get(lastKnowWeek + 1);
-					line.playerMove = node.playerMove.get(lastKnowWeek + 1);
+					line.week = lastKnowWeek;
+                                        line.actualyDelivery = game.supplyChain[pos].travellingStock;
+                                        line.initialStock = (lastKnowWeek <= 0 ? game.initialStock : (node.currentStock.get(lastKnowWeek) + line.actualyDelivery));
+                                        line.orderReceived = (pos <= 0 ? game.demand[lastKnowWeek] : ((Node)game.supplyChain[pos - (game.deliveryDelay + 1)]).playerMove.get(lastKnowWeek));
+                                        line.orderPreviousPending = node.debt.get(lastKnowWeek);
+                                        line.expectedDelivery = (pos <= 0 ? 0 : line.orderPreviousPending) + line.orderReceived;
+                                        line.orderUnfullfiled = line.expectedDelivery - line.actualyDelivery;
+                                        line.finalStock = node.currentStock.get(lastKnowWeek);
+                                        line.playerMove = node.playerMove.get(lastKnowWeek);
+                                        line.confirmedOrderDelivery = game.supplyChain[pos + game.deliveryDelay].travellingStock;
 
 					line.incomingOrder = new ArrayList<>();
-
-					for(int k = 1; k <= game.deliveryDelay; k++)
+                                        
+                                        if(game.deliveryDelay > 0)
+                                                line.incomingOrder.add(node.currentStock.get(lastKnowWeek + 1) - node.currentStock.get(lastKnowWeek));
+                                        
+					for(int k = 1; k < game.deliveryDelay; k++)
 						line.incomingOrder.add(game.supplyChain[pos + k].travellingStock);
+                                        
+                                        line.costUnfulfillment = node.costUnfulfillment.get(lastKnowWeek + 1);
+                                        line.costStock = node.costStocking.get(lastKnowWeek + 1);
+                                        line.profit = node.profit.get(lastKnowWeek + 1);
+                                        line.weekBalance = line.costUnfulfillment + line.costStock + line.profit;
 
 					lines.add(line);
 
@@ -143,10 +174,20 @@ public class Table
 	{
 		public Integer function;
 		public Integer week;
-		public Integer currentStock;
-		public Double profit;
+		public Integer initialStock;
+		public Integer orderReceived;
+		public Integer orderPreviousPending;
+		public Integer expectedDelivery;
+		public Integer actualyDelivery;
+		public Integer orderUnfullfiled;
+		public Integer finalStock;
 		public Integer playerMove;
+		public Integer confirmedOrderDelivery;
 		public List<Integer> incomingOrder;
+		public Double costUnfulfillment;
+		public Double costStock;
+		public Double profit;
+		public Double weekBalance;
 
 		public Line()
 		{

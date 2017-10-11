@@ -88,7 +88,7 @@
 }
 
 .table-card {
-  width: 600px;
+  width: 1190px;
   min-height: 400px;
   margin-bottom: 175px;
 
@@ -283,5 +283,5 @@ body{
   position: relative;
   left: 50%;
   margin-top: 20px;
-  margin-left: -300px;
+  margin-left: -595px;
 }
