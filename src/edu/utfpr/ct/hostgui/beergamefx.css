@@ -72,10 +72,6 @@
     -fx-fill: white;
 }
 
-.card.header > .hyperlink:hover > .icon {
-    -fx-fill: cornflowerblue;
-}
-
 .card.center{
     -fx-border-radius: 0;
     -fx-background-radius: 0;
@@ -179,17 +175,19 @@
     -fx-focus-color: derive(-header-color, -20%);
 }
 
-
 .hyperlink{
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
     -fx-border-color: transparent;
+    -fx-background-color: derive(-header-color, -10%);
+}
+
+.hyperlink:hover{
+    -fx-background-color: derive(-header-color, -20%);
 }
 
 .hyperlink .icon {
     -fx-fill: white;
-}
-
-.hyperlink:hover .icon {
-    -fx-fill: cornflowerblue;
 }
 
 .tab-pane, .tab-pane.floating {
@@ -355,11 +353,11 @@
 }
 
 .play-pause:hover {
-    -fx-background-color: derive(mediumspringgreen, -40%);
+    -fx-background-color: derive(mediumspringgreen, -20%);
 }
 
 .play-pause:selected {
-    -fx-background-color: derive(mediumspringgreen, -20%);
+    -fx-background-color: #ff6666;
 }
 
 .play-pause:selected:hover {

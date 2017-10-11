@@ -272,6 +272,9 @@ public class MainScene extends BorderPane {
         ip.textProperty().bind(Bindings.createStringBinding(() -> {
             return ip_begin.get().concat((ips.isEmpty() ? ip_middle_error.get() : ips.get(0))).concat(ip_middle.get().concat("" + ActionService.getService().getPort()).concat(ip_end.get()));
         }, HostLocalizationManager.getInstance().getLang()));
+        ip.setTooltip(new Tooltip());
+        LocalizationUtils.bindLocalizationText(ip.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_COMMON_IP_INFO);
+        
         GridPane top = new GridPane();
         IconNode refresh = new IconNode(GoogleMaterialDesignIcons.REFRESH);
         refresh.getStyleClass().addAll("icon");
@@ -527,6 +530,7 @@ public class MainScene extends BorderPane {
 
     public void restoreGame(String gameName) {
         if (games.containsKey(gameName)) {
+            tabPane.getSelectionModel().select(games.get(gameName).getTab());
             return;
         }
 

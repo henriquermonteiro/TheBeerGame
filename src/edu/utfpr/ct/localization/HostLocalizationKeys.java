@@ -87,6 +87,7 @@ public class HostLocalizationKeys
 	public static final String TITLE_REPORT_UNKNOWN = "TITLE-REPORT-UNKNOWN-TAB";
         
         public static final String TOOLTIP_COMMON_IP = "TOOLTIP-COMMON-REFRESH-IP";
+        public static final String TOOLTIP_COMMON_IP_INFO = "TOOLTIP-COMMON-IP-INFO";
         public static final String TOOLTIP_COMMON_LANG_BUTTON = "TOOLTIP-COMMON-LANGUAGE-CHANGE-BUTTON";
         public static final String TOOLTIP_COMMON_LANG_OPTION = "TOOLTIP-COMMON-LANGUAGE-CHANGE-OPTION";
         public static final String TOOLTIP_MAIN_HOME = "TOOLTIP-MAINSCENE-HOME-TAB";

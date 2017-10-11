@@ -5,21 +5,6 @@
  */
 package edu.utfpr.ct.webclient;
 
-import be.ceau.chart.LineChart;
-import be.ceau.chart.data.LineData;
-import be.ceau.chart.dataset.LineDataset;
-import be.ceau.chart.enums.HoverMode;
-import be.ceau.chart.options.Hover;
-import be.ceau.chart.options.Legend;
-import be.ceau.chart.options.LineOptions;
-import be.ceau.chart.options.Title;
-import be.ceau.chart.options.Tooltips;
-import be.ceau.chart.options.elements.Line;
-import be.ceau.chart.options.elements.LineElements;
-import be.ceau.chart.options.scales.LinearScale;
-import be.ceau.chart.options.scales.LinearScales;
-import be.ceau.chart.options.scales.ScaleLabel;
-import be.ceau.chart.options.ticks.LinearTicks;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.datamodel.Node;
 import edu.utfpr.ct.localization.ClientLocalizationManager;
@@ -28,8 +13,6 @@ import edu.utfpr.ct.localization.HostLocalizationManager;
 import edu.utfpr.ct.localization.Localize;
 import edu.utfpr.ct.util.ChartJSUtils;
 import java.io.IOException;
-import java.math.BigDecimal;
-import javafx.scene.paint.Color;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -69,7 +52,6 @@ public class GameInfoServlet extends HttpServlet {
 
         if (service != null) {
             if (!req.getRemoteAddr().equals("127.0.0.1") && !service.getRoomActive(gameName)) {
-//                System.out.println(req.getRemoteAddr());
                 return;
             }
 
@@ -372,7 +354,7 @@ public class GameInfoServlet extends HttpServlet {
                     html.append("<html> <head>");
                     html.append("<script src='/resources/chartjs/Chart.js'></script>");
                     html.append("<style> canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; } </style></head>");
-                    html.append("<body><div style=\"width: 95%;\">");
+                    html.append("<body><div style=\"width: 82.5%;\">");
                 }
                 if(order)
                     html.append("<canvas id=\"ord_chart\"></canvas>");

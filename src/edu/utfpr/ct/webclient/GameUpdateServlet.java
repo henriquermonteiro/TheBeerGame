@@ -134,9 +134,9 @@ public class GameUpdateServlet extends HttpServlet {
 
                         player.put("name", n_aux.playerName);
                         player.put("function", n_aux.function.getName());
-                        player.put("cost", (n_aux.profit != null ? (n_aux.getLastProfit() + n_aux.getLastUnfullfilmentCost() + n_aux.getLastStockingCost()) : "---"));
+                        player.put("cost", (n_aux.profit != null ? (g.game.sellingUnitProfit == 0 ? (n_aux.getLastUnfullfilmentCost() + n_aux.getLastStockingCost()) : (n_aux.getLastProfit() - (n_aux.getLastUnfullfilmentCost() + n_aux.getLastStockingCost()))) : "---"));
                         player.put("stock", (n_aux.currentStock != null ? n_aux.getLastStock() : "---"));
-                        player.put("debt", (n_aux.debt != null ? n_aux.getLastDebt(): "---"));
+                        player.put("debt", (n_aux.debt != null ? (n_aux.function.getPosition() == 1 ? "---" : n_aux.getLastDebt()) : "---"));
                         
                         if(g.state == Engine.RUNNING)
                             player.put("last_request", (n_aux.lastRequest != null ? n_aux.lastRequest : "---"));

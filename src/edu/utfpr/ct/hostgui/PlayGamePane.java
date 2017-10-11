@@ -33,6 +33,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Tooltip;
@@ -157,17 +159,10 @@ public class PlayGamePane extends BorderPane {
             }
             
             mainScene.changeGameState(game, newValue);
+            playPauseIcon.setIconCode((newValue ? GoogleMaterialDesignIcons.STOP : GoogleMaterialDesignIcons.PLAY_ARROW));
 
             if(getParent() instanceof GamePane)
                 ((GamePane)getParent()).getTab().setGraphic((newValue ? tabPlayIcon : null));
-        });
-        
-        playPauseButton.hoverProperty().addListener((observable, oldValue, newValue) -> {
-            if(playPauseButton.isSelected()){
-                playPauseIcon.setIconCode((newValue ? GoogleMaterialDesignIcons.STOP : GoogleMaterialDesignIcons.PLAY_ARROW));
-            }else{
-                playPauseIcon.setIconCode((newValue ? GoogleMaterialDesignIcons.PLAY_ARROW : GoogleMaterialDesignIcons.STOP));
-            }
         });
 
         playersInNodes = new AutoCompleteTextField[game.supplyChain.length / (game.deliveryDelay + 1)];
@@ -412,6 +407,13 @@ public class PlayGamePane extends BorderPane {
 
         centerPane.add(playerColumns, 0, 0);
         
+        TabPane charts = new TabPane();
+        charts.getStyleClass().addAll("main-tabs", "transparent", TabPane.STYLE_CLASS_FLOATING);
+        
+        Tab orders = new Tab();
+        orders.setClosable(false);
+        LocalizationUtils.bindLocalizationText(orders.textProperty(), HostLocalizationKeys.CHART_OR_TITLE);
+        
         chart = new WebView();
         try {
             chart.getEngine().load("http://127.0.0.1:" + ActionService.getService().getPort() + "/info?order=true&no-legend=true&game-name=" + URLEncoder.encode(game.name, "UTF-8"));
@@ -422,7 +424,28 @@ public class PlayGamePane extends BorderPane {
             chart.getEngine().reload();
         });
         
-        BorderPane chartP = new BorderPane(chart);
+        orders.setContent(chart);
+        
+        Tab stock = new Tab();
+        stock.setClosable(false);
+        LocalizationUtils.bindLocalizationText(stock.textProperty(), HostLocalizationKeys.CHART_ST_TITLE);
+        
+        chart = new WebView();
+        try {
+            chart.getEngine().load("http://127.0.0.1:" + ActionService.getService().getPort() + "/info?stock=true&no-legend=true&game-name=" + URLEncoder.encode(game.name, "UTF-8"));
+        } catch (UnsupportedEncodingException ex) {
+        }
+        
+        HostLocalizationManager.getInstance().getLang().addListener((observable) -> {
+            chart.getEngine().reload();
+        });
+        
+        stock.setContent(chart);
+        
+        charts.getTabs().addAll(orders, stock);
+        
+//        BorderPane chartP = new BorderPane(chart);
+        BorderPane chartP = new BorderPane(charts);
         chartP.setPadding(new Insets(5));
         
         centerPane.add(chartP, 0, 1);

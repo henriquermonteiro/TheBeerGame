@@ -70,6 +70,7 @@ TITLE-REPORT-DISTRIBUTOR-TAB<>Distribuidor
 TITLE-REPORT-PRODUCER-TAB<>Fabricante
 TITLE-REPORT-UNKNOWN-TAB<>Desconhecido
 TOOLTIP-COMMON-REFRESH-IP<>Atualizar informações de IP
+TOOLTIP-COMMON-IP-INFO<>Ao digitar esse endereço em um navegador, os jogadores terão acesso ao jogo.
 TOOLTIP-COMMON-LANGUAGE-CHANGE-BUTTON<>Alterar idioma
 TOOLTIP-COMMON-LANGUAGE-CHANGE-OPTION<> 
 TOOLTIP-MAINSCENE-HOME-TAB<>Tela inicial

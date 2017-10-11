@@ -105,7 +105,7 @@
                 jsonHttp.send("move=" + move);
             }
 
-            function add_history_info(func, week, init_stock, rec_order, prev_pend_ord, expec_del, act_del, ord_unf, fin_stock, conf_del, cost_unf, cost_stock, profit, week_bal, orders, move) {
+            function add_history_info(func, week, init_stock, rec_order, prev_pend_ord, expec_del, act_del, ord_unf, fin_stock, conf_del, cost_unf, cost_stock, profit, week_bal, orders, move, player_funct) {
                 var history = document.getElementById("history");
                 
                 _func = func;
@@ -144,6 +144,9 @@
                     cell.innerHTML = rec_order;
                 }
                 
+                <% if(!((Boolean)json.get("informed_chain"))) { %>
+                if(player_funct !== "0"){
+                <%}%>
                 var cell = row.insertCell(k++);
                 if(func === 0){
                     cell.innerHTML = "---";
@@ -157,6 +160,9 @@
                 }else{
                     cell.innerHTML = expec_del;
                 }
+                <% if(!((Boolean)json.get("informed_chain"))) { %>
+                }
+                <%}%>
                 
                 var cell = row.insertCell(k++);
                 if(func === 0){
@@ -200,12 +206,14 @@
                     cell.innerHTML = cost_stock;
                 }
                 
+                <% if(((Double)json.get("selling_profit")) != 0.0) { %>
                 var cell = row.insertCell(k++);
                 if(func === 0){
                     cell.innerHTML = "---";
                 }else{
                     cell.innerHTML = profit;
                 }
+                <%}%>
                 
                 var cell = row.insertCell(k++);
                 if(func === 0){
@@ -344,7 +352,31 @@
                 }
             }
             
-            var is_set = false;
+            function init_table(){
+                document.getElementById("func_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_FUNC)) %>";
+                document.getElementById("week_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_WEEK)) %>";
+                document.getElementById("init_stock_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_ISTOCK)) %>";
+                document.getElementById("rec_order_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_RECORDER)) %>";
+                document.getElementById("prev_unf_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_PREVPENDING)) %>";
+                document.getElementById("expe_del_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_EXPECDELIV)) %>";
+                document.getElementById("act_del_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_ACTUDELI)) %>";
+                document.getElementById("unf_order_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_UNFULFORDER)) %>";
+                document.getElementById("final_stock_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_FSTOCK)) %>";
+                document.getElementById("conf_deli_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_CONFIRDELI)) %>";
+                document.getElementById("cost_del_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_COSTDELI)) %>";
+                document.getElementById("cost_stock_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_COSTSTOCK)) %>";
+            <% if(((Double)json.get("selling_profit")) != 0.0) { %>
+                document.getElementById("prof_sale_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_PROFSALE)) %>";
+            <% } %>
+                document.getElementById("bal_header").innerHTML = "<%=(localize.getTextFor( (((Double)json.get("selling_profit")) != 0.0 ? ClientLocalizationKeys.GAME_TABLE_TCOST : ClientLocalizationKeys.GAME_TABLE_BALANCE) )) %>";
+            <% if(((Long)json.get("delay")) > 0){ %>
+                document.getElementById("inc_order_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_INCORDER)) %>";
+            <% } %>
+                document.getElementById("ordered_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_REQUEST)) %>";
+            }
+            
+            var is_set = -1;
+            var table_set = false;
             var my_func;
 
             function processPlay(json_state) {
@@ -353,6 +385,12 @@
                 } else if (state !== "p") {
                     location.reload();
                     return;
+                }
+                
+                if(!table_set){
+                    init_table();
+                    
+                    table_set = true;
                 }
 
                 if (json_state.your_turn) {
@@ -367,11 +405,27 @@
                 for (var player in json_state.players) {
                     var func = json_state.players[player].function;
                     
-                    if(is_set === false){
+                    if(is_set === -1){
                         if(json_state.players[player].name === "<%=(String)session.getAttribute("USER-ID") %>"){
                             document.getElementById("game_"+func+"_img").style.opacity = "1.0";
                             document.getElementById("game_"+func+"_img").style.filter = "alpha(opacity=100)";
-                            is_set = true;
+                            is_set = player;
+                            
+                            if(is_set === "0"){
+                                var pending = document.getElementById("prev_unf_header");
+                                var expected = document.getElementById("expe_del_header");
+                                var row = document.getElementById("header_row");
+                                
+                                if(pending !== undefined || expected !== undefined){
+                                    row.removeChild(pending);
+                                    row.removeChild(expected);
+                                }
+                                
+                                document.getElementById("unf_order_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_UNFULFORDER_RETAILER)) %>";
+                            }else if(is_set === "3"){
+                                <% if(((Long)json.get("delay")) > 0) { %> document.getElementById("inc_order_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_INCORDER_PRODUCER)) %>"; <% } %>
+                                
+                            }
                         }
                     }
                     
@@ -408,7 +462,8 @@
                         Number(json_state.history[line].profit).toFixed(2),
                         Number(json_state.history[line].week_balance).toFixed(2),
                         json_state.history[line].order,
-                        json_state.history[line].move
+                        json_state.history[line].move,
+                        is_set
                     );
                 }
             }
@@ -535,7 +590,7 @@
         <div id="game-panel" class="hidden">
             <div class="table-card mdl-card mdl-shadow--6dp mdl-card--horizontal">
                 <div class="mdl-card__supporting-text  mdl-card--border">
-                    <span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_INFO_WEEKS)) %></span><span id="curweek">k</span>/<span id="totweek">L</span>
+                    <span><h5 style="margin: 0;"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_INFO_WEEKS)) %><span id="curweek">k</span>/<span id="totweek">L</span></h5></span>
                 </div>
                 <div class="mdl-card__media mdl-card--border">
                     <table>
@@ -585,57 +640,63 @@
                         <tr id="incoming-order">
                             <td id="retailer">
                                 <table>
+                                    <tr> <td id="retailer_incoming_header"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_INCOMING_HEADER)) %></b>
                                     <% for(int r = 0; r < ((Long)json.get("delay")); r++){ %>
-                                    <tr> <td> <td id="RETAILER_inc_<%=r+1%>"> ---
+                                    <tr> <td><%=(localize.getTextFor(ClientLocalizationKeys.GAME_INCOMING_WEEK_INIT)) + (r+1) + (localize.getTextFor(ClientLocalizationKeys.GAME_INCOMING_WEEK_END)) %> <td id="RETAILER_inc_<%=r+1%>"> ---
                                     <%}%>
                                 </table>
 
                             <td id="wholesaler">
                                 <table>
+                                    <tr> <td id="wolesaler_incoming_header"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_INCOMING_HEADER)) %></b>
                                     <% for(int r = 0; r < ((Long)json.get("delay")); r++){ %>
-                                    <tr> <td> <td id="WHOLESALER_inc_<%=r+1%>"> ---
+                                    <tr> <td><%=(localize.getTextFor(ClientLocalizationKeys.GAME_INCOMING_WEEK_INIT)) + (r+1) + (localize.getTextFor(ClientLocalizationKeys.GAME_INCOMING_WEEK_END)) %> <td id="WHOLESALER_inc_<%=r+1%>"> ---
                                     <%}%>
                                 </table>
 
                             <td id="distributor">
                                 <table>
+                                    <tr> <td id="distributor_incoming_header"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_INCOMING_HEADER)) %></b>
                                     <% for(int r = 0; r < ((Long)json.get("delay")); r++){ %>
-                                    <tr> <td> <td id="DISTRIBUTOR_inc_<%=r+1%>"> ---
+                                    <tr> <td><%=(localize.getTextFor(ClientLocalizationKeys.GAME_INCOMING_WEEK_INIT)) + (r+1) + (localize.getTextFor(ClientLocalizationKeys.GAME_INCOMING_WEEK_END)) %> <td id="DISTRIBUTOR_inc_<%=r+1%>"> ---
                                     <%}%>
                                 </table>
 
                             <td id="producer">
                                 <table>
+                                    <tr> <td id="producer_incoming_header"><b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_INCOMING_HEADER_PRODUCER)) %></b>
                                     <% for(int r = 0; r < ((Long)json.get("delay")); r++){ %>
-                                    <tr> <td> <td id="PRODUCER_inc_<%=r+1%>"> ---
+                                    <tr> <td><%=(localize.getTextFor(ClientLocalizationKeys.GAME_INCOMING_WEEK_INIT)) + (r+1) + (localize.getTextFor(ClientLocalizationKeys.GAME_INCOMING_WEEK_END)) %> <td id="PRODUCER_inc_<%=r+1%>"> ---
                                     <%}%>
                                 </table>
                     </table>
                 </div>
                 <div class="mdl-card__supporting-text  mdl-card--border">
-                    <span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_NAME)) %></span>
+                    <span><h5 style="margin: 0;"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_NAME)) %></h5></span>
                 </div>
                 <div class="mdl-card__media mdl-card--border">
                     <table id="history">
-                        <tr>
-                            <th rowspan="2"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_FUNC)) %>
-                            <th rowspan="2"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_WEEK)) %>
-                            <th rowspan="2">Initial Stock
-                            <th rowspan="2">Received Order
-                            <th rowspan="2">Unfulfilled Order
-                            <th rowspan="2">Expected Delivery
-                            <th rowspan="2">Actual Delivery
-                            <th rowspan="2">Unfulfilled Order this Week
-                            <th rowspan="2">Final Stock
-                            <th rowspan="2">Order Confirmed
-                            <th rowspan="2">Cost of Delayed Deliveries
-                            <th rowspan="2">Cost of Stock
-                            <th rowspan="2">Profit from Sales
-                            <th rowspan="2">Balance
-                        <% if(((Long)json.get("delay")) > 0){ %>
-                            <th colspan="<%=json.get("delay")%>"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_INCORDER)) %>
+                        <tr id="header_row">
+                            <th id="func_header" rowspan="2"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_FUNC)) %>
+                            <th id="week_header" rowspan="2"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_WEEK)) %>
+                            <th id="init_stock_header" rowspan="2">Initial Stock
+                            <th id="rec_order_header" rowspan="2">Received Order
+                            <th id="prev_unf_header" rowspan="2">Unfulfilled Order
+                            <th id="expe_del_header" rowspan="2">Expected Delivery
+                            <th id="act_del_header" rowspan="2">Actual Delivery
+                            <th id="unf_order_header" rowspan="2">Unfulfilled Order this Week
+                            <th id="final_stock_header" rowspan="2">Final Stock
+                            <th id="conf_deli_header" rowspan="2">Order Confirmed
+                            <th id="cost_del_header" rowspan="2">Cost of Delayed Deliveries
+                            <th id="cost_stock_header" rowspan="2">Cost of Stock
+                        <% if(((Double)json.get("selling_profit")) != 0.0) { %>
+                            <th id="prof_sale_header" rowspan="2">Profit from Sales
                         <% } %>
-                            <th rowspan="2"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_REQUEST)) %>
+                            <th id="bal_header" rowspan="2">Balance
+                        <% if(((Long)json.get("delay")) > 0){ %>
+                            <th id="inc_order_header" colspan="<%=json.get("delay")%>"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_INCORDER)) %>
+                        <% } %>
+                            <th id="ordered_header" rowspan="2"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_REQUEST)) %>
                         
                         <% if(((Long)json.get("delay")) > 0){ %>
                         <tr>
