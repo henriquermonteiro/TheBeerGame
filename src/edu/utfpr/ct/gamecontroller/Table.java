@@ -110,7 +110,7 @@ public class Table
                                         line.costUnfulfillment = node.costUnfulfillment.get(lastKnowWeek + 1);
                                         line.costStock = node.costStocking.get(lastKnowWeek + 1);
                                         line.profit = node.profit.get(lastKnowWeek + 1);
-                                        line.weekBalance = line.costUnfulfillment + line.costStock + line.profit;
+                                        line.weekBalance = (game.sellingUnitProfit == 0 ? line.costUnfulfillment + line.costStock : line.profit - (line.costUnfulfillment + line.costStock));
 
 					lines.add(line);
 
