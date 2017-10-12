@@ -53,7 +53,7 @@ public class Localize {
 
         try {
             fis = new FileInputStream(f);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fis, "UTF-8"));
 
             String s;
             while ((s = reader.readLine()) != null) {
