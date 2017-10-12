@@ -21,7 +21,6 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import jiconfont.icons.GoogleMaterialDesignIcons;
 import jiconfont.javafx.IconFontFX;
-//import test.mock.ControllerMock;
 
 public class StartFrame extends Application implements IGUI{
     private MainScene mainScene;

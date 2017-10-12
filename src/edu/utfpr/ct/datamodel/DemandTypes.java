@@ -24,10 +24,10 @@ public enum DemandTypes
 			if(inputs.length == 4)
 				if(inputs[2] > 0)
 				{
-                                        ret = new int[inputs[3]];
+					ret = new int[inputs[3]];
 
-                                        for(int k = 0; k < inputs[3]; k++)
-                                                ret[k] = (k < inputs[2] ? inputs[0] : inputs[1]);
+					for(int k = 0; k < inputs[3]; k++)
+						ret[k] = (k < inputs[2] ? inputs[0] : inputs[1]);
 				}
 			break;
 		}

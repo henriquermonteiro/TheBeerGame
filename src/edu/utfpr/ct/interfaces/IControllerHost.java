@@ -13,11 +13,11 @@ public interface IControllerHost
 	String[] getPlayersOnGame(String gameName);
 
 	Game getGame(String gameName);
-	
+
 	int getGameWeek(String gameName);
-	
+
 	int getGameState(String gameName);
-	
+
 	int getReportState(String gameName);
 
 	Game getReport(String gameName);
@@ -43,6 +43,6 @@ public interface IControllerHost
 	boolean removePlayerFromNode(String gameName, IFunction function);
 
 	int postMoveForNode(String gameName, int order) throws IllegalStateException, IllegalArgumentException;
-        
-        void closeApplication();
+
+	void closeApplication();
 }

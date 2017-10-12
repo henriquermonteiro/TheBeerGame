@@ -14,7 +14,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import edu.utfpr.ct.interfaces.ILogger;
-import java.util.logging.Level;
 
 public class Logger implements ILogger
 {
@@ -22,7 +21,6 @@ public class Logger implements ILogger
 
 	private Logger()
 	{
-//		new Database().dropDB();
 		new Database().initializeDB();
 	}
 
@@ -33,7 +31,7 @@ public class Logger implements ILogger
 
 		return logger;
 	}
-        
+
 	@Override
 	public void stopLogger()
 	{

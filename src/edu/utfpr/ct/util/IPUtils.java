@@ -138,7 +138,6 @@ public class IPUtils
 		{
 			if(ds != null)
 				ds.close();
-
 			if(ss != null)
 				try
 				{

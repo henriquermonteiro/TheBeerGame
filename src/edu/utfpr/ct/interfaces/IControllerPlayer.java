@@ -48,11 +48,11 @@ public interface IControllerPlayer
 	 *
 	 * @param gameName Nome do jogo em que se deseja entrar.
 	 * @param playerName Nome do jogador fazendo a requisição.
-         * @param password Senha para o jogo. Se o jogo não necessitar de senha, esta será ignorada.
+	 * @param password Senha para o jogo. Se o jogo não necessitar de senha, esta será ignorada.
 	 * @return true se a entrada foi autorizada. false se a entrada foi negada.
 	 */
 	public boolean enterGameRoom(String gameName, String playerName, String password);
-	
+
 	/**
 	 * Permite ao jogador selecionar uma posição disponível se a seleção for
 	 * automática. Atenção com condição de corrida na implementação!
@@ -74,27 +74,27 @@ public interface IControllerPlayer
 	 * permissão ou o jogo for inválido.
 	 */
 	public EngineData getGameData(String gameName, String playerName);
-        
-        /**
-         * Retorna o código do estado do jogo cujo nome foi passado como parâmetro.
-         * 
-         * SETUP = 1;
-         * RUNNING = 2;
-         * PAUSED = 4;
-         * FINISHED = 8;
-         * 
-         * Se for um relatório, retorna -1
-         * 
-         * @param gameName
-         * @return Código do estado do jogo.
-         */
-        public int getGameState(String gameName);
-	
-	public int getReportState(String gameName);
-        
-        public Table getTable(String gameName);
-        
-        public boolean isNameAvailable(String playerName);
 
-        public boolean logout(String player);
+	/**
+	 * Retorna o código do estado do jogo cujo nome foi passado como parâmetro.
+	 *
+	 * SETUP = 1;
+	 * RUNNING = 2;
+	 * PAUSED = 4;
+	 * FINISHED = 8;
+	 *
+	 * Se for um relatório, retorna -1
+	 *
+	 * @param gameName
+	 * @return Código do estado do jogo.
+	 */
+	public int getGameState(String gameName);
+
+	public int getReportState(String gameName);
+
+	public Table getTable(String gameName);
+
+	public boolean isNameAvailable(String playerName);
+
+	public boolean logout(String player);
 }

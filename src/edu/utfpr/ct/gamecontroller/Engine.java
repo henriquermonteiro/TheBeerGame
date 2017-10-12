@@ -133,7 +133,6 @@ public class Engine
 		return true;
 	}
 
-	//WHATAPORRA?
 	public boolean changePlayerForNode(IFunction function, String playerName)
 	{
 		if(!"".equals(playerName) && !players.contains(playerName))
@@ -251,8 +250,8 @@ public class Engine
 
 				makeOrder(node.playerMove.get(i), false);
 			}
-                        
-                        getTable().updateLines(weeks);
+
+			getTable().updateLines(weeks);
 		}
 
 		state = FINISHED;
@@ -315,12 +314,12 @@ public class Engine
 			if(!isClientTurn() && node.getLastStock() > 0 && node.getLastDebt() > 0)
 			{
 				calculateDebtProfit(node);
-                                int extra = node.getLastStock() >= node.getLastDebt() ? node.getLastDebt() : node.getLastStock();
+				int extra = node.getLastStock() >= node.getLastDebt() ? node.getLastDebt() : node.getLastStock();
 				node.travellingStock += extra;
-                                node.debt.set(node.debt.size() - 1, node.getLastDebt() - extra);
+				node.debt.set(node.debt.size() - 1, node.getLastDebt() - extra);
 				node.currentStock.set(node.currentStock.size() - 1, node.getLastStock() - extra);
 			}
-                        
+
 			calculateProfit(node, order);
 
 			node.lastRequest = order; // Save the amount requested for rendering purposes.
@@ -333,21 +332,9 @@ public class Engine
 
 	private void calculateProfit(Node node, int order)
 	{
-//		double profit = node.profit.isEmpty() ? 0 : node.getLastProfit();
-//		double stock = node.costStocking.isEmpty() ? 0 : node.getLastStockingCost();
-//		double missing = node.costUnfulfillment.isEmpty() ? 0 : node.getLastUnfullfilmentCost();
-
-//		profit += node.getLastStock() >= order ? order * game.sellingUnitProfit : node.getLastStock() * game.sellingUnitProfit;
-		/* Cost from missing unit */
-//		profit -= node.getLastStock() >= order ? 0 : (order - node.getLastStock()) * game.missingUnitCost;
-//                missing -= node.getLastStock() >= order ? 0 : (order - node.getLastStock()) * game.missingUnitCost;
-		/* Cost from the remaining stock after selling */
-//		profit -= node.getLastStock() >= order ? (node.getLastStock() - order) * game.stockUnitCost : 0;
-//		stock -= node.getLastStock() >= order ? (node.getLastStock() - order) * game.stockUnitCost : 0;
-
 		node.profit.add(node.travellingStock * game.sellingUnitProfit);
-                node.costUnfulfillment.add((node.function.getPosition() == 1 ? (node.debt.get(node.debt.size() - 1) - (node.debt.size() > 1 ? node.debt.get(node.debt.size() - 2) : 0)) : node.getLastDebt()) * game.missingUnitCost);
-                node.costStocking.add(node.getLastStock() * game.stockUnitCost);
+		node.costUnfulfillment.add((node.function.getPosition() == 1 ? (node.debt.get(node.debt.size() - 1) - (node.debt.size() > 1 ? node.debt.get(node.debt.size() - 2) : 0)) : node.getLastDebt()) * game.missingUnitCost);
+		node.costStocking.add(node.getLastStock() * game.stockUnitCost);
 	}
 
 	private void calculateDebtProfit(Node node)

@@ -2,7 +2,6 @@ package edu.utfpr.ct.datamodel;
 
 import edu.utfpr.ct.localization.HostLocalizationKeys;
 import edu.utfpr.ct.localization.HostLocalizationManager;
-import edu.utfpr.ct.localization.Localize;
 import java.util.ArrayList;
 
 public enum SupplyChainTypes
