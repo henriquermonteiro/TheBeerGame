@@ -1,5 +1,6 @@
 <%@page import="java.io.*" %>
 <%@page import="java.net.*" %>
+<%@page import="java.util.Locale" %>
 <%@page import="org.json.simple.*" %>
 <%@page import="org.json.simple.parser.*" %>
 <%@page import="edu.utfpr.ct.localization.*" %>
@@ -13,7 +14,7 @@
         session.setAttribute("PREF-LANG", request.getParameter("lang"));
     }
     
-    String lang = "default";
+    String lang = Locale.getDefault().getLanguage()+"_"+Locale.getDefault().getCountry();
     if(session.getAttribute("PREF-LANG") != null){ 
         lang = (String) session.getAttribute("PREF-LANG");
     }

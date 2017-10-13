@@ -2,6 +2,7 @@ package edu.utfpr.ct.localization;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Locale;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -30,7 +31,12 @@ public class HostLocalizationManager {
             }
         }
         
-        lang = new SimpleStringProperty(localizeMap.get("default").getTextFor(HostLocalizationKeys.LANGUAGE_NAME));
+        String langDefault = Locale.getDefault().getLanguage()+"_"+Locale.getDefault().getCountry();
+        if(localizeMap.containsKey(langDefault)){
+            lang = new SimpleStringProperty(localizeMap.get(langDefault).getTextFor(HostLocalizationKeys.LANGUAGE_NAME));
+        }else{
+            lang = new SimpleStringProperty(localizeMap.get("default").getTextFor(HostLocalizationKeys.LANGUAGE_NAME));
+        }
     }
 
     public StringProperty getLang() {

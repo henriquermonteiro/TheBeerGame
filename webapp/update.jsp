@@ -3,7 +3,6 @@
 <%@page import="org.json.simple.*" %>
 <%@page import="org.json.simple.parser.*" %>
 <%
-    //System.out.println("Test update - " + request.getMethod());
     if(session.getAttribute("USER-ID") == null || ((String)session.getAttribute("USER-ID")).isEmpty()){
         response.sendRedirect("/check_in.jsp");
         return;

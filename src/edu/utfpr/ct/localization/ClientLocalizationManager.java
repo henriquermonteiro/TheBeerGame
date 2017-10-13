@@ -37,9 +37,7 @@ public class ClientLocalizationManager {
 
     public Localize getClientFor(String lang) {
         if (!localizeMap.containsKey(lang)) {
-            Localize loc = new Localize(lang, false);
-
-            localizeMap.put(lang, loc);
+            return localizeMap.get("default");
         }
 
         return localizeMap.get(lang);

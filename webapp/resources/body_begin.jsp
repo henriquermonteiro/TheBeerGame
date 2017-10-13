@@ -1,10 +1,11 @@
+<%@page import="java.util.Locale" %>
 <%@page import="edu.utfpr.ct.localization.ClientLocalizationManager" %>
 <%@page import="edu.utfpr.ct.localization.ClientLocalizationKeys" %>
 <%@page import="edu.utfpr.ct.localization.Localize" %>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
-    String lang = "default";
+    String lang = Locale.getDefault().getLanguage()+"_"+Locale.getDefault().getCountry();
     if(session.getAttribute("PREF-LANG") != null){ 
         lang = (String) session.getAttribute("PREF-LANG");
     }
