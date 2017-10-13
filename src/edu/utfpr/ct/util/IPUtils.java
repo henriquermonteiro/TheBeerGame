@@ -1,6 +1,6 @@
 package edu.utfpr.ct.util;
 
-import edu.utfpr.ct.webclient.ActionService;
+import edu.utfpr.ct.webserver.ActionService;
 import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.HttpURLConnection;

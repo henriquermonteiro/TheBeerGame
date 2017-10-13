@@ -4,7 +4,7 @@ import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.localization.HostLocalizationKeys;
 import edu.utfpr.ct.localization.HostLocalizationManager;
 import edu.utfpr.ct.localization.LocalizationUtils;
-import edu.utfpr.ct.webclient.ActionService;
+import edu.utfpr.ct.webserver.ActionService;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import javafx.beans.binding.Bindings;

@@ -4,15 +4,50 @@ import java.io.Serializable;
 
 public interface IFunction extends Serializable
 {
-	public int getPosition();
 
-	public IFunction first();
+        /**
+         * Posição ocupada pela função em uma cadeia de suprimentos.
+         * 
+         * Varejista = 1
+         * Atacadista = 2
+         * Distribuidor = 3
+         * Fabricante = 4
+         * 
+         * @return A posição ocupada pela função.
+         */
+        public int getPosition();
 
-	public boolean isLast();
+        /**
+         * Retorna a primeira função.
+         * @return Primeira função.
+         */
+        public IFunction first();
 
-	public IFunction next();
+        /**
+         * Retorna verdadeiro se for a última função da cadeia de suprimentos.
+         * Falso do contrário.
+         * @return Verdadeiro se for a última função, falso do contrário.
+         */
+        public boolean isLast();
 
-	public IFunction[] getValues();
+        /**
+         * Retorna a próxima função da cadeia de suprimentos. Null caso seja a última função.
+         * 
+         * @return Próxima função, ou null se não existir.
+         */
+        public IFunction next();
 
-	public String getName();
+        /**
+         * Retorna a lista de funções definidas na cadeia de suprimentos.
+         * 
+         * @return Lista de funções.
+         */
+        public IFunction[] getValues();
+
+        /**
+         * Retorna o nome definido para cada função.
+         * 
+         * @return O nome da função.
+         */
+        public String getName();
 }

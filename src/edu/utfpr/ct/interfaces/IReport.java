@@ -4,9 +4,28 @@ import edu.utfpr.ct.datamodel.Game;
 
 public interface IReport
 {
-	public boolean createReport(Game game);
 
-	public boolean purgeReport(Game game);
+        /**
+         * Cria um relatório a partir de um jogo.
+         * 
+         * @param game Jogo que será feito o relatório.
+         * @return Verdadeiro se tiver havido sucesso, falso do contrário.
+         */
+        public boolean createReport(Game game);
 
-	public Game[] getReports();
+        /**
+         * Excluí definitivamente um relatório.
+         * A operação não pode ser desfeita.
+         * 
+         * @param game Jogo a ser destruído.
+         * @return Verdadeiro se o relatório foi completamente destruído, falso do contrário.
+         */
+        public boolean purgeReport(Game game);
+
+        /**
+         * Retorna a lista de relatórios existentes, no formato de Game.
+         * 
+         * @return ista de relatórios.
+         */
+        public Game[] getReports();
 }

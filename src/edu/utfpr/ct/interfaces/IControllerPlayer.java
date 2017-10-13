@@ -21,7 +21,6 @@ public interface IControllerPlayer
 	 * -1 se a jogada for inválida.
 	 *
 	 * @param gameName ID do jogo onde a jogada será realizada.
-	 * @param function ID do Node onde a jogada será realizada.
 	 * @param playerName Nome do jogador que realizou a jogada.
 	 * @param order Jogada realizada.
 	 * @return Montante do pedido atendido. -1 se a jogada for inválida.
@@ -33,7 +32,6 @@ public interface IControllerPlayer
 	 * e do ID dos jogos. O jogo estar disponível não implica em o usuário estar
 	 * autorizado a jogar.
 	 *
-	 * @param playerName
 	 * @return lista de jogos disponíveis.
 	 */
 	public Game[] listAvailableGameRooms();
@@ -83,18 +81,49 @@ public interface IControllerPlayer
 	 * PAUSED = 4;
 	 * FINISHED = 8;
 	 *
-	 * Se for um relatório, retorna -1
+	 * Se for um relatório, retorna -1.
+         * Se não existir um jogo, nem um relatório, retorna -2.
 	 *
-	 * @param gameName
+	 * @param gameName Nome do jogo.
 	 * @return Código do estado do jogo.
 	 */
 	public int getGameState(String gameName);
 
-	public int getReportState(String gameName);
+        /**
+         * Retorna o código do estado do relatório cujo nome foi passado como parâmetro.
+         * 
+         * RUNNING = 8;
+         * PAUSED = 16;
+         * 
+         * Se não existir um relatório com o nome, retorna -1.
+         * 
+         * @param gameName Nome do relatório.
+         * @return Código do estado do relatório.
+         */
+        public int getReportState(String gameName);
 
-	public Table getTable(String gameName);
+        /**
+         * Retorna a tabela de histórico de um jogo cujo nome foi passado como parâmetro.
+         * Retorna null se não tiver sido encontrado.
+         * 
+         * @param gameName
+         * @return tabela de histórico.
+         */
+        public Table getTable(String gameName);
 
-	public boolean isNameAvailable(String playerName);
+        /**
+         * Retorna verdadeiro se o nome de jogador está disponível, falso do contrário.
+         * 
+         * @param playerName
+         * @return disponibilidade de nome de jogador.
+         */
+        public boolean isNameAvailable(String playerName);
 
-	public boolean logout(String player);
+        /**
+         * Faz o logout de um jogador. Retorna verdadeiro se um jogador foi removido, falso se não houve alteração.
+         * 
+         * @param player
+         * @return Verdadeiro se o jogador foi removido, falso se não tiver sido encontrado.
+         */
+        public boolean logout(String player);
 }

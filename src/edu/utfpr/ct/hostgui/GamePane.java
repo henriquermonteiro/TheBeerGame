@@ -7,8 +7,8 @@ import javafx.scene.layout.BorderPane;
 
 public class GamePane extends BorderPane {
 
-    private Game game;
-    private MainScene mainScene;
+    private final Game game;
+    private final MainScene mainScene;
     private Boolean isGame;
     private BorderPane center;
     private final Tab tab;

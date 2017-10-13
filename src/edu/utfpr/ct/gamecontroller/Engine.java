@@ -322,7 +322,7 @@ public class Engine
 
 			calculateProfit(node, order);
 
-			node.lastRequest = order; // Save the amount requested for rendering purposes.
+			node.lastRequest = order;
 
 			return node.travellingStock;
 		}

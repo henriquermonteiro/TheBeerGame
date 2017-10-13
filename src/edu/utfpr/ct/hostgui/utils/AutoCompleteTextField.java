@@ -20,12 +20,6 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-/**
- * This class is a TextField which implements an "autocomplete" functionality,
- * based on a supplied list of entries.
- *
- * @author Caleb Brinkman
- */
 public class AutoCompleteTextField extends TextField {
 
     /**
@@ -64,14 +58,6 @@ public class AutoCompleteTextField extends TextField {
         initialize();
     }
 
-    public void setValidText(boolean isValid) {
-        if (isValid) {
-//                this.setStyle("");
-        } else {
-//                this.setStyle("-fx-base: coral;");
-        }
-    }
-
     private void initialize() {
         textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -85,7 +71,6 @@ public class AutoCompleteTextField extends TextField {
                         populatePopup(searchResult);
                         if (!entriesPopup.isShowing()) {
                             entriesPopup.show(AutoCompleteTextField.this, Side.BOTTOM, 0, 0);
-//                            entriesPopup.setStyle("-fx-control-inner-background: LIGHTGREY;");
                         }
                     } else {
                         entriesPopup.hide();

@@ -162,7 +162,6 @@
 .lang-element.item.current{
     -fx-background-color: derive(-header-color, -10%);
     -fx-focus-color: derive(-header-color, -10%);
-    /*-fx-text-fill: white;*/
 }
 
 .lang-element.item .hbox-1 {

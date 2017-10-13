@@ -42,7 +42,6 @@ public class GameComponent extends GridPane {
             reload.getStyleClass().add("icon");
             loadButton.setGraphic(reload);
 
-//            loadButton.setTooltip(new Tooltip("Carregar jogo"));
             loadButton.setTooltip(new Tooltip());
             LocalizationUtils.bindLocalizationText(loadButton.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_GAME_COMP_LOAD_GAME);
             
@@ -54,7 +53,6 @@ public class GameComponent extends GridPane {
             report.getStyleClass().add("icon");
             loadButton.setGraphic(report);
 
-//            loadButton.setTooltip(new Tooltip("Carregar relatório"));
             loadButton.setTooltip(new Tooltip());
             LocalizationUtils.bindLocalizationText(loadButton.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_GAME_COMP_LOAD_REPO);
             
@@ -64,11 +62,8 @@ public class GameComponent extends GridPane {
         IconNode delete = new IconNode(GoogleMaterialDesignIcons.DELETE_FOREVER);
         delete.getStyleClass().add("icon");
 
-//        removeButton = new Button();
         removeButton.setGraphic(delete);
         
-//        removeButton.setTooltip(new Tooltip("Apagar registro"));
-
         loadButton.getStyleClass().addAll("left", "load");
         removeButton.getStyleClass().addAll("right", "remove");
 

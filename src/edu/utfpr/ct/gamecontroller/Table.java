@@ -36,7 +36,6 @@ public class Table
 		int lastKnowWeek = 0;
 		int lastPlayer = -1;
 
-		//Se já há registros, carrega o último;
 		if(lines.size() > 0)
 		{
 			lastKnowWeek = lines.get(lines.size() - 1).week;
@@ -49,10 +48,8 @@ public class Table
 			}
 		}
 
-		//Enquanto o primeiro jogador já fez uma jogada no turno atualmente averiguado
 		while((((Node) game.supplyChain[0]).playerMove.size() > lastKnowWeek) && (lastKnowWeek != stopWeek))
 		{
-			//Se o último jogador do turno é desconhecido, é a vez do consumidor
 			if(lastPlayer == -1)
 			{
 				line = new Line();
@@ -75,7 +72,6 @@ public class Table
 
 				lines.add(line);
 
-				//Último jogador foi o consumidor
 				lastPlayer = 0;
 			}
 
@@ -84,7 +80,6 @@ public class Table
 				int pos = lastPlayer * (game.deliveryDelay + 1);
 				node = (Node) game.supplyChain[pos];
 
-				//Se próximo jogador esperado já fez uma jogada no turno averiguado; Senão encerra o método
 				if(node.playerMove.size() > lastKnowWeek)
 				{
 					line = new Line();

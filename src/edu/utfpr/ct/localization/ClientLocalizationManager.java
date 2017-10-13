@@ -1,10 +1,7 @@
 package edu.utfpr.ct.localization;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
-import javafx.beans.property.SimpleStringProperty;
 
 public class ClientLocalizationManager {
 
@@ -49,46 +46,6 @@ public class ClientLocalizationManager {
     }
 
     public static String[] getValidLanguages() {
-//        File f = new File("lang" + File.separator + "web");
-//
-//        String[] langs = null;
-//
-//        if (f.isDirectory()) {
-//            ArrayList<String> a_lang = new ArrayList<>();
-//            
-//            a_lang.add("en US");
-//
-//            for (File l : f.listFiles((File file, String string) -> { return string.endsWith(".map");} )) {
-//                if (!l.getName().equals("default.map")) {
-//                    a_lang.add(l.getName().replace(".map", ""));
-//                }
-//            }
-//            
-//            langs = a_lang.toArray(langs);
-//        }
-
         return getInstance().localizeMap.keySet().toArray(new String[0]);
     }
-    
-//    public static String[] getValidLanguagesNames() {
-//        File f = new File("lang");
-//
-//        String[] langs = null;
-//
-//        if (f.isDirectory()) {
-//            ArrayList<String> a_lang = new ArrayList<>();
-//            
-//            a_lang.add("English");
-//            
-//            for (File l : f.listFiles((File file, String string) -> { return string.endsWith(".map");} )) {
-//                if (!l.getName().equals("default.map")) {
-//                    a_lang.add(new Locale(l.getName().replace(".map", "")).getDisplayLanguage());
-//                }
-//            }
-//            
-//            langs = a_lang.toArray(new String[0]);
-//        }
-//
-//        return langs;
-//    }
 }

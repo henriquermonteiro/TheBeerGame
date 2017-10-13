@@ -14,8 +14,8 @@ import javafx.scene.layout.Priority;
 
 public class NumberChooserFX extends HBox {
 
-    private Label label;
-    private Slider slider;
+    private final Label label;
+    private final Slider slider;
     private TextField text;
     private Boolean isDecimal;
 

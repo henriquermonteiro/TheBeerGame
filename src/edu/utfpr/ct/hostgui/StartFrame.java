@@ -24,10 +24,10 @@ import jiconfont.javafx.IconFontFX;
 
 public class StartFrame extends Application implements IGUI{
     private MainScene mainScene;
-    private IControllerHost controller;
+    private final IControllerHost controller;
     private Stage primaryStage;
     
-    private ArrayList<Stage> infos;
+    private final ArrayList<Stage> infos;
 
     public StartFrame() {
         controller = Controller.getController();

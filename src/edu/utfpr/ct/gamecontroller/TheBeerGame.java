@@ -2,7 +2,7 @@ package edu.utfpr.ct.gamecontroller;
 
 import edu.utfpr.ct.hostgui.StartFrame;
 import edu.utfpr.ct.logmanager.database.Database;
-import edu.utfpr.ct.webclient.ActionService;
+import edu.utfpr.ct.webserver.ActionService;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 

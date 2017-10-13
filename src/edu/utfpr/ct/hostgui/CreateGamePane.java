@@ -490,10 +490,8 @@ public class CreateGamePane extends BorderPane {
         GridPane.setConstraints(simpleDemandChart, 0, 4);
 
         RowConstraints r15 = new RowConstraints();
-//        r15.setPercentHeight(15);
 
         RowConstraints r40 = new RowConstraints();
-//        r40.setPercentHeight(40);
         r40.setVgrow(Priority.ALWAYS);
 
         grid1.getRowConstraints().addAll(r15, r15, r15, r15, r40);

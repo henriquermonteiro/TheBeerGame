@@ -11,7 +11,7 @@ import edu.utfpr.ct.localization.HostLocalizationKeys;
 import edu.utfpr.ct.localization.HostLocalizationManager;
 import edu.utfpr.ct.localization.LocalizationUtils;
 import edu.utfpr.ct.util.ChartJSUtils;
-import edu.utfpr.ct.webclient.ActionService;
+import edu.utfpr.ct.webserver.ActionService;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -78,7 +78,7 @@ public class PlayGamePane extends BorderPane {
 
     private final MainScene mainScene;
 
-    public void updateGame(Game game, Boolean state, String[] newPool) {
+    public final void updateGame(Game game, Boolean state, String[] newPool) {
         gameName.setText(game.name);
 
         validPlayers.clear();
@@ -88,7 +88,7 @@ public class PlayGamePane extends BorderPane {
         for (int k = 0; k < playersInNodes.length; k++) {
             Node playerNode = ((Node) game.supplyChain[ModelUtils.getActualNodePosition(game, k)]);
             playersInNodes[k].setText(playerNode.playerName);
-            playersInNodes[k].setValidText(true);
+//            playersInNodes[k].setValidText(true);
             if (!playerNode.playerName.isEmpty()) {
                 validPlayers.add(playerNode.playerName);
             }
@@ -286,10 +286,6 @@ public class PlayGamePane extends BorderPane {
 
                     int test = validPlayerText(newValue);
                     if (test >= -1) {
-                        if (test == 0) {
-                            playersInNodes[((IdentifiableChangeListener) this).getId()].setValidText(false);
-                        }
-
                         if (test == 1) {
                             mainScene.changePlayerInNode(game, newValue, ((IdentifiableChangeListener) this).getId());
                             mainScene.updateGame(game.name);

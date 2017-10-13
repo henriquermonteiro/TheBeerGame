@@ -18,7 +18,7 @@ import edu.utfpr.ct.interfaces.IControllerHost;
 import edu.utfpr.ct.interfaces.ILogger;
 import java.util.Arrays;
 import edu.utfpr.ct.interfaces.IControllerPlayer;
-import edu.utfpr.ct.webclient.ActionService;
+import edu.utfpr.ct.webserver.ActionService;
 import java.util.HashSet;
 
 public class Controller implements IControllerHost, IControllerPlayer
