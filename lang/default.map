@@ -1,4 +1,4 @@
-HOST-FLAG-PATH<>/edu/utfpr/ct/webclient/webapp/resources/flags/flag_usa.png
+HOST-FLAG-PATH<>webapp//resources//flags//flag_usa.png
 HOST-LANG-IDENTIFIER<>English
 GUI-FRAME-NAME<>The Beer Game - UTFPR
 GUI-LABEL-AWAIT-START<><html>Please, await game initialization.<br/>It should take only a few seconds.</html>

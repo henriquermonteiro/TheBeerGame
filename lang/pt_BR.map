@@ -1,4 +1,4 @@
-HOST-FLAG-PATH<>/edu/utfpr/ct/webclient/webapp/resources/flags/flag_brasil.png
+HOST-FLAG-PATH<>webapp//resources//flags//flag_brasil.png
 HOST-LANG-IDENTIFIER<>Português
 GUI-FRAME-NAME<>Jogo da Cerveja - UTFPR
 GUI-LABEL-AWAIT-START<><html>Por favor, aguarde a inicialização do jogo.<br/>Deve levar apenas alguns segundos.</html>

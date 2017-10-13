@@ -12,6 +12,9 @@ import edu.utfpr.ct.localization.HostLocalizationManager;
 import edu.utfpr.ct.localization.LocalizationUtils;
 import edu.utfpr.ct.util.IPUtils;
 import edu.utfpr.ct.webserver.ActionService;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -339,8 +342,11 @@ public class MainScene extends BorderPane {
 
         String currentLang = HostLocalizationManager.getInstance().getLang().get();
 
-        String toURL = HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.LANGUAGE_FLAG);
-        Image img = new Image(getClass().getResourceAsStream(toURL));
+        Image img = null;
+        try {
+            img = new Image(new FileInputStream(new File(HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.LANGUAGE_FLAG))));
+        } catch (FileNotFoundException ex) {
+        }
         ImageView flag = new ImageView(img);
         flag.setPreserveRatio(true);
         flag.setFitHeight(30.0);
@@ -359,8 +365,10 @@ public class MainScene extends BorderPane {
                 continue;
             }
 
-            toURL = HostLocalizationManager.getInstance().getClientFor(lang).getTextFor(HostLocalizationKeys.LANGUAGE_FLAG);
-            img = new Image(getClass().getResourceAsStream(toURL));
+            try {
+                img = new Image(new FileInputStream(new File(HostLocalizationManager.getInstance().getClientFor(lang).getTextFor(HostLocalizationKeys.LANGUAGE_FLAG))));
+            } catch (FileNotFoundException ex) {
+            }
             flag = new ImageView(img);
             flag.setPreserveRatio(true);
             flag.setFitHeight(30.0);
@@ -389,8 +397,12 @@ public class MainScene extends BorderPane {
         HBox content = new HBox();
         content.getStyleClass().addAll("lang-element");
 
-        String toURL = HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.LANGUAGE_FLAG);
-        Image img = new Image(getClass().getResourceAsStream(toURL));
+        Image img = null;
+        try {
+            img = new Image(new FileInputStream(new File(HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.LANGUAGE_FLAG))));
+        } catch (FileNotFoundException ex) {
+        }
+        
         ImageView flag = new ImageView(img);
         flag.setPreserveRatio(true);
         flag.setFitHeight(28.0);

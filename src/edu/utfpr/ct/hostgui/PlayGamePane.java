@@ -88,7 +88,6 @@ public class PlayGamePane extends BorderPane {
         for (int k = 0; k < playersInNodes.length; k++) {
             Node playerNode = ((Node) game.supplyChain[ModelUtils.getActualNodePosition(game, k)]);
             playersInNodes[k].setText(playerNode.playerName);
-//            playersInNodes[k].setValidText(true);
             if (!playerNode.playerName.isEmpty()) {
                 validPlayers.add(playerNode.playerName);
             }
