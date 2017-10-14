@@ -1,6 +1,7 @@
 package edu.utfpr.ct.report;
 
 import edu.utfpr.ct.datamodel.Game;
+import edu.utfpr.ct.gamecontroller.Table;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -20,9 +21,9 @@ class BinaryReport extends AbstractReport
 	}
 
 	@Override
-	public boolean generateReport(Game game)
+	public boolean generateReport(Table table)
 	{
-		return writeFile(getFileName(game), serialization(game));
+		return writeFile(getFileName(table.getGame()), serialization(table.getGame()));
 	}
 
 	@Override

@@ -74,7 +74,7 @@ public class Controller implements IControllerHost, IControllerPlayer
 
 			if(engine.getState() == Engine.FINISHED)
 			{
-				reportManager.createReport(game);
+				reportManager.createReport(engine.getTable());
 				logger.purgeGame(game.gameID);
 			}
 			else
@@ -293,7 +293,7 @@ public class Controller implements IControllerHost, IControllerPlayer
 		{
 			logger.purgeGame(engine.getGame().gameID);
 			engines.remove(gameName);
-			reportManager.createReport(engine.getGame());
+			reportManager.createReport(engine.getTable());
 			reports.putIfAbsent(engine.getGame(), true);
 		}
 

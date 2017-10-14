@@ -4,11 +4,18 @@ import edu.utfpr.ct.datamodel.AbstractNode;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.datamodel.Node;
 import edu.utfpr.ct.datamodel.TravellingTime;
+import edu.utfpr.ct.gamecontroller.Table;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 class HTMLReport extends AbstractReport
 {
@@ -18,18 +25,20 @@ class HTMLReport extends AbstractReport
 	}
 
 	@Override
-	public boolean generateReport(Game game)
+	public boolean generateReport(Table table)
 	{
 		BufferedWriter bw;
+		String page;
 
 		try
 		{
-			bw = new BufferedWriter(new FileWriter(createFile(getFileName(game))));
-			writeHeader(bw);
-			writeGameConfig(bw, game);
-			writeClientData(bw, game);
-			writeNodeData(bw, game);
-			writeFoot(bw);
+			page = new String(Files.readAllBytes(Paths.get("Template.html")), StandardCharsets.UTF_8);
+			bw = new BufferedWriter(new FileWriter(createFile(getFileName(table.getGame()))));
+
+			page = replaceGameConfig(page, table.getGame());
+			page = replaceNodeData(page, table.getGame());
+
+			bw.write(page);
 			bw.close();
 			return true;
 		}
@@ -46,102 +55,29 @@ class HTMLReport extends AbstractReport
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
-	private void writeHeader(BufferedWriter bw) throws IOException
+	private String replaceGameConfig(String page, Game game) throws IOException
 	{
-		String header = "<!DOCTYPE html> \n"
-						+ "<html> \n"
-						+ "<head> \n"
-						+ "<meta charset=\"UTF-8\"> \n"
-						+ "<style> \n"
-						+ "table \n"
-						+ "{ \n"
-						+ "    font-family: arial, sans-serif; \n"
-						+ "    border-collapse: collapse; \n"
-						+ "    width: 100%; \n"
-						+ "    border: 1px solid #dddddd; \n"
-						+ "} \n"
-						+ "\n"
-						+ "td, th \n"
-						+ "{ \n"
-						+ "    border: 1px solid #dddddd; \n"
-						+ "    text-align: left; \n"
-						+ "    padding: 8px; \n"
-						+ "} \n"
-						+ "</style> \n"
-						+ "</head> \n"
-						+ "<body> \n";
+		page = page.replace("{GameName}",         game.name);
+		page = page.replace("{Type}",             game.informedChainSupply ? "Informed" : "Not informed");
+		page = page.replace("{StockUnitCost}",    Double.toString(game.stockUnitCost));
+		page = page.replace("{MissingUnitCost}",  Double.toString(game.missingUnitCost));
+		page = page.replace("{Profit}",           Double.toString(game.sellingUnitProfit));
+		page = page.replace("{DeliveryTime}",     Integer.toString(game.deliveryDelay));
+		page = page.replace("{RealDuration}",     Integer.toString(game.realDuration));
+		page = page.replace("{InformedDuration}", Integer.toString(game.informedDuration));
 
-		bw.write(header);
-		bw.newLine();
+		return page;
 	}
 
-	private void writeFoot(BufferedWriter bw) throws IOException
+	private String replaceNodeData(String page, Game game)
 	{
-		String foot = "</body> \n"
-					  + "</html>";
-
-		bw.write(foot);
-		bw.newLine();
-	}
-
-	private void writeGameConfig(BufferedWriter bw, Game game) throws IOException
-	{
-		bw.write("<b><h1>Configuration </h1></b><br>");
-		bw.newLine();
-		bw.write("<b>ID: </b>" + game.gameID + "<br>");
-		bw.newLine();
-		bw.write("<b>Timestamp: </b>" + new SimpleDateFormat("yyyy-MM-dd HH-mm-ss").format(new Date(game.timestamp)) + "<br>");
-		bw.newLine();
-		bw.write("<b>Name: </b>" + game.name + "<br>");
-		bw.newLine();
-		bw.write("<b>Password: </b>" + game.password + "<br>");
-		bw.newLine();
-		bw.write("<b>Cost of missing unit: </b>" + game.missingUnitCost + "<br>");
-		bw.newLine();
-		bw.write("<b>Cost of unit in stock: </b>" + game.stockUnitCost + "<br>");
-		bw.newLine();
-		bw.write("<b>Profit per unit: </b>" + game.sellingUnitProfit + "<br>");
-		bw.newLine();
-		bw.write("<b>Real duration: </b>" + game.realDuration + "<br>");
-		bw.newLine();
-		bw.write("<b>Informed duration: </b>" + game.informedDuration + "<br>");
-		bw.newLine();
-		bw.write("<b>Delivery delay: </b>" + game.deliveryDelay + "<br>");
-		bw.newLine();
-		bw.write("<b>Units on travel: </b>" + game.unitiesOnTravel + "<br>");
-		bw.newLine();
-		bw.write("<b>Initial stock: </b>" + game.initialStock + "<br>");
-		bw.newLine();
-		bw.write("<b>Informed chain supply: </b>" + game.informedChainSupply + "<br>");
-		bw.newLine();
-		bw.newLine();
-	}
-
-	private void writeClientData(BufferedWriter bw, Game game) throws IOException
-	{
-		bw.write("<b><h1>Client</h1></b>");
-		bw.newLine();
-
-		bw.write("<table>");
-		bw.newLine();
-
-		/*Header*/
-		bw.write("<tr><th></th>");
-		for(int i = 0; i <= game.realDuration; i++)
-			bw.write("<th>Week " + (i + 1) + "</th>");
-		bw.newLine();
-
-		bw.write("<tr><th>Order</th>");
-		for(int demand : game.demand)
-			bw.write("<th>" + demand + "</th>");
-		bw.write("</tr>");
-		bw.write("</table><br>");
-		bw.newLine();
-	}
-
-	private void writeNodeData(BufferedWriter bw, Game game) throws IOException
-	{
+		List sequence;
 		Node node;
+		String function;
+
+		sequence = Stream.iterate(1, n -> n + 1).limit(game.realDuration).collect(Collectors.toList());
+		page = page.replaceAll(Pattern.quote("{RealWeeks}"), sequence.toString());
+		page = page.replace("{ConsumerOrder}", Arrays.toString(game.demand));
 
 		for(AbstractNode abstractNode : game.supplyChain)
 		{
@@ -149,35 +85,15 @@ class HTMLReport extends AbstractReport
 				continue;
 			node = (Node) abstractNode;
 
-			bw.write("<b><h1>" + node.function.getName() + "</h1></b>");
-			bw.newLine();
+			function = node.function.toString();
+			function = function.toLowerCase();
+			function = function.substring(0, 1).toUpperCase() + function.substring(1);
 
-			bw.write("<table>");
-			bw.newLine();
-
-			/*Header*/
-			bw.write("<tr><th></th>");
-			for(int i = 0; i <= game.realDuration; i++)
-				bw.write("<th>Week " + (i + 1) + "</th>");
-			bw.newLine();
-
-			bw.write("<tr><th>Stock</th>");
-			for(int value : node.currentStock)
-				bw.write("<th>" + value + "</th>");
-			bw.newLine();
-
-			bw.write("<tr><th>Order</th>");
-			for(int value : node.playerMove)
-				bw.write("<th>" + value + "</th>");
-			bw.newLine();
-
-			bw.write("<tr><th>Profit</th>");
-			for(double value : node.profit)
-				bw.write("<th>" + value + "</th>");
-			bw.write("</tr>");
-			bw.write("</table><br>");
-
-			bw.newLine();
+			page = page.replace("{" + function + "Name}",  node.playerName);
+			page = page.replace("{" + function + "Order}", node.playerMove.toString());
+			page = page.replace("{" + function + "Stock}", node.currentStock.toString());
 		}
+
+		return page;
 	}
 }

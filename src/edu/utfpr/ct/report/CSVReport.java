@@ -4,6 +4,7 @@ import edu.utfpr.ct.datamodel.AbstractNode;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.datamodel.Node;
 import edu.utfpr.ct.datamodel.TravellingTime;
+import edu.utfpr.ct.gamecontroller.Table;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -18,16 +19,16 @@ class CSVReport extends AbstractReport
 	}
 
 	@Override
-	public boolean generateReport(Game game)
+	public boolean generateReport(Table table)
 	{
 		BufferedWriter bw;
 
 		try
 		{
-			bw = new BufferedWriter(new FileWriter(createFile(getFileName(game))));
-			writeGameConfig(bw, game);
-			writeClientData(bw, game);
-			writeNodeData(bw, game);
+			bw = new BufferedWriter(new FileWriter(createFile(getFileName(table.getGame()))));
+			writeGameConfig(bw, table.getGame());
+			writeClientData(bw, table.getGame());
+			writeNodeData(bw, table);
 			bw.close();
 			return true;
 		}
@@ -101,11 +102,11 @@ class CSVReport extends AbstractReport
 		bw.newLine();
 	}
 
-	private void writeNodeData(BufferedWriter bw, Game game) throws IOException
+	private void writeNodeData(BufferedWriter bw, Table table) throws IOException
 	{
 		Node node;
 
-		for(AbstractNode abstractNode : game.supplyChain)
+		for(AbstractNode abstractNode : table.getGame().supplyChain)
 		{
 			if(abstractNode instanceof TravellingTime)
 				continue;
@@ -114,25 +115,42 @@ class CSVReport extends AbstractReport
 			bw.write(node.function.getName());
 			bw.newLine();
 
-			for(int i = 0; i <= game.realDuration; i++)
-				bw.write(", Week " + (i + 1));
+			bw.write("Week, "
+					 + "Initial stock, "
+					 + "Order received, "
+					 + "Previous pending order, "
+					 + "Expected delivery, "
+					 + "Actual delivery, "
+					 + "Order unfullfiled, "
+					 + "Final stock, "
+					 + "Player move, "
+					 + "Confirmed order delivery,"
+					 + "Incoming order, "
+					 + "Unfulfillment cost, "
+					 + "Stock cost, "
+					 + "Profit, "
+					 + "Week balance");
 			bw.newLine();
 
-			bw.write("Stock");
-			for(int value : node.currentStock)
-				bw.write(", " + value);
-			bw.newLine();
-
-			bw.write("Move");
-			for(int value : node.playerMove)
-				bw.write(", " + value);
-			bw.newLine();
-
-			bw.write("Profit");
-			for(double value : node.profit)
-				bw.write(", " + value);
-			bw.newLine();
-			bw.newLine();
+			for(Table.Line line : table.getByFunction(node.function))
+			{
+				bw.write(line.week + ", ");
+				bw.write(line.initialStock + ", ");
+				bw.write(line.orderReceived + ", ");
+				bw.write(line.orderPreviousPending + ", ");
+				bw.write(line.expectedDelivery + ", ");
+				bw.write(line.actualyDelivery + ", ");
+				bw.write(line.orderUnfullfiled + ", ");
+				bw.write(line.finalStock + ", ");
+				bw.write(line.playerMove + ", ");
+				bw.write(line.confirmedOrderDelivery + ", ");
+				bw.write(line.incomingOrder + ", ");
+				bw.write(line.costUnfulfillment.toString() + ", ");
+				bw.write(line.costStock.toString() + ", ");
+				bw.write(line.profit.toString() + ", ");
+				bw.write(line.weekBalance.toString() + ", ");
+				bw.newLine();
+			}
 		}
 	}
 }

@@ -3,6 +3,7 @@ package edu.utfpr.ct.gamecontroller;
 import edu.utfpr.ct.datamodel.Function;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.datamodel.Node;
+import edu.utfpr.ct.interfaces.IFunction;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -16,6 +17,11 @@ public class Table
 	{
 		this.game = game;
 		this.lines = new ArrayList<>();
+	}
+
+	public Game getGame()
+	{
+		return game;
 	}
 
 	public List<Line> getLines()
@@ -164,6 +170,17 @@ public class Table
 		}
 
 		return ret;
+	}
+	
+	public Line[] getByFunction(IFunction function)
+	{
+		List<Line> selectedLines = new ArrayList<>();
+		
+		for(Line line : lines)
+			if(line.function == function.getPosition())
+				selectedLines.add(line);
+		
+		return selectedLines.toArray(new Line[0]);
 	}
 
 	public class Line

@@ -1,6 +1,7 @@
 package edu.utfpr.ct.report;
 
 import edu.utfpr.ct.datamodel.Game;
+import edu.utfpr.ct.gamecontroller.Table;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -26,7 +27,7 @@ abstract class AbstractReport
 		this.extension = extension;
 	}
 
-	public abstract boolean generateReport(Game game);
+	public abstract boolean generateReport(Table table);
 
 	public abstract Game[] loadReports();
 

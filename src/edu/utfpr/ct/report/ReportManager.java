@@ -1,6 +1,7 @@
 package edu.utfpr.ct.report;
 
 import edu.utfpr.ct.datamodel.Game;
+import edu.utfpr.ct.gamecontroller.Table;
 import edu.utfpr.ct.interfaces.IReport;
 
 public class ReportManager implements IReport
@@ -20,18 +21,18 @@ public class ReportManager implements IReport
 	}
 
 	@Override
-	public boolean createReport(Game game)
+	public boolean createReport(Table table)
 	{
 		AbstractReport report;
 
 		report = new CSVReport();
-		report.generateReport(game);
+		report.generateReport(table);
 
 		report = new HTMLReport();
-		report.generateReport(game);
+		report.generateReport(table);
 
 		report = new BinaryReport();
-		report.generateReport(game);
+		report.generateReport(table);
 
 		return true;
 	}
