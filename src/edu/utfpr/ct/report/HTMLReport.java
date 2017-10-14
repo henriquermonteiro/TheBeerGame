@@ -12,6 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -32,7 +33,7 @@ class HTMLReport extends AbstractReport
 
 		try
 		{
-			page = new String(Files.readAllBytes(Paths.get("Template.html")), StandardCharsets.UTF_8);
+			page = new String(Files.readAllBytes(Paths.get("resources", "Template.html")), StandardCharsets.UTF_8);
 			bw = new BufferedWriter(new FileWriter(createFile(getFileName(table.getGame()))));
 
 			page = replaceGameConfig(page, table.getGame());
@@ -71,7 +72,8 @@ class HTMLReport extends AbstractReport
 
 	private String replaceNodeData(String page, Game game)
 	{
-		List sequence;
+		int maxOrder = 1, maxStock = 1;
+		List<Integer> sequence;
 		Node node;
 		String function;
 
@@ -88,11 +90,20 @@ class HTMLReport extends AbstractReport
 			function = node.function.toString();
 			function = function.toLowerCase();
 			function = function.substring(0, 1).toUpperCase() + function.substring(1);
+			
+			List<Integer> tmpOrderList = node.playerMove.subList(0, node.playerMove.size());
+			List<Integer> tmpStockList = node.currentStock.subList(0, node.playerMove.size());
 
 			page = page.replace("{" + function + "Name}",  node.playerName);
-			page = page.replace("{" + function + "Order}", node.playerMove.toString());
-			page = page.replace("{" + function + "Stock}", node.currentStock.toString());
+			page = page.replace("{" + function + "Order}", tmpOrderList.toString());
+			page = page.replace("{" + function + "Stock}", tmpStockList.toString());
+			
+			maxOrder = maxOrder > Collections.max(tmpOrderList, null) ? maxOrder : Collections.max(tmpOrderList, null);
+			maxStock = maxStock > Collections.max(tmpStockList, null) ? maxStock : Collections.max(tmpStockList, null);
 		}
+		
+		page = page.replace("{MaxOrder}", Integer.toString(maxOrder + 10));
+		page = page.replace("{MaxStock}", Integer.toString(maxStock + 10));
 
 		return page;
 	}

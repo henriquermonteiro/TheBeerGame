@@ -134,7 +134,7 @@ class CSVReport extends AbstractReport
 
 			for(Table.Line line : table.getByFunction(node.function))
 			{
-				bw.write(line.week + ", ");
+				bw.write(line.week + 1 + ", ");
 				bw.write(line.initialStock + ", ");
 				bw.write(line.orderReceived + ", ");
 				bw.write(line.orderPreviousPending + ", ");

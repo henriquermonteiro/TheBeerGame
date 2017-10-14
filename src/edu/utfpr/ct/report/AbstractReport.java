@@ -41,8 +41,7 @@ abstract class AbstractReport
 			if(!Files.exists(path))
 				path = Files.createDirectory(path);
 
-			fileName = path + separator + fileName;
-			path = Paths.get(fileName);
+			path = Paths.get(path.toString(), fileName);
 			path = Files.createFile(path);
 
 			return path.toFile();
@@ -60,8 +59,7 @@ abstract class AbstractReport
 
 		try
 		{
-			fileName = defaultFolder + separator + fileName;
-			path = Paths.get(fileName).toAbsolutePath();
+			path = Paths.get(defaultFolder, fileName).toAbsolutePath();
 
 			return Files.deleteIfExists(path);
 		}
@@ -80,8 +78,7 @@ abstract class AbstractReport
 		{
 			for(String file : listAllFiles())
 			{
-				file = defaultFolder + separator + file;
-				path = Paths.get(file).toAbsolutePath();
+				path = Paths.get(defaultFolder, file).toAbsolutePath();
 				Files.deleteIfExists(path);
 			}
 
