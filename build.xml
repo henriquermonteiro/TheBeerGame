@@ -69,19 +69,22 @@
     properties which you can use, check the target you are overriding in the
     nbproject/build-impl.xml file. 
 
-    -->
-    <target name="-post-compile">
-        <copy todir="${dist.dir}/webapp">
-            <fileset dir="webapp"/>
-        </copy>
-        <copy todir="${dist.dir}/icon">
-            <fileset dir="icon"/>
-        </copy>
-        <copy todir="${dist.dir}/lang">
-            <fileset dir="lang"/>
-        </copy>
-        <copy todir="${dist.dir}/build/classes">
-            <fileset dir="build/classes/edu/utfpr/ct/webserver"/>
-        </copy>           
-    </target>
+	-->
+	<target name="-post-compile">
+		<copy todir="${dist.dir}/webapp">
+			<fileset dir="webapp"/>
+		</copy>
+		<copy todir="${dist.dir}/icon">
+			<fileset dir="icon"/>
+		</copy>
+		<copy todir="${dist.dir}/lang">
+			<fileset dir="lang"/>
+		</copy>
+		<copy todir="${dist.dir}/build/classes">
+			<fileset dir="build/classes/edu/utfpr/ct/webserver"/>
+		</copy>
+		<copy todir="${dist.dir}/resources">
+			<fileset dir="resources"/>
+		</copy>
+	</target>
 </project>
