@@ -160,7 +160,7 @@ public class PlayGamePane extends BorderPane {
                     Label icon = new Label();
                     icon.getStyleClass().addAll("warning", "dialog-pane", "alert");
                     confirm.setGraphic(icon);
-                    ((Stage)confirm.getDialogPane().getScene().getWindow()).getIcons().add(new Image(new File("icon" + File.separator + "Beer_mug_transparent2.png").toURI().toString()));
+                    ((Stage)confirm.getDialogPane().getScene().getWindow()).getIcons().add(StaticImages.BEERMUG2_ICON);
                     confirm.setHeaderText(HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.MESSAGE_STOPGAME_WARN_TITLE));
                     confirm.setTitle(HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.MESSAGE_STOPGAME_WARN_TITLE));
                     Optional<ButtonType> res = confirm.showAndWait();

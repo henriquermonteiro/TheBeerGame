@@ -2,6 +2,7 @@ package edu.utfpr.ct.hostgui;
 
 import edu.utfpr.ct.gamecontroller.Controller;
 import edu.utfpr.ct.hostgui.utils.BubblePanel;
+import edu.utfpr.ct.hostgui.utils.StaticImages;
 import edu.utfpr.ct.interfaces.IGUI;
 import edu.utfpr.ct.localization.HostLocalizationKeys;
 import javafx.application.Application;
@@ -66,7 +67,7 @@ public class StartFrame extends Application implements IGUI{
         s.getStylesheets().add(stylesheet);
         LocalizationUtils.bindLocalizationText(primaryStage.titleProperty(), HostLocalizationKeys.FRAME_NAME);
         primaryStage.setScene(s);
-        primaryStage.getIcons().add(new Image(new File("icon" + File.separator + "Beer_mug_transparent2.png").toURI().toString()));
+        primaryStage.getIcons().add(StaticImages.BEERMUG2_ICON);
         
         this.primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
@@ -76,7 +77,7 @@ public class StartFrame extends Application implements IGUI{
                     Label icon = new Label();
                     icon.getStyleClass().addAll("warning", "dialog-pane", "alert");
                     confirm.setGraphic(icon);
-                    ((Stage)confirm.getDialogPane().getScene().getWindow()).getIcons().add(new Image(new File("icon" + File.separator + "Beer_mug_transparent2.png").toURI().toString()));
+                    ((Stage)confirm.getDialogPane().getScene().getWindow()).getIcons().add(StaticImages.BEERMUG2_ICON);
                     confirm.setHeaderText(HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.MESSAGE_CLOSEAPP_WARN_TITLE));
                     confirm.setTitle(HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.MESSAGE_CLOSEAPP_WARN_TITLE));
                     Optional<ButtonType> res = confirm.showAndWait();
@@ -118,7 +119,7 @@ public class StartFrame extends Application implements IGUI{
         infos.add(window);
         
         window.setScene(s);
-        window.getIcons().add(new Image(new File("icon" + File.separator + "Beer_mug_transparent2.png").toURI().toString()));
+        window.getIcons().add(StaticImages.BEERMUG2_ICON);
         window.show();
     }
 

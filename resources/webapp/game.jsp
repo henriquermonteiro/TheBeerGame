@@ -372,26 +372,26 @@
             }
             
             function init_table(){
-                document.getElementById("func_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_FUNC)) %>";
-                document.getElementById("week_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_WEEK)) %>";
-                document.getElementById("init_stock_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_ISTOCK)) %>";
-                document.getElementById("rec_order_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_RECORDER)) %>";
-                document.getElementById("prev_unf_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_PREVPENDING)) %>";
-                document.getElementById("expe_del_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_EXPECDELIV)) %>";
-                document.getElementById("act_del_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_ACTUDELI)) %>";
-                document.getElementById("unf_order_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_UNFULFORDER)) %>";
-                document.getElementById("final_stock_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_FSTOCK)) %>";
-                document.getElementById("conf_deli_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_CONFIRDELI)) %>";
-                document.getElementById("cost_del_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_COSTDELI)) %>";
-                document.getElementById("cost_stock_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_COSTSTOCK)) %>";
-            <% if(((Double)json.get("selling_profit")) != 0.0) { %>
-                document.getElementById("prof_sale_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_PROFSALE)) %>";
-            <% } %>
-                document.getElementById("bal_header").innerHTML = "<%=(localize.getTextFor( (((Double)json.get("selling_profit")) != 0.0 ? ClientLocalizationKeys.GAME_TABLE_TCOST : ClientLocalizationKeys.GAME_TABLE_BALANCE) )) %>";
-            <% if(((Long)json.get("delay")) > 0){ %>
-                document.getElementById("inc_order_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_INCORDER)) %>";
-            <% } %>
-                document.getElementById("ordered_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_REQUEST)) %>";
+//                document.getElementById("func_header").innerHTML = "< %=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_FUNC)) %>";
+//                document.getElementById("week_header").innerHTML = "< %=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_WEEK)) %>";
+//                document.getElementById("init_stock_header").innerHTML = "< %=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_ISTOCK)) %>";
+//                document.getElementById("rec_order_header").innerHTML = "< %=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_RECORDER)) %>";
+//                document.getElementById("prev_unf_header").innerHTML = "< %=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_PREVPENDING)) %>";
+//                document.getElementById("expe_del_header").innerHTML = "< %=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_EXPECDELIV)) %>";
+//                document.getElementById("act_del_header").innerHTML = "< %=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_ACTUDELI)) %>";
+//                document.getElementById("unf_order_header").innerHTML = "< %=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_UNFULFORDER)) %>";
+//                document.getElementById("final_stock_header").innerHTML = "< %=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_FSTOCK)) %>";
+//                document.getElementById("conf_deli_header").innerHTML = "< %=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_CONFIRDELI)) %>";
+//                document.getElementById("cost_del_header").innerHTML = "< %=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_COSTDELI)) %>";
+//                document.getElementById("cost_stock_header").innerHTML = "< %=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_COSTSTOCK)) %>";
+//            < % if(((Double)json.get("selling_profit")) != 0.0) { % >
+//                document.getElementById("prof_sale_header").innerHTML = "< %=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_PROFSALE)) %>";
+//            < % } % >
+//                document.getElementById("bal_header").innerHTML = "< %=(localize.getTextFor( (((Double)json.get("selling_profit")) != 0.0 ? ClientLocalizationKeys.GAME_TABLE_TCOST : ClientLocalizationKeys.GAME_TABLE_BALANCE) )) %>";
+//            < % if(((Long)json.get("delay")) > 0){ %>
+//                document.getElementById("inc_order_header").innerHTML = "< %=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_INCORDER)) %>";
+//            < % } %>
+//                document.getElementById("ordered_header").innerHTML = "< %=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_REQUEST)) %>";
             }
             
             var is_set = -1;
@@ -466,7 +466,10 @@
                                 
                                 document.getElementsByClassName("dis_tint")[0].className = "dis_tint paint";
                             }else if(is_set === "3"){
-                                <% if(((Long)json.get("delay")) > 0) { %> document.getElementById("inc_order_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_INCORDER_PRODUCER)) %>"; <% } %>
+                                <% if(((Long)json.get("delay")) > 0) { %> 
+                                    document.getElementById("inc_order_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_INCORDER_PRODUCER)) %>"; 
+                                    document.getElementById("inc_order_header_tooltip").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_INCORDER_PRODUCER_TT)) %>"; 
+                                <% } %>
                                 document.getElementById("PRODUCER_column").className = "this_player";
                                 
                                 document.getElementById("RETAILER_make_order").innerHTML = "";
@@ -638,9 +641,6 @@
 
         <div id="game-panel" class="hidden">
             <div class="table-card mdl-card mdl-shadow--6dp mdl-card--horizontal">
-                <!--div class="mdl-card__supporting-text  mdl-card--border">
-                    <span><h5 style="margin: 0;">< %=(localize.getTextFor(ClientLocalizationKeys.GAME_INFO_WEEKS)) % ><span id="curweek">k</span>/<span id="totweek">L</span></h5></span>
-                </div-->
                 <div class="mdl-card__media mdl-card--border">
                     <table id="top_table">
                         <colgroup>
@@ -784,28 +784,25 @@
                             
                     </table>
                 </div>
-                <!--div class="mdl-card__supporting-text  mdl-card--border">
-                    <span><h5 style="margin: 0;">< %=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_NAME)) % ></h5></span>
-                </div-->
                 <div class="mdl-card__media mdl-card--border">
                     <table id="history">
                         <tr id="header_row">
                             <th id="func_header" rowspan="2"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_FUNC)) %>
                             <th id="week_header" rowspan="2"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_WEEK)) %>
-                            <th id="init_stock_header" rowspan="2">Initial Stock
-                            <th id="rec_order_header" rowspan="2">Received Order
-                            <th id="prev_unf_header" rowspan="2">Unfulfilled Order
-                            <th id="expe_del_header" rowspan="2">Expected Delivery
-                            <th id="act_del_header" rowspan="2">Actual Delivery
-                            <th id="unf_order_header" rowspan="2">Unfulfilled Order this Week
-                            <th id="final_stock_header" rowspan="2">Final Stock
-                            <th id="conf_deli_header" rowspan="2">Order Confirmed
-                            <th id="cost_del_header" rowspan="2">Cost of Delayed Deliveries
-                            <th id="cost_stock_header" rowspan="2">Cost of Stock
+                            <th id="init_stock_header" rowspan="2"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_ISTOCK)) %>
+                            <th id="rec_order_header" rowspan="2"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_RECORDER)) %>
+                            <th id="prev_unf_header" rowspan="2"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_PREVPENDING)) %>
+                            <th id="expe_del_header" rowspan="2"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_EXPECDELIV)) %>
+                            <th id="act_del_header" rowspan="2"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_ACTUDELI)) %>
+                            <th id="unf_order_header" rowspan="2"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_UNFULFORDER)) %>
+                            <th id="final_stock_header" rowspan="2"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_FSTOCK)) %>
+                            <th id="conf_deli_header" rowspan="2"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_CONFIRDELI)) %>
+                            <th id="cost_del_header" rowspan="2"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_COSTDELI)) %>
+                            <th id="cost_stock_header" rowspan="2"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_COSTSTOCK)) %>
                         <% if(((Double)json.get("selling_profit")) != 0.0) { %>
-                            <th id="prof_sale_header" rowspan="2">Profit from Sales
+                            <th id="prof_sale_header" rowspan="2"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_PROFSALE)) %>
                         <% } %>
-                            <th id="bal_header" rowspan="2">Balance
+                            <th id="bal_header" rowspan="2"><%=(localize.getTextFor( (((Double)json.get("selling_profit")) != 0.0 ? ClientLocalizationKeys.GAME_TABLE_TCOST : ClientLocalizationKeys.GAME_TABLE_BALANCE) )) %>
                         <% if(((Long)json.get("delay")) > 0){ %>
                             <th id="inc_order_header" colspan="<%=json.get("delay")%>"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_INCORDER)) %>
                         <% } %>
@@ -816,29 +813,29 @@
                         <%
                             for(int u = 1; u <= ((Long)json.get("delay")); u++){
                         %>
-                            <th><%=u%> Week
+                            <th><%=u%><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_INCORDER_WEEK)) %>
                         <%  } 
                            } %>
                             
                     </table>
                 </div>
+                <div class="mdl-tooltip" for="func_header"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_FUNC_TT)) %></div>
+                <div class="mdl-tooltip" for="week_header"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_WEEK_TT)) %></div>
+                <div class="mdl-tooltip" for="init_stock_header"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_ISTOCK_TT)) %></div>
+                <div class="mdl-tooltip" for="rec_order_header"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_RECORDER_TT)) %></div>
+                <div class="mdl-tooltip" for="prev_unf_header"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_PREVPENDING_TT)) %></div>
+                <div class="mdl-tooltip" for="expe_del_header"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_EXPECDELIV_TT)) %></div>
+                <div class="mdl-tooltip" for="act_del_header"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_ACTUDELI_TT)) %></div>
+                <div class="mdl-tooltip" for="unf_order_header"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_UNFULFORDER_TT)) %></div>
+                <div class="mdl-tooltip" for="final_stock_header"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_FSTOCK_TT)) %></div>
+                <div class="mdl-tooltip" for="conf_deli_header"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_CONFIRDELI_TT)) %></div>
+                <div class="mdl-tooltip" for="cost_del_header"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_COSTDELI_TT)) %></div>
+                <div class="mdl-tooltip" for="cost_stock_header"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_COSTSTOCK_TT)) %></div>
+                <div class="mdl-tooltip" for="prof_sale_header"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_PROFSALE_TT)) %></div>
+                <div class="mdl-tooltip" for="bal_header"><%=(localize.getTextFor( (((Double)json.get("selling_profit")) != 0.0 ? ClientLocalizationKeys.GAME_TABLE_TCOST_TT : ClientLocalizationKeys.GAME_TABLE_BALANCE_TT) )) %></div>
+                <div id="inc_order_header_tooltip" class="mdl-tooltip" for="inc_order_header"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_INCORDER_TT)) %></div>
+                <div class="mdl-tooltip" for="ordered_header"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_REQUEST_TT)) %></div>
             </div>
-            <!--div class="control-panel page-content">
-                <div class="half-oval-shaped drop-shadow">
-                    <div id="order_input" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" pattern="[0-9]{1,9}" id="order__input">
-                        <label class="mdl-textfield__label" for="order_input" id="order__label">< %=(localize.getTextFor(ClientLocalizationKeys.GAME_CONTROL_LABEL_ALLOW)) % ></label>
-                        <span class="mdl-textfield__error">< %=(localize.getTextFor(ClientLocalizationKeys.GAME_CONTROL_ERROR)) % ></span>
-                    </div>
-                    <div class="mdl-tooltip" for="order_input">< %=(localize.getTextFor(ClientLocalizationKeys.PLAY_ORDER_INPUT_TOOLTIP)) % ></div>
-                    <span style="display: inline-block;">
-                        <button id="order__button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" onclick="send_request();">
-                            < %=(localize.getTextFor(ClientLocalizationKeys.GAME_CONTROL_BUTTON)) % >
-                        </button>
-                    </span>
-                </div>
-                <div class="mdl-tooltip mdl-tooltip--right" for="order__button">< %=(localize.getTextFor(ClientLocalizationKeys.PLAY_ORDER_BUTTON_TOOLTIP)) % ></div>
-            </div-->
         </div>
 
         <div id="report-panel" class="hidden">

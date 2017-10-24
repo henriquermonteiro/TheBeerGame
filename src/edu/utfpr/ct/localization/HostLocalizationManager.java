@@ -21,7 +21,7 @@ public class HostLocalizationManager {
         localizeMap = new HashMap<>();
         langMap = new HashMap<>();
         
-        File f = new File("lang");
+        File f = new File("resources" + File.separator + "lang");
         
         FileFilter fF = new FileFilter() {
             @Override

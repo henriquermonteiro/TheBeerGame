@@ -48,24 +48,44 @@ GAME-INCOMING-WEEK-LABEL-INIT<>
 GAME-INCOMING-WEEK-LABEL-END<> semana: 
 GAME-TABLE-NAME<>Histórico: 
 GAME-TABLE-FUNCTION<>Função
+GAME-TABLE-FUNCTION-TOOLTIP<>Papel do jogador. <br/>Em uma cadeia informada, terão vários papéis no histórico.
 GAME-TABLE-WEEK<>Semana
+GAME-TABLE-WEEK-TOOLTIP<>Semana da informação.
 GAME-TABLE-INITIAL-STOCK<>Estoque Inicial
+GAME-TABLE-INITIAL-STOCK-TOOLTIP<>A soma do estoque final e do produto a caminho da semana anterior.
 GAME-TABLE-RECEIVED-ORDER<>Pedido Recebido
+GAME-TABLE-RECEIVED-ORDER-TOOLTIP<>Pedido recebido na semana feito pelo cliente.
 GAME-TABLE-PREVIOUSLY-PENDING-ORDERS<>Pedidos Pendentes Anteriormente
+GAME-TABLE-PREVIOUSLY-PENDING-ORDERS-TOOLTIP<>Mantém registro dos pedidos pendentes, estes devem ser atendidos assim que possível.<br/>É o pedido pendente da semana anterior.
 GAME-TABLE-EXPECTED-DELIVERY<>Entrega Esperada
+GAME-TABLE-EXPECTED-DELIVERY-TOOLTIP<>A soma do pedido recebido e dos pedidos pendentes anteriores.
 GAME-TABLE-ACTUAL-DELIVERY<>Entrega Efetivada
+GAME-TABLE-ACTUAL-DELIVERY-TOOLTIP<>Quantidade enviada. É o mínimo entre o estoque disponível e a entrega esperada.
 GAME-TABLE-UNFULFILLED-ORDER-THIS-WEEK<>Pedido Pendente na Semana
+GAME-TABLE-UNFULFILLED-ORDER-THIS-WEEK-TOOLTIP<>Se a entrega esperada não puder ser atendida, a quantidade faltante é registrada para a semana seguinte.
 GAME-TABLE-UNFULFILLED-ORDER-THIS-WEEK-RETAILER<>Vendas perdidas na Semana
+GAME-TABLE-UNFULFILLED-ORDER-THIS-WEEK-RETAILER-TOOLTIP<>O total de vendas perdidas na semana.
 GAME-TABLE-FINAL-STOCK<>Estoque Final
+GAME-TABLE-FINAL-STOCK-TOOLTIP<>Inventário ao final da semana.
 GAME-TABLE-CONFIRMED-DELIVERY<>Confirmação de Pedido Enviado
+GAME-TABLE-CONFIRMED-DELIVERY-TOOLTIP<>A quantidade enviada pelo fornecedor em resposta ao seu pedido.<br/>Quanquer quantidade faltante será enviada quando disponível.
 GAME-TABLE-COST-MISSING-DELIVERY<>Custo de Entrega Atrasada
+GAME-TABLE-COST-MISSING-DELIVERY-TOOLTIP<>O custo de não atender aos pedidos desta semana.
 GAME-TABLE-COST-STOCKING<>Custo de Estocagem
+GAME-TABLE-COST-STOCKING-TOOLTIP<>Custo de armazenamento do inventário entre as semanas.
 GAME-TABLE-PROFIT-SALE<>Lucro sobre vendas
+GAME-TABLE-PROFIT-SALE-TOOLTIP<>A quantidade recebida pelas vendas da semana.
 GAME-TABLE-TOTAL-COST<>Custo Total
+GAME-TABLE-TOTAL-COST-TOOLTIP<>O custo total da semana.<br/>É ou o custo de entrega atrasada ou o custo de estocagem.
 GAME-TABLE-BALANCE<>Balanço
+GAME-TABLE-BALANCE-TOOLTIP<>O lucro ou prejuízo na semana.<br/>É lucro sobre vendas menos o custo de estocagem e custo de entrega atrasada.
 GAME-TABLE-INCOMMINGORDER<>Produto a caminho
+GAME-TABLE-INCOMMINGORDER-TOOLTIP<>Produtos que estão a caminho.<br/>Quando o produto atingir o marco de 1 semana, será<br/>adicionado ao inventário no início da semana seguinte.
 GAME-TABLE-INCOMMINGORDER-PRODUCER<>Produzindo
+GAME-TABLE-INCOMMINGORDER-TOOLTIP-PRODUCER<>Predutos que estão sendo feitos.<br/>Quando o produto atingir o marco de 1 semana, será<br/>adicionado ao inventário no início da semana seguinte.
+GAME-TABLE-INCOMMINGORDER-WEEK<> Semana
 GAME-TABLE-REQUEST<>Pedido
+GAME-TABLE-REQUEST-TOOLTIP<>Pedido feito por você ao seu fornecedor nesta semana.
 GAME-TABLE-FUNC-CONSUMER<>Consumidor
 GAME-TABLE-FUNC-RETAILER<>Varejista
 GAME-TABLE-FUNC-WHOLESALER<>Atacadista

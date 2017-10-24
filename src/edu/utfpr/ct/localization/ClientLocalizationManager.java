@@ -16,7 +16,7 @@ public class ClientLocalizationManager {
         localizeMap = new HashMap<>();
         langMap = new HashMap<>();
         
-        File f = new File("lang" + File.separator + "web");
+        File f = new File("resources" + File.separator + "lang" + File.separator + "web");
         
         FileFilter fF = new FileFilter() {
             @Override

@@ -110,7 +110,7 @@ public class ActionService {
 
         tomcat.setPort(port);
 
-        File webContentFolder = new File(root.getAbsolutePath(), "webapp/");
+        File webContentFolder = new File(root.getAbsolutePath(), "resources/webapp/");
         if (!webContentFolder.exists()) {
             webContentFolder = Files.createTempDirectory("default-doc-base").toFile();
         }

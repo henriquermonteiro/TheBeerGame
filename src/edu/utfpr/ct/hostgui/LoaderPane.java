@@ -3,6 +3,7 @@ package edu.utfpr.ct.hostgui;
 import edu.utfpr.ct.datamodel.Game;
 import edu.utfpr.ct.hostgui.utils.GameComponent;
 import edu.utfpr.ct.hostgui.utils.ParameterEventHandler;
+import edu.utfpr.ct.hostgui.utils.StaticImages;
 import edu.utfpr.ct.localization.HostLocalizationKeys;
 import edu.utfpr.ct.localization.HostLocalizationManager;
 import edu.utfpr.ct.localization.Localize;
@@ -64,7 +65,7 @@ public class LoaderPane extends BorderPane {
                         confirmation.setContentText(message);
                         confirmation.setHeaderText(title);
                         confirmation.setTitle(title);
-                        ((Stage)confirmation.getDialogPane().getScene().getWindow()).getIcons().add(new Image(new File("icon" + File.separator + "Beer_mug_transparent2.png").toURI().toString()));
+                        ((Stage)confirmation.getDialogPane().getScene().getWindow()).getIcons().add(StaticImages.BEERMUG2_ICON);
                         Label icon = new Label();
                         icon.getStyleClass().addAll("warning", "dialog-pane", "alert");
                         confirmation.setGraphic(icon);
@@ -107,7 +108,7 @@ public class LoaderPane extends BorderPane {
                         confirmation.setContentText(message);
                         confirmation.setHeaderText(title);
                         confirmation.setTitle(title);
-                        ((Stage)confirmation.getDialogPane().getScene().getWindow()).getIcons().add(new Image(new File("icon" + File.separator + "Beer_mug_transparent2.png").toURI().toString()));
+                        ((Stage)confirmation.getDialogPane().getScene().getWindow()).getIcons().add(StaticImages.BEERMUG2_ICON);
                         Label icon = new Label();
                         icon.getStyleClass().addAll("warning", "dialog-pane", "alert");
                         confirmation.setGraphic(icon);

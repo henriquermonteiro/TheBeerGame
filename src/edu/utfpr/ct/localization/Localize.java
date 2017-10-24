@@ -19,9 +19,9 @@ public class Localize {
         language = (lang.equalsIgnoreCase("default") ? Locale.getDefault().getLanguage() : lang);
 
         if (isHost) {
-            path = "lang" + File.separator;
+            path = "resources" + File.separator + "lang" + File.separator;
         } else {
-            path = "lang" + File.separator + "web" + File.separator;
+            path = "resources" + File.separator + "lang" + File.separator + "web" + File.separator;
         }
         
         loadLanguage(lang);

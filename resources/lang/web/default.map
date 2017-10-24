@@ -48,24 +48,44 @@ GAME-INCOMING-WEEK-LABEL-INIT<>
 GAME-INCOMING-WEEK-LABEL-END<> week: 
 GAME-TABLE-NAME<>History:
 GAME-TABLE-FUNCTION<>Role
+GAME-TABLE-FUNCTION-TOOLTIP<>Role of the player. <br/>For an informed chain, there'll be several roles on the history.
 GAME-TABLE-WEEK<>Week
+GAME-TABLE-WEEK-TOOLTIP<>Week of the information.
 GAME-TABLE-INITIAL-STOCK<>Initial Stock
+GAME-TABLE-INITIAL-STOCK-TOOLTIP<>The sum of the final stock and the incomming order of the previous week.
 GAME-TABLE-RECEIVED-ORDER<>Received Order
+GAME-TABLE-RECEIVED-ORDER-TOOLTIP<>The request received on the week made by the customer.
 GAME-TABLE-PREVIOUSLY-PENDING-ORDERS<>Previously Pending Orders
+GAME-TABLE-PREVIOUSLY-PENDING-ORDERS-TOOLTIP<>Keeps track of pending orders, that must be fullfiled as soon as posible.<br/>It's the unfulfilled order of the previous week.
 GAME-TABLE-EXPECTED-DELIVERY<>Expected Delivery
+GAME-TABLE-EXPECTED-DELIVERY-TOOLTIP<>The sum of received order and previosly pending orders.
 GAME-TABLE-ACTUAL-DELIVERY<>Actualy Delivered
+GAME-TABLE-ACTUAL-DELIVERY-TOOLTIP<>The amount sent. It is the minimum between the amount available and the expected delivery.
 GAME-TABLE-UNFULFILLED-ORDER-THIS-WEEK<>Unfulfilled Orders this Week
+GAME-TABLE-UNFULFILLED-ORDER-THIS-WEEK-TOOLTIP<>If the expected delivery cannot be fulfilled, the amount missing is save for the next week.
 GAME-TABLE-UNFULFILLED-ORDER-THIS-WEEK-RETAILER<>Lost Sales this Week
+GAME-TABLE-UNFULFILLED-ORDER-THIS-WEEK-RETAILER-TOOLTIP<>The amount of sales lost this week.
 GAME-TABLE-FINAL-STOCK<>Final Stock
+GAME-TABLE-FINAL-STOCK-TOOLTIP<>Inventory at the end of the week.
 GAME-TABLE-CONFIRMED-DELIVERY<>Confirmed 
-GAME-TABLE-COST-MISSING-DELIVERY<>Cost of non-fulfillment
+GAME-TABLE-CONFIRMED-DELIVERY-TOOLTIP<>The amount dispatched by the supplyer in response of your request.<br/>Any missing amount will be sent when available.
+GAME-TABLE-COST-MISSING-DELIVERY<>Cost of unfulfillment
+GAME-TABLE-COST-MISSING-DELIVERY-TOOLTIP<>The cost of not been able to fulfill the orders this week.
 GAME-TABLE-COST-STOCKING<>Cost of carrying inventory
+GAME-TABLE-COST-STOCKING-TOOLTIP<>The cost of carrying inventory throught the weeks.
 GAME-TABLE-PROFIT-SALE<>Profit over Sales
+GAME-TABLE-PROFIT-SALE-TOOLTIP<>The amount received for the sales of the week.
 GAME-TABLE-TOTAL-COST<>Overall Cost
+GAME-TABLE-TOTAL-COST-TOOLTIP<>The total cost of the week.<br/>It's either the cost of unfulfillment or the cost of carrying inventory.
 GAME-TABLE-BALANCE<>Balance
+GAME-TABLE-BALANCE-TOOLTIP<>The ammount of profit or loss on the week. <br/>It's the profit over sales minus the cost of carrying inventory and the cost of unfulfillment.
 GAME-TABLE-INCOMMINGORDER<>Incoming products
+GAME-TABLE-INCOMMINGORDER-TOOLTIP<>Products that are on their way.<br/> When the product hits the 1 week mark, it'll be <br/>added to the inventory on the start of the next week.
 GAME-TABLE-INCOMMINGORDER-PRODUCER<>Producing
+GAME-TABLE-INCOMMINGORDER-PRODUCER-TOOLTIP<>Products that are been made.<br/> When the product hits the 1 week mark, it'll be <br/> added to the inventory on the start of the next week.
+GAME-TABLE-INCOMMINGORDER-WEEK<> Week
 GAME-TABLE-REQUEST<>Demand
+GAME-TABLE-REQUEST-TOOLTIP<>Order made by you to your supplier this week.
 GAME-TABLE-FUNC-CONSUMER<>Consumer
 GAME-TABLE-FUNC-RETAILER<>Retailer
 GAME-TABLE-FUNC-WHOLESALER<>Wholesaler

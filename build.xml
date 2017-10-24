@@ -71,14 +71,8 @@
 
 	-->
 	<target name="-post-compile">
-		<copy todir="${dist.dir}/webapp">
-			<fileset dir="webapp"/>
-		</copy>
 		<copy todir="${dist.dir}/icon">
 			<fileset dir="icon"/>
-		</copy>
-		<copy todir="${dist.dir}/lang">
-			<fileset dir="lang"/>
 		</copy>
 		<copy todir="${dist.dir}/build/classes">
 			<fileset dir="build/classes/edu/utfpr/ct/webserver"/>
