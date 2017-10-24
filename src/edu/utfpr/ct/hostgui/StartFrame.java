@@ -13,12 +13,14 @@ import edu.utfpr.ct.localization.LocalizationUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Optional;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
+import javafx.stage.WindowEvent;
 import jiconfont.icons.GoogleMaterialDesignIcons;
 import jiconfont.javafx.IconFontFX;
 
@@ -66,26 +68,29 @@ public class StartFrame extends Application implements IGUI{
         primaryStage.setScene(s);
         primaryStage.getIcons().add(new Image(new File("icon" + File.separator + "Beer_mug_transparent2.png").toURI().toString()));
         
-        this.primaryStage.setOnCloseRequest((event) -> {
-            if(mainScene.isAnyGameRunning()){
-                Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.MESSAGE_CLOSEAPP_WARN));
-                Label icon = new Label();
-                icon.getStyleClass().addAll("warning", "dialog-pane", "alert");
-                confirm.setGraphic(icon);
-                ((Stage)confirm.getDialogPane().getScene().getWindow()).getIcons().add(new Image(new File("icon" + File.separator + "Beer_mug_transparent2.png").toURI().toString()));
-                confirm.setHeaderText(HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.MESSAGE_CLOSEAPP_WARN_TITLE));
-                confirm.setTitle(HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.MESSAGE_CLOSEAPP_WARN_TITLE));
-                Optional<ButtonType> res = confirm.showAndWait();
+        this.primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                if(mainScene.isAnyGameRunning()){
+                    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.MESSAGE_CLOSEAPP_WARN));
+                    Label icon = new Label();
+                    icon.getStyleClass().addAll("warning", "dialog-pane", "alert");
+                    confirm.setGraphic(icon);
+                    ((Stage)confirm.getDialogPane().getScene().getWindow()).getIcons().add(new Image(new File("icon" + File.separator + "Beer_mug_transparent2.png").toURI().toString()));
+                    confirm.setHeaderText(HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.MESSAGE_CLOSEAPP_WARN_TITLE));
+                    confirm.setTitle(HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.MESSAGE_CLOSEAPP_WARN_TITLE));
+                    Optional<ButtonType> res = confirm.showAndWait();
 
-                if (res.get() != ButtonType.OK) {
-                    event.consume();
-                    return;
+                    if (res.get() != ButtonType.OK) {
+                        event.consume();
+                        return;
+                    }
+                }
+
+                for(Stage st : infos){
+                    st.close();
                 }
             }
-
-            infos.forEach((st) -> {
-                st.close();
-            });
         });
         
         primaryStage.show();
@@ -103,8 +108,11 @@ public class StartFrame extends Application implements IGUI{
         
         Stage window = new Stage();
         window.setTitle(title);
-        window.setOnCloseRequest((event) -> {
-            infos.remove(window);
+        window.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                infos.remove(window);
+            }
         });
         
         infos.add(window);

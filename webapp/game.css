@@ -122,11 +122,9 @@
   border: 1px solid #dddddd;
 }
 
-.table-card > .mdl-card__media > table > tbody > tr > td > img {
+.table-card > .mdl-card__media > table > tbody > tr > td > figure > img {
   width: 100px;
   height: 100px;
-  margin-left: 15px;
-  margin-right: 15px;
 }
 
 .table-card > .mdl-card__media > table > tbody > tr > td > table {
@@ -161,6 +159,73 @@
 #game-panel > .control-panel > .half-oval-shaped > span > button {
   pointer-events: all;
   margin-top: 5px;
+}
+
+#top_table .this_player {
+    background-color: #EBEBEB;
+}
+
+#top_table .this_player.your_turn {
+    -moz-animation:myfirst 2s infinite;
+    -webkit-animation:myfirst 2s infinite; 
+}
+
+@-moz-keyframes myfirst
+{
+      0%   {background: #EBEBEB;}
+     16%   {background: #EBEBEB;}
+     24%  {background:  rgba(68,138,255, 1.0);}
+     32%   {background: #EBEBEB;}
+     50%   {background: #EBEBEB;}
+}
+ 
+@-webkit-keyframes myfirst
+{
+      0%   {background: #EBEBEB;}
+     16%   {background: #EBEBEB;}
+     24%  {background:  rgba(68,138,255, 1.0);}
+     32%   {background: #EBEBEB;}
+     50%   {background: #EBEBEB;}
+}
+
+.ret_tint, .who_tint, .dis_tint, .pro_tint {
+    width: 100px;
+    position: relative;
+    display: inline-block;
+}
+
+.ret_tint::before, .who_tint::before, .dis_tint::before, .pro_tint::before {
+    content: "";
+    display: block;
+    position: absolute;
+    filter: alpha(opacity=50);
+    -moz-opacity: 0.5;
+    opacity: 0.5;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 50px;
+}
+
+.ret_tint.paint::before{
+    background: #009e73;
+}
+
+.who_tint.paint::before{
+    background: #0072b2;
+}
+
+.dis_tint.paint::before{
+    background: #cc79a7;
+}
+
+.pro_tint.paint::before{
+    background: #f0e442;
+}
+
+.last_row {
+    background-color: rgba(68,138,255, 5.0);
 }
 
 #report-panel {
@@ -283,4 +348,8 @@ body{
   left: 50%;
   margin-top: 20px;
   margin-left: -595px;
+}
+
+.mdl-textfield {
+    width: 200px;
 }

@@ -34,7 +34,7 @@
         session.setAttribute("PREF-LANG", request.getParameter("lang"));
     }
     
-    String lang = HostLocalizationManager.getInstance().getLang().get();
+    String lang = Locale.getDefault().getLanguage()+"_"+Locale.getDefault().getCountry();
     if(session.getAttribute("PREF-LANG") != null){ 
         lang = (String) session.getAttribute("PREF-LANG");
     }
@@ -58,6 +58,11 @@
                 var input = document.getElementById("order__input");
                 var label = document.getElementById("order__label");
                 var button = document.getElementById("order__button");
+                
+                var column = document.getElementsByClassName("this_player");
+                if(column.length > 0){
+                    document.getElementsByClassName("this_player")[0].className = "this_player your_turn";
+                }
 
                 if (input.hasAttribute("disabled")) {
                     input.removeAttribute("disabled");
@@ -73,6 +78,7 @@
 
                 input.focus();
                 input.parentNode.classList.add('is-dirty');
+                input.parentNode.classList.add('is-focused');
                 input.select();
             }
 
@@ -80,6 +86,10 @@
                 var input = document.getElementById("order__input");
                 var label = document.getElementById("order__label");
                 var button = document.getElementById("order__button");
+                
+                if(document.getElementsByClassName("this_player").length > 0){
+                    document.getElementsByClassName("this_player")[0].className = "this_player";
+                }
 
                 if (!input.hasAttribute("disabled")) {
                     input.setAttribute("disabled", "");
@@ -109,11 +119,19 @@
             function add_history_info(func, week, init_stock, rec_order, prev_pend_ord, expec_del, act_del, ord_unf, fin_stock, conf_del, cost_unf, cost_stock, profit, week_bal, orders, move, player_funct) {
                 var history = document.getElementById("history");
                 
+                var list = document.getElementsByClassName("last_row");
+                var i;
+                
+                for (i = 0; i < list.length; i++){
+                    list[i].className = "";
+                }
+                
                 _func = func;
                 _week = week;
 
                 var k = 0;
                 var row = history.insertRow(2);
+                row.className = "last_row";
                 var cell = row.insertCell(k++);
                 if(func === 0){
                     cell.innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_FUNC_CON)) %>";
@@ -400,8 +418,8 @@
                     block_move();
                 }
 
-                document.getElementById("curweek").innerHTML = json_state.current_week + 1;
-                document.getElementById("totweek").innerHTML = json_state.total_week;
+                //document.getElementById("curweek").innerHTML = json_state.current_week + 1;
+                //document.getElementById("totweek").innerHTML = json_state.total_week;
 
                 for (var player in json_state.players) {
                     var func = json_state.players[player].function;
@@ -417,15 +435,45 @@
                                 var expected = document.getElementById("expe_del_header");
                                 var row = document.getElementById("header_row");
                                 
+                                document.getElementById("RETAILER_column").className = "this_player";
+                                
+                                document.getElementById("WHOLESALER_make_order").innerHTML = "";
+                                document.getElementById("DISTRIBUTOR_make_order").innerHTML = "";
+                                document.getElementById("PRODUCER_make_order").innerHTML = "";
+                                
+                                document.getElementsByClassName("ret_tint")[0].className = "ret_tint paint";
+                                
                                 if(pending !== undefined || expected !== undefined){
                                     row.removeChild(pending);
                                     row.removeChild(expected);
                                 }
                                 
                                 document.getElementById("unf_order_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_UNFULFORDER_RETAILER)) %>";
+                            }else if(is_set === "1"){
+                                document.getElementById("WHOLESALER_column").className = "this_player";
+                                
+                                document.getElementById("RETAILER_make_order").innerHTML = "";
+                                document.getElementById("DISTRIBUTOR_make_order").innerHTML = "";
+                                document.getElementById("PRODUCER_make_order").innerHTML = "";
+                                
+                                document.getElementsByClassName("who_tint")[0].className = "who_tint paint";
+                            }else if(is_set === "2"){
+                                document.getElementById("DISTRIBUTOR_column").className = "this_player";
+                                
+                                document.getElementById("RETAILER_make_order").innerHTML = "";
+                                document.getElementById("WHOLESALER_make_order").innerHTML = "";
+                                document.getElementById("PRODUCER_make_order").innerHTML = "";
+                                
+                                document.getElementsByClassName("dis_tint")[0].className = "dis_tint paint";
                             }else if(is_set === "3"){
                                 <% if(((Long)json.get("delay")) > 0) { %> document.getElementById("inc_order_header").innerHTML = "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_INCORDER_PRODUCER)) %>"; <% } %>
+                                document.getElementById("PRODUCER_column").className = "this_player";
                                 
+                                document.getElementById("RETAILER_make_order").innerHTML = "";
+                                document.getElementById("WHOLESALER_make_order").innerHTML = "";
+                                document.getElementById("DISTRIBUTOR_make_order").innerHTML = "";
+                                
+                                document.getElementsByClassName("pro_tint")[0].className = "pro_tint paint";
                             }
                         }
                     }
@@ -590,11 +638,17 @@
 
         <div id="game-panel" class="hidden">
             <div class="table-card mdl-card mdl-shadow--6dp mdl-card--horizontal">
-                <div class="mdl-card__supporting-text  mdl-card--border">
-                    <span><h5 style="margin: 0;"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_INFO_WEEKS)) %><span id="curweek">k</span>/<span id="totweek">L</span></h5></span>
-                </div>
+                <!--div class="mdl-card__supporting-text  mdl-card--border">
+                    <span><h5 style="margin: 0;">< %=(localize.getTextFor(ClientLocalizationKeys.GAME_INFO_WEEKS)) % ><span id="curweek">k</span>/<span id="totweek">L</span></h5></span>
+                </div-->
                 <div class="mdl-card__media mdl-card--border">
-                    <table>
+                    <table id="top_table">
+                        <colgroup>
+                            <col id="RETAILER_column" style="width: 25%;"/>
+                            <col id="WHOLESALER_column" style="width: 25%;"/>
+                            <col id="DISTRIBUTOR_column" style="width: 25%;"/>
+                            <col id="PRODUCER_column" style="width: 25%;"/>
+                        </colgroup>
                         <tr>
                             <th><%=(localize.getTextFor(ClientLocalizationKeys.GAME_INFO_RET)) %>
                             <th><%=(localize.getTextFor(ClientLocalizationKeys.GAME_INFO_WHO)) %>
@@ -602,10 +656,10 @@
                             <th><%=(localize.getTextFor(ClientLocalizationKeys.GAME_INFO_PRO)) %>
                         </tr>
                         <tr id="image">
-                            <td><img id="game_RETAILER_img"    style="opacity: 0.5; filter: alpha(opacity=50);"  src="resources\retailer.png"    alt="<%=(localize.getTextFor(ClientLocalizationKeys.GAME_INFO_RET)) %>">
-                            <td><img id="game_WHOLESALER_img"  style="opacity: 0.5; filter: alpha(opacity=50);"  src="resources\wholesaler.png"  alt="<%=(localize.getTextFor(ClientLocalizationKeys.GAME_INFO_WHO)) %>">
-                            <td><img id="game_DISTRIBUTOR_img" style="opacity: 0.5; filter: alpha(opacity=50);"  src="resources\distributor.png" alt="<%=(localize.getTextFor(ClientLocalizationKeys.GAME_INFO_DIS)) %>">
-                            <td><img id="game_PRODUCER_img"    style="opacity: 0.5; filter: alpha(opacity=50);"  src="resources\Industry.png"    alt="<%=(localize.getTextFor(ClientLocalizationKeys.GAME_INFO_PRO)) %>">
+                            <td><figure class="ret_tint"><img id="game_RETAILER_img"    style="opacity: 0.5; filter: alpha(opacity=50);"  src="resources\retailer.png"    alt="<%=(localize.getTextFor(ClientLocalizationKeys.GAME_INFO_RET)) %>"></figure>
+                            <td><figure class="who_tint"><img id="game_WHOLESALER_img"  style="opacity: 0.5; filter: alpha(opacity=50);"  src="resources\wholesaler.png"  alt="<%=(localize.getTextFor(ClientLocalizationKeys.GAME_INFO_WHO)) %>"></figure>
+                            <td><figure class="dis_tint"><img id="game_DISTRIBUTOR_img" style="opacity: 0.5; filter: alpha(opacity=50);"  src="resources\distributor.png" alt="<%=(localize.getTextFor(ClientLocalizationKeys.GAME_INFO_DIS)) %>"></figure>
+                            <td><figure class="pro_tint"><img id="game_PRODUCER_img"    style="opacity: 0.5; filter: alpha(opacity=50);"  src="resources\Industry.png"    alt="<%=(localize.getTextFor(ClientLocalizationKeys.GAME_INFO_PRO)) %>"></figure>
 
                         <tr id="name">
                             <td id="retailer_name">   <b><%=(localize.getTextFor(ClientLocalizationKeys.GAME_NAME_LABEL)) %></b><span id="RETAILER_name2">Name 1</span>
@@ -670,11 +724,69 @@
                                     <tr> <td><%=(localize.getTextFor(ClientLocalizationKeys.GAME_INCOMING_WEEK_INIT)) + (r+1) + (localize.getTextFor(ClientLocalizationKeys.GAME_INCOMING_WEEK_END)) %> <td id="PRODUCER_inc_<%=r+1%>"> ---
                                     <%}%>
                                 </table>
+                                
+                        <tr id="make-order">
+                            <td id="RETAILER_make_order">
+                                <div id="order_input" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                    <input class="mdl-textfield__input" type="text" pattern="[0-9]{1,9}" id="order__input">
+                                    <label class="mdl-textfield__label" for="order_input" id="order__label"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_CONTROL_LABEL_ALLOW)) %></label>
+                                    <span class="mdl-textfield__error"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_CONTROL_ERROR)) %></span>
+                                </div>
+                                <div class="mdl-tooltip" for="order_input"><%=(localize.getTextFor(ClientLocalizationKeys.PLAY_ORDER_INPUT_TOOLTIP)) %></div>
+                                <span style="display: inline-block;">
+                                    <button id="order__button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" onclick="send_request();">
+                                        <%=(localize.getTextFor(ClientLocalizationKeys.GAME_CONTROL_BUTTON)) %>
+                                    </button>
+                                </span>
+                            </td>
+                            
+                            <td id="WHOLESALER_make_order">
+                                <div id="order_input" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                    <input class="mdl-textfield__input" type="text" pattern="[0-9]{1,9}" id="order__input">
+                                    <label class="mdl-textfield__label" for="order_input" id="order__label"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_CONTROL_LABEL_ALLOW)) %></label>
+                                    <span class="mdl-textfield__error"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_CONTROL_ERROR)) %></span>
+                                </div>
+                                <div class="mdl-tooltip" for="order_input"><%=(localize.getTextFor(ClientLocalizationKeys.PLAY_ORDER_INPUT_TOOLTIP)) %></div>
+                                <span style="display: inline-block;">
+                                    <button id="order__button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" onclick="send_request();">
+                                        <%=(localize.getTextFor(ClientLocalizationKeys.GAME_CONTROL_BUTTON)) %>
+                                    </button>
+                                </span>
+                            </td>
+                            
+                            <td id="DISTRIBUTOR_make_order">
+                                <div id="order_input" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                    <input class="mdl-textfield__input" type="text" pattern="[0-9]{1,9}" id="order__input">
+                                    <label class="mdl-textfield__label" for="order_input" id="order__label"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_CONTROL_LABEL_ALLOW)) %></label>
+                                    <span class="mdl-textfield__error"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_CONTROL_ERROR)) %></span>
+                                </div>
+                                <div class="mdl-tooltip" for="order_input"><%=(localize.getTextFor(ClientLocalizationKeys.PLAY_ORDER_INPUT_TOOLTIP)) %></div>
+                                <span style="display: inline-block;">
+                                    <button id="order__button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" onclick="send_request();">
+                                        <%=(localize.getTextFor(ClientLocalizationKeys.GAME_CONTROL_BUTTON)) %>
+                                    </button>
+                                </span>
+                            </td>
+                            
+                            <td id="PRODUCER_make_order">
+                                <div id="order_input" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                    <input class="mdl-textfield__input" type="text" pattern="[0-9]{1,9}" id="order__input">
+                                    <label class="mdl-textfield__label" for="order_input" id="order__label"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_CONTROL_LABEL_ALLOW)) %></label>
+                                    <span class="mdl-textfield__error"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_CONTROL_ERROR)) %></span>
+                                </div>
+                                <div class="mdl-tooltip" for="order_input"><%=(localize.getTextFor(ClientLocalizationKeys.PLAY_ORDER_INPUT_TOOLTIP)) %></div>
+                                <span style="display: inline-block;">
+                                    <button id="order__button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" onclick="send_request();">
+                                        <%=(localize.getTextFor(ClientLocalizationKeys.GAME_CONTROL_BUTTON)) %>
+                                    </button>
+                                </span>
+                            </td>
+                            
                     </table>
                 </div>
-                <div class="mdl-card__supporting-text  mdl-card--border">
-                    <span><h5 style="margin: 0;"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_NAME)) %></h5></span>
-                </div>
+                <!--div class="mdl-card__supporting-text  mdl-card--border">
+                    <span><h5 style="margin: 0;">< %=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_NAME)) % ></h5></span>
+                </div-->
                 <div class="mdl-card__media mdl-card--border">
                     <table id="history">
                         <tr id="header_row">
@@ -711,22 +823,22 @@
                     </table>
                 </div>
             </div>
-            <div class="control-panel page-content">
+            <!--div class="control-panel page-content">
                 <div class="half-oval-shaped drop-shadow">
                     <div id="order_input" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                         <input class="mdl-textfield__input" type="text" pattern="[0-9]{1,9}" id="order__input">
-                        <label class="mdl-textfield__label" for="order_input" id="order__label"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_CONTROL_LABEL_ALLOW)) %></label>
-                        <span class="mdl-textfield__error"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_CONTROL_ERROR)) %></span>
+                        <label class="mdl-textfield__label" for="order_input" id="order__label">< %=(localize.getTextFor(ClientLocalizationKeys.GAME_CONTROL_LABEL_ALLOW)) % ></label>
+                        <span class="mdl-textfield__error">< %=(localize.getTextFor(ClientLocalizationKeys.GAME_CONTROL_ERROR)) % ></span>
                     </div>
-                    <div class="mdl-tooltip" for="order_input"><%=(localize.getTextFor(ClientLocalizationKeys.PLAY_ORDER_INPUT_TOOLTIP)) %></div>
+                    <div class="mdl-tooltip" for="order_input">< %=(localize.getTextFor(ClientLocalizationKeys.PLAY_ORDER_INPUT_TOOLTIP)) % ></div>
                     <span style="display: inline-block;">
                         <button id="order__button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" onclick="send_request();">
-                            <%=(localize.getTextFor(ClientLocalizationKeys.GAME_CONTROL_BUTTON)) %>
+                            < %=(localize.getTextFor(ClientLocalizationKeys.GAME_CONTROL_BUTTON)) % >
                         </button>
                     </span>
                 </div>
-                <div class="mdl-tooltip mdl-tooltip--right" for="order__button"><%=(localize.getTextFor(ClientLocalizationKeys.PLAY_ORDER_BUTTON_TOOLTIP)) %></div>
-            </div>
+                <div class="mdl-tooltip mdl-tooltip--right" for="order__button">< %=(localize.getTextFor(ClientLocalizationKeys.PLAY_ORDER_BUTTON_TOOLTIP)) % ></div>
+            </div-->
         </div>
 
         <div id="report-panel" class="hidden">

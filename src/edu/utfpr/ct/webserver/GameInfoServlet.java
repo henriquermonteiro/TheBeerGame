@@ -145,6 +145,8 @@ public class GameInfoServlet extends HttpServlet {
                     ax.put("text", loc.getTextFor(HostLocalizationKeys.CHART_OR_TITLE));
 
                     chartOptions.put("title", ax);
+                    
+                    chartOptions.put("maintainAspectRatio", false);
 
                     ax = new JSONObject();
                     ax.put("display", !noLegend);
@@ -265,6 +267,8 @@ public class GameInfoServlet extends HttpServlet {
                     ax.put("reverse", "true");
 
                     chartOptions.put("legend", ax);
+                    
+                    chartOptions.put("maintainAspectRatio", false);
 
                     ax = new JSONObject();
                     ax.put("mode", "index");
@@ -328,10 +332,10 @@ public class GameInfoServlet extends HttpServlet {
                 
                 if(!no_html){
                     html.append("<!DOCTYPE html>");
-                    html.append("<html> <head>");
+                    html.append("<html><head>");
                     html.append("<script src='/resources/chartjs/Chart.js'></script>");
                     html.append("<style> canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; } </style></head>");
-                    html.append("<body><div style=\"width: 82.5%;\">");
+                    html.append("<body style=\"position: absolute; width: 95%; height: 95%;\"><div id=\"holder\" style=\"width: 100%; height: 100%;\">");
                 }
                 if(order)
                     html.append("<canvas id=\"ord_chart\"></canvas>");

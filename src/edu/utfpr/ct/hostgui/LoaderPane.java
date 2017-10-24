@@ -10,6 +10,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
@@ -149,12 +150,18 @@ public class LoaderPane extends BorderPane {
         ScrollPane eScroll = new ScrollPane(eastPane);
         ScrollPane wScroll = new ScrollPane(westPane);
 
-        eScroll.widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            eastPane.setPrefWidth(newValue.doubleValue());
+        eScroll.widthProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                eastPane.setPrefWidth(newValue.doubleValue());
+            }
         });
 
-        wScroll.widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            westPane.setPrefWidth(newValue.doubleValue());
+        wScroll.widthProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                westPane.setPrefWidth(newValue.doubleValue());
+            }
         });
 
         eScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);

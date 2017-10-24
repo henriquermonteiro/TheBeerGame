@@ -26,7 +26,7 @@
         session.setAttribute("PREF-LANG", request.getParameter("lang"));
     }
     
-    String lang = HostLocalizationManager.getInstance().getLang().get();
+    String lang = Locale.getDefault().getLanguage()+"_"+Locale.getDefault().getCountry();
     if(session.getAttribute("PREF-LANG") != null){ 
         lang = (String) session.getAttribute("PREF-LANG");
     }

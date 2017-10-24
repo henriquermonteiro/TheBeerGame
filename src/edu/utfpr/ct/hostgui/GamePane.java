@@ -12,6 +12,7 @@ public class GamePane extends BorderPane {
     private Boolean isGame;
     private BorderPane center;
     private final Tab tab;
+    private final GamePane thisGamePane;
 
     public GamePane(Game game, Integer state, String[] pool, MainScene mainScene, Tab tab) {
         super();
@@ -20,6 +21,8 @@ public class GamePane extends BorderPane {
         this.mainScene = mainScene;
 
         isGame = (state <= 4);
+        
+        thisGamePane = this;
 
         if (isGame) {
             center = new PlayGamePane(mainScene, game, state == 2, pool);
@@ -35,10 +38,13 @@ public class GamePane extends BorderPane {
             ((PlayGamePane) center).updateGame(game, state <= 2, pool);
 
         } else if (isGame) {
-            Platform.runLater(() -> {
-                center = new ReportGamePane(game, state == 8, mainScene);
-                this.setCenter(center);
-                isGame = false;
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    center = new ReportGamePane(game, state == 8, mainScene);
+                    thisGamePane.setCenter(center);
+                    isGame = false;
+                }
             });
         } else {
             ((ReportGamePane) center).updateReport(game, state == 8);

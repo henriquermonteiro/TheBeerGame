@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -76,8 +77,15 @@ class HTMLReport extends AbstractReport
 		List<Integer> sequence;
 		Node node;
 		String function;
+                
+                UnaryOperator<Integer> uO = new UnaryOperator<Integer>() {
+                    @Override
+                    public Integer apply(Integer t) {
+                        return t + 1;
+                    }
+                };
 
-		sequence = Stream.iterate(1, n -> n + 1).limit(game.realDuration).collect(Collectors.toList());
+		sequence = Stream.iterate(1, uO).limit(game.realDuration).collect(Collectors.toList());
 		page = page.replaceAll(Pattern.quote("{RealWeeks}"), sequence.toString());
 		page = page.replace("{ConsumerOrder}", Arrays.toString(game.demand));
 

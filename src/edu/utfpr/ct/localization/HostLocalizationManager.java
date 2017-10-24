@@ -1,6 +1,7 @@
 package edu.utfpr.ct.localization;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.util.HashMap;
 import java.util.Locale;
 import javafx.beans.property.SimpleStringProperty;
@@ -21,9 +22,16 @@ public class HostLocalizationManager {
         langMap = new HashMap<>();
         
         File f = new File("lang");
+        
+        FileFilter fF = new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                return file.getName().endsWith(".map");
+            }
+        };
 
         if (f.isDirectory()) {
-            for (File l : f.listFiles((File file, String string) -> { return string.endsWith(".map");} )) {
+            for (File l : f.listFiles(fF)) {
                     String lang = l.getName().substring(0, l.getName().length() - 4);
                     localizeMap.put(lang, new Localize(lang, true));
                     

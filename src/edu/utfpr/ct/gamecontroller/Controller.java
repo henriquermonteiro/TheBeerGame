@@ -20,6 +20,7 @@ import java.util.Arrays;
 import edu.utfpr.ct.interfaces.IControllerPlayer;
 import edu.utfpr.ct.webserver.ActionService;
 import java.util.HashSet;
+import java.util.function.Predicate;
 
 public class Controller implements IControllerHost, IControllerPlayer
 {
@@ -113,8 +114,10 @@ public class Controller implements IControllerHost, IControllerPlayer
 	public Game[] getGames()
 	{
 		List<Game> unfinishedGames = new ArrayList<>();
-
-		engines.entrySet().stream().forEach((entry) -> { unfinishedGames.add(entry.getValue().getGame()); });
+                
+                for(Engine eng : engines.values()){
+                    unfinishedGames.add(eng.getGame());
+                }
 
 		return unfinishedGames.toArray(new Game[0]);
 	}
@@ -389,9 +392,16 @@ public class Controller implements IControllerHost, IControllerPlayer
 	public EngineData getGameData(String gameName, String playerName)
 	{
 		Engine engine = engines.get(gameName);
+                
+                Predicate<String> pred = new Predicate<String>() {
+                    @Override
+                    public boolean test(String s) {
+                        return s.equals(playerName);
+                    }
+                };
 
 		if(engine != null)
-			if(Arrays.stream(engine.getPlayers()).anyMatch(s -> s.equals(playerName)))
+			if(Arrays.stream(engine.getPlayers()).anyMatch(pred))
 			{
 				Game fullGame = engine.getGame();
 				EngineData data = new EngineData();

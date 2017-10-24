@@ -9,8 +9,10 @@ import edu.utfpr.ct.hostgui.utils.StaticImages;
 import edu.utfpr.ct.localization.HostLocalizationKeys;
 import edu.utfpr.ct.localization.HostLocalizationManager;
 import edu.utfpr.ct.localization.LocalizationUtils;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -27,7 +29,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
@@ -119,8 +120,11 @@ public class CreateGamePane extends BorderPane {
                     Spinner spin = new Spinner();
                     spin.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, (Integer) parameterDef[k + 2]));
 
-                    spin.valueProperty().addListener((ObservableValue observable, Object oldValue, Object newValue) -> {
-                        updateChart();
+                    spin.valueProperty().addListener(new ChangeListener(){
+                        @Override
+                        public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+                            updateChart();
+                        }
                     });
 
                     v.getChildren().add(spin);
@@ -422,6 +426,14 @@ public class CreateGamePane extends BorderPane {
         LocalizationUtils.bindLocalizationText(simpleUsePassword.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_USEPASSW);
         
         simplePassword = new TextField();
+        simplePassword.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if(newValue != null && !newValue.matches("[A-Z,a-z,0-9]{0,}")){
+                    simplePassword.setText(oldValue);
+                }
+            }
+        });
         simplePassword.setTooltip(new Tooltip());
         LocalizationUtils.bindLocalizationText(simplePassword.promptTextProperty(), HostLocalizationKeys.LABEL_CREATEGAME_PASSWORD_FIELD);
         LocalizationUtils.bindLocalizationText(simplePassword.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_PASSW);
@@ -436,12 +448,15 @@ public class CreateGamePane extends BorderPane {
 
         simplePassword.setDisable(true);
 
-        simpleUsePassword.setOnAction((ActionEvent event) -> {
-            if (simpleUsePassword.isSelected()) {
-                simplePassword.setDisable(false);
-            } else {
-                simplePassword.setText(null);
-                simplePassword.setDisable(true);
+        simpleUsePassword.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (simpleUsePassword.isSelected()) {
+                    simplePassword.setDisable(false);
+                } else {
+                    simplePassword.setText(null);
+                    simplePassword.setDisable(true);
+                }
             }
         });
 
@@ -472,8 +487,18 @@ public class CreateGamePane extends BorderPane {
         simpleChainCanvas.widthProperty().bind(b.widthProperty());
         simpleChainCanvas.heightProperty().bind(b.heightProperty());
 
-        simpleChainCanvas.widthProperty().addListener(observable -> updateCanvas(simpleChainCanvas));
-        simpleChainCanvas.heightProperty().addListener(observable -> updateCanvas(simpleChainCanvas));
+        simpleChainCanvas.widthProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                updateCanvas(simpleChainCanvas);
+            }
+        });
+        simpleChainCanvas.heightProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                updateCanvas(simpleChainCanvas);
+            }
+        });
 
         b.getChildren().add(simpleChainCanvas);
         b.fillHeightProperty().setValue(Boolean.TRUE);
@@ -538,8 +563,11 @@ public class CreateGamePane extends BorderPane {
         IconNode create = new IconNode(GoogleMaterialDesignIcons.DONE);
         create.getStyleClass().addAll("icon");
         createButton.setGraphic(create);
-        createButton.setOnAction((ActionEvent event) -> {
-            callCreation(Boolean.TRUE);
+        createButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                callCreation(Boolean.TRUE);
+            }
         });
 
         Button cancelButton = new Button();
@@ -549,8 +577,11 @@ public class CreateGamePane extends BorderPane {
         cancel.getStyleClass().addAll("icon");
         cancelButton.setGraphic(cancel);
         cancelButton.getStyleClass().addAll("clear");
-        cancelButton.setOnAction((ActionEvent event) -> {
-            clearFields();
+        cancelButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                clearFields();
+            }
         });
 
         Button advButton = new Button();
@@ -560,8 +591,11 @@ public class CreateGamePane extends BorderPane {
         IconNode conf = new IconNode(GoogleMaterialDesignIcons.BUILD);
         conf.getStyleClass().addAll("icon");
         advButton.setGraphic(conf);
-        advButton.setOnAction((ActionEvent event) -> {
-            changePane(true);
+        advButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                changePane(true);
+            }
         });
 
         fP.getChildren().addAll(createButton, cancelButton, advButton);
@@ -601,18 +635,29 @@ public class CreateGamePane extends BorderPane {
         LocalizationUtils.bindLocalizationText(usePassword.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_PASSWORD_CHECK);
         LocalizationUtils.bindLocalizationText(usePassword.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_USEPASSW);
 
-        password = new PasswordField();
+        password = new TextField();
+        password.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if(newValue != null && !newValue.matches("[A-Z,a-z,0-9]{0,}")){
+                    password.setText(oldValue);
+                }
+            }
+        });
         password.setTooltip(new Tooltip());
         LocalizationUtils.bindLocalizationText(password.promptTextProperty(), HostLocalizationKeys.LABEL_CREATEGAME_PASSWORD_FIELD);
         LocalizationUtils.bindLocalizationText(password.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_PASSW);
         password.setDisable(true);
 
-        usePassword.setOnAction((ActionEvent event) -> {
-            if (usePassword.isSelected()) {
-                password.setDisable(false);
-            } else {
-                password.setText(null);
-                password.setDisable(true);
+        usePassword.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (usePassword.isSelected()) {
+                    password.setDisable(false);
+                } else {
+                    password.setText(null);
+                    password.setDisable(true);
+                }
             }
         });
 
@@ -735,8 +780,11 @@ public class CreateGamePane extends BorderPane {
         sliderT = new Tooltip();
         LocalizationUtils.bindLocalizationText(sliderT.textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_REAL_DUR);
         Tooltip.install(realDuration, sliderT);
-        realDuration.addValuePropertyListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            updateChart();
+        realDuration.addValuePropertyListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                updateChart();
+            }
         });
 
         grid2.add(realDuration, 1, 3);
@@ -757,12 +805,18 @@ public class CreateGamePane extends BorderPane {
 
         grid2.add(informedDuration, 1, 4);
         
-        informedDuration.addValuePropertyListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            if(newValue.doubleValue() < realDuration.getValue()) realDuration.setValue(newValue.doubleValue());
+        informedDuration.addValuePropertyListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                if(newValue.doubleValue() < realDuration.getValue()) realDuration.setValue(newValue.doubleValue());
+            }
         });
         
-        realDuration.addValuePropertyListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            if(newValue.doubleValue() > informedDuration.getValue()) informedDuration.setValue(newValue.doubleValue());
+        realDuration.addValuePropertyListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                if(newValue.doubleValue() > informedDuration.getValue()) informedDuration.setValue(newValue.doubleValue());
+            }
         });
 
         l = new Label();
@@ -818,16 +872,19 @@ public class CreateGamePane extends BorderPane {
 
         grid3.setTop(supplyChainTypeSelect);
         
-        HostLocalizationManager.getInstance().getLang().addListener((observable) -> {
-            DemandTypes typeD = demandTypeSelect.getValue();
-            demandTypeSelect.getItems().clear();
-            demandTypeSelect.getItems().addAll(DemandTypes.values());
-            demandTypeSelect.setValue(typeD);
-            
-            SupplyChainTypes typeS = supplyChainTypeSelect.getValue();
-            supplyChainTypeSelect.getItems().clear();
-            supplyChainTypeSelect.getItems().addAll(SupplyChainTypes.values());
-            supplyChainTypeSelect.setValue(typeS);
+        HostLocalizationManager.getInstance().getLang().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                DemandTypes typeD = demandTypeSelect.getValue();
+                demandTypeSelect.getItems().clear();
+                demandTypeSelect.getItems().addAll(DemandTypes.values());
+                demandTypeSelect.setValue(typeD);
+
+                SupplyChainTypes typeS = supplyChainTypeSelect.getValue();
+                supplyChainTypeSelect.getItems().clear();
+                supplyChainTypeSelect.getItems().addAll(SupplyChainTypes.values());
+                supplyChainTypeSelect.setValue(typeS);
+            }
         });
 
         HBox b = new HBox();
@@ -843,8 +900,18 @@ public class CreateGamePane extends BorderPane {
         chainCanvas.widthProperty().bind(b.widthProperty());
         chainCanvas.heightProperty().bind(b.heightProperty());
 
-        chainCanvas.widthProperty().addListener(observable -> updateCanvas(chainCanvas));
-        chainCanvas.heightProperty().addListener(observable -> updateCanvas(chainCanvas));
+        chainCanvas.widthProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                updateCanvas(chainCanvas);
+            }
+        });
+        chainCanvas.heightProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                updateCanvas(chainCanvas);
+            }
+        });
 
         b.getChildren().add(chainCanvas);
         b.fillHeightProperty().setValue(Boolean.TRUE);
@@ -883,13 +950,19 @@ public class CreateGamePane extends BorderPane {
         LocalizationUtils.bindLocalizationText(confirmButton.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_BUTTON_AACCEP);
         confirmButton.getStyleClass().addAll("create");
 
-        cancelButton.setOnAction((ActionEvent event) -> {
-            changePane(false);
-            clearFields();
+        cancelButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                changePane(false);
+                clearFields();
+            }
         });
 
-        confirmButton.setOnAction((ActionEvent event) -> {
-            callCreation(Boolean.FALSE);
+        confirmButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                callCreation(Boolean.FALSE);
+            }
         });
 
         buttonsBox.getChildren().addAll(confirmButton, cancelButton);

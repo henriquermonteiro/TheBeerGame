@@ -7,8 +7,12 @@ import edu.utfpr.ct.localization.LocalizationUtils;
 import edu.utfpr.ct.webserver.ActionService;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.concurrent.Callable;
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
@@ -45,17 +49,23 @@ public class ReportGamePane extends BorderPane{
         webStart.setGraphic(web_icon);
         webStart.getStyleClass().addAll("play-pause");
         webStart.setTooltip(new Tooltip());
-        webStart.getTooltip().textProperty().bind(Bindings.createStringBinding(() -> {
-            return (webStart.selectedProperty().get() ? 
-                    HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.TOOLTIP_SHOW_REPO_BUTT_START) : 
-                    HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.TOOLTIP_SHOW_REPO_BUTT_PAUSE));
+        webStart.getTooltip().textProperty().bind(Bindings.createStringBinding(new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                return (webStart.selectedProperty().get() ? 
+                        HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.TOOLTIP_SHOW_REPO_BUTT_START) : 
+                        HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.TOOLTIP_SHOW_REPO_BUTT_PAUSE));
+            }
         }, HostLocalizationManager.getInstance().getLang(), webStart.selectedProperty()));
         
-        webStart.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            mainScene.changeReportState(game, newValue);
-            
-            if(getParent() instanceof GamePane)
-                ((GamePane)getParent()).getTab().setGraphic((newValue ? tabPlayIcon : null));
+        webStart.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                mainScene.changeReportState(game, newValue);
+
+                if(getParent() instanceof GamePane)
+                    ((GamePane)getParent()).getTab().setGraphic((newValue ? tabPlayIcon : null));
+            }
         });
         
         
@@ -68,8 +78,11 @@ public class ReportGamePane extends BorderPane{
         Tooltip.install(info, infoTooltip);
         
         info.setGraphic(infoIcon);
-        info.setOnAction((event) -> {
-            mainScene.makeGameInfo(game.name);
+        info.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                mainScene.makeGameInfo(game.name);
+            }
         });
         
         BorderPane topPane = new BorderPane();
@@ -88,8 +101,11 @@ public class ReportGamePane extends BorderPane{
         } catch (UnsupportedEncodingException ex) {
         }
         
-        HostLocalizationManager.getInstance().getLang().addListener((observable) -> {
-            chartViewOrder.getEngine().reload();
+        HostLocalizationManager.getInstance().getLang().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                chartViewOrder.getEngine().reload();
+            }
         });
         
         chartViewOrder.getStyleClass().addAll("chart-view");
@@ -116,8 +132,11 @@ public class ReportGamePane extends BorderPane{
         } catch (UnsupportedEncodingException ex) {
         }
         
-        HostLocalizationManager.getInstance().getLang().addListener((observable) -> {
-            chartViewStock.getEngine().reload();
+        HostLocalizationManager.getInstance().getLang().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                chartViewStock.getEngine().reload();
+            }
         });
         
         chartViewStock.getStyleClass().addAll("chart-view");

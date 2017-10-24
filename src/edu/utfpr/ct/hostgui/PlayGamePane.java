@@ -5,7 +5,6 @@ import edu.utfpr.ct.datamodel.ModelUtils;
 import edu.utfpr.ct.datamodel.Node;
 import edu.utfpr.ct.hostgui.utils.AutoCompleteTextField;
 import edu.utfpr.ct.hostgui.utils.IdentifiableChangeListener;
-import edu.utfpr.ct.hostgui.utils.LockedToggleButton;
 import edu.utfpr.ct.hostgui.utils.StaticImages;
 import edu.utfpr.ct.localization.HostLocalizationKeys;
 import edu.utfpr.ct.localization.HostLocalizationManager;
@@ -19,10 +18,14 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
@@ -97,12 +100,16 @@ public class PlayGamePane extends BorderPane {
 
         byPass_setText = false;
 
-        Platform.runLater(() -> {
-            playPauseButton.setSelected(state);
-            pool.setItems(FXCollections.observableList(Arrays.asList(newPool)));
-            for(WebView wV : charts){
-                wV.getEngine().reload();
+        Platform.runLater(new Runnable(){
+            @Override
+            public void run() {
+                playPauseButton.setSelected(state);
+                pool.setItems(FXCollections.observableList(Arrays.asList(newPool)));
+                for(WebView wV : charts){
+                    wV.getEngine().reload();
+                }
             }
+            
         });
 
     }
@@ -136,34 +143,40 @@ public class PlayGamePane extends BorderPane {
         playPauseButton.getStyleClass().addAll("play-pause");
         playPauseButton.setGraphic(playPauseIcon);
         playPauseButton.setTooltip(new Tooltip());
-        playPauseButton.getTooltip().textProperty().bind(Bindings.createStringBinding(() -> {
-            return (playPauseButton.selectedProperty().get() ? 
+        playPauseButton.getTooltip().textProperty().bind(Bindings.createStringBinding(new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                return (playPauseButton.selectedProperty().get() ? 
                     HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.TOOLTIP_PLAY_GAME_BUTTON_START) : 
                     HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.TOOLTIP_PLAY_GAME_BUTTON_PAUSE));
+            }
         }, HostLocalizationManager.getInstance().getLang(), playPauseButton.selectedProperty()));
 
-        playPauseButton.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            if(!newValue){
-                Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.MESSAGE_STOPGAME_WARN));
-                Label icon = new Label();
-                icon.getStyleClass().addAll("warning", "dialog-pane", "alert");
-                confirm.setGraphic(icon);
-                ((Stage)confirm.getDialogPane().getScene().getWindow()).getIcons().add(new Image(new File("icon" + File.separator + "Beer_mug_transparent2.png").toURI().toString()));
-                confirm.setHeaderText(HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.MESSAGE_STOPGAME_WARN_TITLE));
-                confirm.setTitle(HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.MESSAGE_STOPGAME_WARN_TITLE));
-                Optional<ButtonType> res = confirm.showAndWait();
-                
-                if (res.get() != ButtonType.OK) {
-                    playPauseButton.setSelected(oldValue);
-                    return;
-                }
-            }
-            
-            mainScene.changeGameState(game, newValue);
-            playPauseIcon.setIconCode((newValue ? GoogleMaterialDesignIcons.STOP : GoogleMaterialDesignIcons.PLAY_ARROW));
+        playPauseButton.selectedProperty().addListener(new ChangeListener<java.lang.Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if(!newValue){
+                    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.MESSAGE_STOPGAME_WARN));
+                    Label icon = new Label();
+                    icon.getStyleClass().addAll("warning", "dialog-pane", "alert");
+                    confirm.setGraphic(icon);
+                    ((Stage)confirm.getDialogPane().getScene().getWindow()).getIcons().add(new Image(new File("icon" + File.separator + "Beer_mug_transparent2.png").toURI().toString()));
+                    confirm.setHeaderText(HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.MESSAGE_STOPGAME_WARN_TITLE));
+                    confirm.setTitle(HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.MESSAGE_STOPGAME_WARN_TITLE));
+                    Optional<ButtonType> res = confirm.showAndWait();
 
-            if(getParent() instanceof GamePane)
-                ((GamePane)getParent()).getTab().setGraphic((newValue ? tabPlayIcon : null));
+                    if (res.get() != ButtonType.OK) {
+                        playPauseButton.setSelected(oldValue);
+                        return;
+                    }
+                }
+
+                mainScene.changeGameState(game, newValue);
+                playPauseIcon.setIconCode((newValue ? GoogleMaterialDesignIcons.STOP : GoogleMaterialDesignIcons.PLAY_ARROW));
+
+                if(getParent() instanceof GamePane)
+                    ((GamePane)getParent()).getTab().setGraphic((newValue ? tabPlayIcon : null));
+            }
         });
 
         playersInNodes = new AutoCompleteTextField[game.supplyChain.length / (game.deliveryDelay + 1)];
@@ -179,14 +192,17 @@ public class PlayGamePane extends BorderPane {
         pool.setTooltip(new Tooltip());
         LocalizationUtils.bindLocalizationText(pool.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_PLAY_GAME_PL_POOL);
 
-        pool.setOnDragDetected((MouseEvent event) -> {
-            Dragboard db = pool.startDragAndDrop(TransferMode.MOVE);
+        pool.setOnDragDetected(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                Dragboard db = pool.startDragAndDrop(TransferMode.MOVE);
 
-            ClipboardContent cbCont = new ClipboardContent();
-            cbCont.putString(pool.getSelectionModel().getSelectedItem());
-            db.setContent(cbCont);
+                ClipboardContent cbCont = new ClipboardContent();
+                cbCont.putString(pool.getSelectionModel().getSelectedItem());
+                db.setContent(cbCont);
 
-            event.consume();
+                event.consume();
+            }
         });
 
         BorderPane topPane = new BorderPane();
@@ -201,8 +217,11 @@ public class PlayGamePane extends BorderPane {
         Tooltip.install(info, infoTooltip);
         
         info.setGraphic(infoIcon);
-        info.setOnAction((event) -> {
-            mainScene.makeGameInfo(game.name);
+        info.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                mainScene.makeGameInfo(game.name);
+            }
         });
 
         topPane.setCenter(gameName);
@@ -225,54 +244,49 @@ public class PlayGamePane extends BorderPane {
 
         for (int k = 0; k < playersInNodes.length; k++) {
             GridPane gP = new GridPane();
-            
-            Label name = new Label();
-            LocalizationUtils.bindLocalizationText(name.textProperty(), HostLocalizationKeys.CHART_OR_FUNCTION_AX+(k+1));
-            
-            gP.add(name, 0, 0, 3, 1);
 
-            gP.add(playersInNodes[k], 1, 1);
+            gP.add(playersInNodes[k], 0, 0);
 
-            LockedToggleButton lTB = new LockedToggleButton();
-            lTB.setTooltip(new Tooltip());
             int function = k+1;
-            lTB.getTooltip().textProperty().bind(Bindings.createStringBinding(() -> {
-                return HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.TOOLTIP_PLAY_GAME_LOCKUN_BEGIN).concat(
-                    HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.CHART_OR_FUNCTION_AX+function)).concat(
-                    HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.TOOLTIP_PLAY_GAME_LOCKUN_END));
-            }, HostLocalizationManager.getInstance().getLang()));
+            playersInNodes[k].setOnDragOver(new EventHandler<DragEvent>() {
+                @Override
+                public void handle(DragEvent event) {
+                    if (event.getGestureSource() == pool && event.getDragboard().hasString()) {
+                        event.acceptTransferModes(TransferMode.ANY);
+                    }
 
-            playersInNodes[k].disableProperty().bind(lTB.selectedProperty());
-            playersInNodes[k].setOnDragOver((DragEvent event) -> {
-                if (event.getGestureSource() == pool && event.getDragboard().hasString()) {
-                    event.acceptTransferModes(TransferMode.ANY);
+                    event.consume();
                 }
-
-                event.consume();
             });
 
-            playersInNodes[k].setOnDragDropped((DragEvent event) -> {
-                Dragboard db = event.getDragboard();
+            playersInNodes[k].setOnDragDropped(new EventHandler<DragEvent>() {
+                @Override
+                public void handle(DragEvent event) {
+                    Dragboard db = event.getDragboard();
 
-                boolean success = false;
-                if (db.hasString()) {
-                    ((TextField) event.getSource()).setText(db.getString());
-                    success = true;
+                    boolean success = false;
+                    if (db.hasString()) {
+                        ((TextField) event.getSource()).setText(db.getString());
+                        success = true;
+                    }
+
+                    event.setDropCompleted(success);
+                    event.consume();
                 }
-
-                event.setDropCompleted(success);
-                event.consume();
             });
             
             int ref = k;
-            playersInNodes[k].focusedProperty().addListener((observable) -> {
-                if (byPass_setText) {
-                    return;
-                }
+            playersInNodes[k].focusedProperty().addListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                    if (byPass_setText) {
+                        return;
+                    }
 
-                int test = validPlayerText(playersInNodes[ref].getText());
-                if (test <= 0) {
-                    playersInNodes[ref].setText("");
+                    int test = validPlayerText(playersInNodes[ref].getText());
+                    if (test <= 0) {
+                        playersInNodes[ref].setText("");
+                    }
                 }
              });
 
@@ -292,8 +306,11 @@ public class PlayGamePane extends BorderPane {
 
                         if (test == -1) {
                             mainScene.removePlayerFromNode(game, ((IdentifiableChangeListener) this).getId());
-                            Platform.runLater(() -> {
-                                mainScene.updateGame(game.name);
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mainScene.updateGame(game.name);
+                                }
                             });
                         }
                     } else {
@@ -303,17 +320,18 @@ public class PlayGamePane extends BorderPane {
             });
             
             playersInNodes[k].setTooltip(new Tooltip());
-            playersInNodes[k].getTooltip().textProperty().bind(Bindings.createStringBinding(() -> {
-                return HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.TOOLTIP_PLAY_GAME_POSIT_BEGIN).concat(
+            playersInNodes[k].getTooltip().textProperty().bind(Bindings.createStringBinding(new Callable<String>() {
+                @Override
+                public String call() throws Exception {
+                    return HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.TOOLTIP_PLAY_GAME_POSIT_BEGIN).concat(
                     HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.CHART_OR_FUNCTION_AX+function)).concat(
                     HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.TOOLTIP_PLAY_GAME_POSIT_END));
+                }
             }, HostLocalizationManager.getInstance().getLang()));
-
-            gP.add(lTB, 2, 1);
 
             ImageView iV = new ImageView();
 
-            iV.setFitHeight(65);
+            iV.setFitHeight(32);
             iV.setPreserveRatio(true);
             
             ColorAdjust bright = new ColorAdjust();
@@ -352,25 +370,20 @@ public class PlayGamePane extends BorderPane {
             Label l = new Label();
             l.setGraphic(iV);
 
-            gP.add(l, 1, 2);
-            
+            gP.add(l, 1, 0);
+
             ColumnConstraints cC1 = new ColumnConstraints();
             cC1.setFillWidth(true);
-            cC1.setHalignment(HPos.CENTER);
+            cC1.setHalignment(HPos.RIGHT);
             cC1.setHgrow(Priority.SOMETIMES);
-            cC1.setPercentWidth(20);
+            cC1.setPercentWidth(75);
             ColumnConstraints cC2 = new ColumnConstraints();
-            cC2.setHalignment(HPos.CENTER);
+            cC2.setHalignment(HPos.LEFT);
             cC2.setFillWidth(true);
             cC2.setHgrow(Priority.SOMETIMES);
-            cC2.setPercentWidth(60);
-            ColumnConstraints cC3 = new ColumnConstraints();
-            cC3.setHalignment(HPos.CENTER);
-            cC3.setFillWidth(true);
-            cC3.setHgrow(Priority.SOMETIMES);
-            cC3.setPercentWidth(20);
+            cC2.setPercentWidth(25);
             
-            gP.getColumnConstraints().addAll(cC1, cC2, cC3);
+            gP.getColumnConstraints().addAll(cC1, cC2);
             
             gP.setVgap(3.0);
             gP.setHgap(3.0);
@@ -388,19 +401,7 @@ public class PlayGamePane extends BorderPane {
             playerColumns.getColumnConstraints().add(cC);
         }
         
-        RowConstraints rC = new RowConstraints();
-        rC.setFillHeight(true);
-        rC.setVgrow(Priority.SOMETIMES);
-        rC.setValignment(VPos.CENTER);
-        
-        playerColumns.getRowConstraints().add(rC);
-        
-        rC = new RowConstraints();
-        rC.setFillHeight(true);
-        rC.setVgrow(Priority.ALWAYS);
-        rC.setValignment(VPos.TOP);
-        
-        playerColumns.getRowConstraints().add(rC);
+        playerColumns.setPadding(new Insets(5.0));
 
         centerPane.add(playerColumns, 0, 0);
         
@@ -419,8 +420,18 @@ public class PlayGamePane extends BorderPane {
         } catch (UnsupportedEncodingException ex) {
         }
         
-        HostLocalizationManager.getInstance().getLang().addListener((observable) -> {
-            charts[0].getEngine().reload();
+        HostLocalizationManager.getInstance().getLang().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                charts[0].getEngine().reload();
+            }
+        });
+        
+        charts[0].widthProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                charts[0].getEngine().reload();
+            }
         });
         
         orders.setContent(charts[0]);
@@ -435,8 +446,11 @@ public class PlayGamePane extends BorderPane {
         } catch (UnsupportedEncodingException ex) {
         }
         
-        HostLocalizationManager.getInstance().getLang().addListener((observable) -> {
+        HostLocalizationManager.getInstance().getLang().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
             charts[1].getEngine().reload();
+            }
         });
         
         stock.setContent(charts[1]);
@@ -455,7 +469,7 @@ public class PlayGamePane extends BorderPane {
         
         centerPane.getColumnConstraints().add(cC);
         
-        rC = new RowConstraints();
+        RowConstraints rC = new RowConstraints();
         rC.setFillHeight(true);
         rC.setVgrow(Priority.SOMETIMES);
         

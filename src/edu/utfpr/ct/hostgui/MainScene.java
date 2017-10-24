@@ -19,10 +19,13 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.concurrent.Callable;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -82,8 +85,11 @@ public class MainScene extends BorderPane {
             
             Text passw = new Text();
             String password = g.password;
-            passw.textProperty().bind(Bindings.createStringBinding(() -> {
-                return (password == null || password.isEmpty() ? HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.INFO_NO_PASSW) : password);
+            passw.textProperty().bind(Bindings.createStringBinding(new Callable<String>() {
+                @Override
+                public String call() throws Exception {
+                    return (password == null || password.isEmpty() ? HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.INFO_NO_PASSW) : password);
+                }
             }, HostLocalizationManager.getInstance().getLang()));
             passw.getStyleClass().addAll("text-node");
             Label passw_Label = new Label();
@@ -93,8 +99,11 @@ public class MainScene extends BorderPane {
             
             Text status = new Text();
             boolean isGameF = isGame;
-            status.textProperty().bind(Bindings.createStringBinding(() -> {
-                return (isGameF ? HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.INFO_IS_GAME) : HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.INFO_IS_REPORT));
+            status.textProperty().bind(Bindings.createStringBinding(new Callable<String>() {
+                @Override
+                public String call() throws Exception {
+                    return (isGameF ? HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.INFO_IS_GAME) : HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.INFO_IS_REPORT));
+                }
             }, HostLocalizationManager.getInstance().getLang()));
             status.getStyleClass().addAll("text-node");
             Label status_Label = new Label();
@@ -104,8 +113,11 @@ public class MainScene extends BorderPane {
             
             Text informed = new Text(Boolean.toString(g.informedChainSupply));
             boolean isInformed = g.informedChainSupply;
-            informed.textProperty().bind(Bindings.createStringBinding(() -> {
-                return (isInformed ? HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.INFO_IS_INFORMED) : HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.INFO_NOT_INFORMED));
+            informed.textProperty().bind(Bindings.createStringBinding(new Callable<String>() {
+                @Override
+                public String call() throws Exception {
+                    return (isInformed ? HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.INFO_IS_INFORMED) : HostLocalizationManager.getInstance().getClientFor(HostLocalizationManager.getInstance().getLang().get()).getTextFor(HostLocalizationKeys.INFO_NOT_INFORMED));
+                }
             }, HostLocalizationManager.getInstance().getLang()));
             informed.getStyleClass().addAll("text-node");
             Label informed_Label = new Label();
@@ -200,8 +212,11 @@ public class MainScene extends BorderPane {
             chartPane.getStyleClass().addAll("card", "bottom", "shadowed-1");
 
             WebView chart = new WebView();
-            HostLocalizationManager.getInstance().getLang().addListener((observable) -> {
-                chart.getEngine().reload();
+            HostLocalizationManager.getInstance().getLang().addListener(new ChangeListener<String>() {
+                @Override
+                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                    chart.getEngine().reload();
+                }
             });
     
             String url = "http://127.0.0.1:" + ActionService.getService().getPort() + "/info?order=true&game-name=" + URLEncoder.encode(gameName, "UTF-8");
@@ -272,8 +287,11 @@ public class MainScene extends BorderPane {
 
         Label ip = new Label();
         
-        ip.textProperty().bind(Bindings.createStringBinding(() -> {
-            return ip_begin.get().concat((ips.isEmpty() ? ip_middle_error.get() : ips.get(0))).concat(ip_middle.get().concat("" + ActionService.getService().getPort()).concat(ip_end.get()));
+        ip.textProperty().bind(Bindings.createStringBinding(new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                return ip_begin.get().concat((ips.isEmpty() ? ip_middle_error.get() : ips.get(0))).concat(ip_middle.get().concat("" + ActionService.getService().getPort()).concat(ip_end.get()));
+            }
         }, HostLocalizationManager.getInstance().getLang()));
         ip.setTooltip(new Tooltip());
         LocalizationUtils.bindLocalizationText(ip.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_COMMON_IP_INFO);
@@ -287,16 +305,22 @@ public class MainScene extends BorderPane {
 
         Hyperlink rel = new Hyperlink("", refresh);
         rel.setVisited(true);
-        rel.setOnAction((ActionEvent event) -> {
-            ArrayList<String> ips2 = (ArrayList<String>) IPUtils.findIP();
+        rel.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                ArrayList<String> ips2 = (ArrayList<String>) IPUtils.findIP();
 
-            Label ip2 = new Label();
-            ip2.textProperty().bind(Bindings.createStringBinding(() -> {
-                return ip_begin.get().concat((ips2.isEmpty() ? ip_middle_error.get() : ips2.get(0))).concat(ip_middle.get().concat("" + ActionService.getService().getPort()).concat(ip_end.get()));
-            }, HostLocalizationManager.getInstance().getLang()));
+                Label ip2 = new Label();
+                ip2.textProperty().bind(Bindings.createStringBinding(new Callable<String>() {
+                    @Override
+                    public String call() throws Exception {
+                        return ip_begin.get().concat((ips2.isEmpty() ? ip_middle_error.get() : ips2.get(0))).concat(ip_middle.get().concat("" + ActionService.getService().getPort()).concat(ip_end.get()));
+                    }
+                }, HostLocalizationManager.getInstance().getLang()));
 
-            top.getChildren().remove(top.getChildren().size() - 1);
-            top.add(ip2, 1, 0);
+                top.getChildren().remove(top.getChildren().size() - 1);
+                top.add(ip2, 1, 0);
+            }
         });
 
         langMenuButton = new MenuButton();
@@ -379,11 +403,14 @@ public class MainScene extends BorderPane {
             content.getStyleClass().addAll("hbox-1");
             item = new MenuItem("", content);
             item.getStyleClass().addAll("lang-element", "item");
-            item.setOnAction((ActionEvent event) -> {
-                HostLocalizationManager.getInstance().getLang().setValue(name2.getText());
+            item.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    HostLocalizationManager.getInstance().getLang().setValue(name2.getText());
 
-                makeLanguageMenuItens(langMenuButton);
-                updateLanguageMenuButton();
+                    makeLanguageMenuItens(langMenuButton);
+                    updateLanguageMenuButton();
+                }
             });
 
             menu.getItems().add(item);
@@ -493,8 +520,11 @@ public class MainScene extends BorderPane {
             Game g = control.getGame(gameName);
             
             if(g == null){
-                Platform.runLater(() -> {
-                    loaderPane.update();
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        loaderPane.update();
+                    }
                 });
                 
                 if(state == -1){
