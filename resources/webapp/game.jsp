@@ -897,7 +897,7 @@
             </div>
             <div class="graph-card mdl-card mdl-shadow--6dp mdl-card--horizontal">
                 <div class="mdl-card__supporting-text" id="rep_ord_chart">
-                    <iframe id="chart_frame" src="/info?order=true&stock=true&game-name=<%=URLEncoder.encode((String)session.getAttribute("LOGGED_GAME"), "UTF-8").replace("+", "%20") %>&lang=<%=lang %>" style="border: 0pt none; height: 610px; width: 580px;"></iframe>
+                    <iframe id="chart_frame" src="/info?order=true&stock=true&game-name=<%=URLEncoder.encode((String)session.getAttribute("LOGGED_GAME"), "UTF-8").replace("+", "%20") %>&lang=<%=lang %>" style="border: 0pt none; height: 610px; width: 1160px;"></iframe>
                 </div>
             </div>
         </div>

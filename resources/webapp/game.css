@@ -238,7 +238,7 @@
   margin-right: auto;
   margin-top: 15px;
 
-  width: 600px;
+  width: 1180px;
   background: #EBEBEB;
 }
 
@@ -252,6 +252,7 @@
   margin-left: -13px;
   margin-right: 3px;
   border-collapse: collapse;
+  text-align: center;
 }
 
 #report-panel > .mdl-card > .mdl-card__supporting-text > table > tbody > tr > th {
