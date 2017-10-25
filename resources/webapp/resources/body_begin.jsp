@@ -15,11 +15,11 @@
     boolean has_return = Boolean.parseBoolean(request.getParameter("show_return"));
 %>
     <% if(!"true".equals(request.getParameter("hide_body"))){ %><body onload="bubbles();"><% }%>
-        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-            <header class="mdl-layout__header">
+        <div class="mdl-layout mdl-js-layout <%=("true".equals(request.getParameter("scroll_header")) ? "" : " mdl-layout--fixed-header")%>">
+            <header class="mdl-layout__header <%=("true".equals(request.getParameter("scroll_header")) ? "mdl-layout__header--scroll" : "")%>">
                 <div id="lang-menu" class="mdl-layout-icon"></div>
                 <div class="mdl-layout__header-row">
-                    <a id="curr_lang" href="#" style="text-decoration: none; color: black;" class="mdl-layout__title"><img id="flag" src="resources/flags/<%=(localize.getTextFor(ClientLocalizationKeys.FLAG_PATH))%>" >&nbsp;&nbsp;<%=(localize.getTextFor(ClientLocalizationKeys.LANG_ID)) %></a>
+                    <a id="curr_lang" href="#" style="text-decoration: none; color: black;" class="mdl-layout__title"><img id="flag" style="width: 30px;" src="resources/flags/<%=(localize.getTextFor(ClientLocalizationKeys.FLAG_PATH))%>" >&nbsp;&nbsp;<%=(localize.getTextFor(ClientLocalizationKeys.LANG_ID)) %></a>
                     <div class="mdl-tooltip" for="curr_lang"><%=(localize.getTextFor(ClientLocalizationKeys.COMMON_CURRENT_LANGUAGE_TOOLTIP)) %></div>
                     <% if(session.getAttribute("USER-ID") != null && !((String)session.getAttribute("USER-ID")).isEmpty()){ 
                         String name = (String) session.getAttribute("USER-ID");
