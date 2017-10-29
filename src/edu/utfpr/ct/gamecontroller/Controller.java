@@ -427,34 +427,35 @@ public class Controller implements IControllerHost, IControllerPlayer
 
 					break;
 				case Engine.RUNNING:
-					if(!engine.getGame().informedChainSupply)
-					{
-						data.game.supplyChain = new AbstractNode[fullGame.supplyChain.length];
-
-						boolean flag = false;
-						for(int k = 0; k < fullGame.supplyChain.length; k++)
-							if(fullGame.supplyChain[k] instanceof Node)
-							{
-								Node realNode = (Node) fullGame.supplyChain[k];
-								flag = playerName.equals(realNode.playerName);
-
-								if(flag)
-									data.game.supplyChain[k] = realNode;
-								else
-								{
-									Node n = new Node();
-									n.function = realNode.function;
-									n.playerName = realNode.playerName;
-
-									data.game.supplyChain[k] = n;
-								}
-							}
-							else
-								data.game.supplyChain[k] = (flag ? fullGame.supplyChain[k] : null);
-
-					}
-					else
-						data.game.supplyChain = fullGame.supplyChain;
+//					if(!engine.getGame().informedChainSupply)
+//					{
+//						data.game.supplyChain = new AbstractNode[fullGame.supplyChain.length];
+//
+//						boolean flag = false;
+//						for(int k = 0; k < fullGame.supplyChain.length; k++)
+//							if(fullGame.supplyChain[k] instanceof Node)
+//							{
+//								Node realNode = (Node) fullGame.supplyChain[k];
+//								flag = playerName.equals(realNode.playerName);
+//
+//								if(flag)
+//									data.game.supplyChain[k] = realNode;
+//								else
+//								{
+//									Node n = new Node();
+//									n.function = realNode.function;
+//									n.playerName = realNode.playerName;
+//
+//									data.game.supplyChain[k] = n;
+//								}
+//							}
+//							else
+//								data.game.supplyChain[k] = (flag ? fullGame.supplyChain[k] : null);
+//
+//					}
+//					else
+					data.game.supplyChain = fullGame.supplyChain;
+                                        data.game.demand = fullGame.demand;
 				}
 
 				return data;

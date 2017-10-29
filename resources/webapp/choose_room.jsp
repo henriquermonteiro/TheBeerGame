@@ -216,7 +216,7 @@
                 location.reload();
             }
             
-            setInterval(reload, 45*1000);
+            setInterval(reload, 15*1000);
         </script>
     </body>
 </html>

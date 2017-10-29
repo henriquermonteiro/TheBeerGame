@@ -27,7 +27,7 @@
                     <div class="mdl-layout-spacer"></div>
                     <nav class="mdl-navigation">
                         <%if(has_return){%>
-                        <a id="return" class="mdl-navigation__link" href="choose_room.jsp?returned=true"><i class="material-icons md-24">power_settings_new</i><%=(localize.getTextFor(ClientLocalizationKeys.COMMON_RETURN_TEXT)) %></a>
+                        <a id="return" class="mdl-navigation__link" style="display: none;" href="choose_room.jsp?returned=true"><i class="material-icons md-24">navigate_before</i><%=(localize.getTextFor(ClientLocalizationKeys.COMMON_RETURN_TEXT)) %></a>
                         <div class="mdl-tooltip" for="return"><%=(localize.getTextFor(ClientLocalizationKeys.COMMON_RETURN_TOOLTIP)) %></div>
                         <%}%>
                         <a id="logout" class="mdl-navigation__link" href="logout.jsp"><i class="material-icons md-24">power_settings_new</i>&nbsp;&nbsp;&nbsp;<%=name %></a>
@@ -55,6 +55,16 @@
                         var obfuscator = document.getElementsByClassName("mdl-layout__obfuscator");
                         obfuscator[0].className = "mdl-layout__obfuscator is-visible";
                     };
+                    
+                <%if(has_return){%>    
+                function show_return() {
+                    document.getElementById("return").style = "";
+                }
+                
+                function hide_return() {
+                    document.getElementById("return").style = "display: none;";
+                }
+                <%}%>
             </script>
             <main class="mdl-layout__content">
                 <div id="bub_back" class="bubbles"></div>

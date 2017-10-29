@@ -98,7 +98,7 @@ GAME-TABLE-BALANCE-TOOLTIP<>O lucro ou prejuízo na semana.<br/>É lucro sobre v
 GAME-TABLE-INCOMMINGORDER<>Produto a caminho
 GAME-TABLE-INCOMMINGORDER-TOOLTIP<>Produtos que estão a caminho.<br/>Quando o produto atingir o marco de 1 semana, será<br/>adicionado ao inventário no início da semana seguinte.
 GAME-TABLE-INCOMMINGORDER-PRODUCER<>Produzindo
-GAME-TABLE-INCOMMINGORDER-TOOLTIP-PRODUCER<>Produtos que estão sendo feitos.<br/>Quando o produto atingir o marco de 1 semana, será<br/>adicionado ao inventário no início da semana seguinte.
+GAME-TABLE-INCOMMINGORDER-PRODUCER-TOOLTIP<>Produtos que estão sendo feitos.<br/>Quando o produto atingir o marco de 1 semana, será<br/>adicionado ao inventário no início da semana seguinte.
 GAME-TABLE-INCOMMINGORDER-WEEK<> Semana
 GAME-TABLE-REQUEST-RETAILER<>Pedido ao atacadista
 GAME-TABLE-REQUEST-RETAILER-TOOLTIP<>Pedido feito ao fornecedor.
@@ -114,8 +114,8 @@ GAME-TABLE-FUNC-WHOLESALER<>Atacadista
 GAME-TABLE-FUNC-DISTRIBUTOR<>Distribuidor
 GAME-TABLE-FUNC-PRODUCER<>Produtor
 GAME-CONTROL-LABEL-ALLOW<>Pedido
-GAME-CONTROL-LABEL-BLOCK<>Aguarde seu turno...
-GAME-CONTROL-BUTTON<>Enviar pedido
+GAME-CONTROL-LABEL-BLOCK<>Aguarde...
+GAME-CONTROL-BUTTON<>Enviar
 GAME-CONTROL-ERROR<>Não é um pedido válido!
 GAME-CONTROL-INPUT-TOOLTIP<>Insira seu pedido
 GAME-CONTROL-BUTTON-TOOLTIP<>Fazer pedido

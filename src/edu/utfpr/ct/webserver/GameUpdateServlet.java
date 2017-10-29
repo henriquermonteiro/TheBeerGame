@@ -129,30 +129,45 @@ public class GameUpdateServlet extends HttpServlet {
 
                     for (int k = 0; k < players_amount; k++) {
                         JSONObject player = new JSONObject();
-
-                        Node n_aux = ((Node) g.game.supplyChain[k * (g.game.deliveryDelay + 1)]);
-
+                        
+                        int pos = k * (g.game.deliveryDelay + 1);
+                        Node n_aux = ((Node) g.game.supplyChain[pos]);
+                        Node prev_node = ((Node) g.game.supplyChain[(pos > 0 ? pos - (g.game.deliveryDelay + 1) : 0)]);
+                        
+                        boolean show = g.game.informedChainSupply || n_aux.playerName.equals(playerName);
+                        
                         player.put("name", n_aux.playerName);
                         player.put("function", n_aux.function.getName());
-                        player.put("cost", (n_aux.profit != null ? (g.game.sellingUnitProfit == 0 ? (n_aux.getLastUnfullfilmentCost() + n_aux.getLastStockingCost()) : (n_aux.getLastProfit() - (n_aux.getLastUnfullfilmentCost() + n_aux.getLastStockingCost()))) : "---"));
-                        player.put("stock", (n_aux.currentStock != null ? n_aux.getLastStock() : "---"));
-                        player.put("debt", (n_aux.debt != null ? (n_aux.function.getPosition() == 1 ? "---" : n_aux.getLastDebt()) : "---"));
                         
-                        if(g.state == Engine.RUNNING)
-                            player.put("last_request", (n_aux.lastRequest != null ? n_aux.lastRequest : "---"));
+                        if(g.state == Engine.RUNNING){
+                            player.put("initial_stock", (show ? g.weeks == 0 ? g.game.initialStock : n_aux.getLastStock() + n_aux.travellingStock : "---"));
+                            player.put("received_order", (show ? pos == 0 ? g.game.demand[g.weeks] : prev_node.playerMove.get(prev_node.playerMove.size() - 1) : "---"));
+                            player.put("previously_pending_orders", (show ? pos == 0 ? 0 : n_aux.getLastDebt() : "---"));
+                            player.put("expected_delivery", (show ? (pos == 0 ? 0 : n_aux.getLastDebt()) + (int)player.get("received_order") : "---"));
+                            player.put("actual_delivery", (show ? n_aux.travellingStock : "---"));
+                            player.put("order_unfulfilled", (show ? (int)player.get("expected_delivery") - (int)player.get("actual_delivery") : "---"));
+                            player.put("final_stock", (show ? n_aux.getLastStock() : "---"));
+                            player.put("move", "---");
+                            player.put("confirmed_delivery", "---");
+                            player.put("cost_unfulfillment", (show ? n_aux.getLastUnfullfilmentCost(): "---"));
+                            player.put("cost_stock", (show ? n_aux.getLastStockingCost() : "---"));
+                            player.put("profit", (show ? n_aux.getLastProfit() : "---"));
+                            player.put("week_balance", (show ? (g.game.sellingUnitProfit == 0.0 ? (double)player.get("cost_unfulfillment") + (double)player.get("cost_stock") : (double)player.get("profit") - ((double)player.get("cost_unfulfillment") + (double)player.get("cost_stock"))) : "---"));
 
-                        JSONArray receiving = new JSONArray();
 
-                        for (int l = 1; l <= g.game.deliveryDelay; l++) {
-                            AbstractNode t_aux = g.game.supplyChain[(k * (g.game.deliveryDelay + 1)) + l];
+                            JSONArray receiving = new JSONArray();
 
-                            JSONObject incoming = new JSONObject();
-                            incoming.put("distance", l);
-                            incoming.put("value", (t_aux != null ? t_aux.travellingStock : "?"));
-                            receiving.add(incoming);
+                            for (int l = 1; l <= g.game.deliveryDelay; l++) {
+                                AbstractNode t_aux = g.game.supplyChain[(k * (g.game.deliveryDelay + 1)) + l];
+
+                                JSONObject incoming = new JSONObject();
+                                incoming.put("distance", l);
+                                incoming.put("value", (show ? t_aux.travellingStock : "?"));
+                                receiving.add(incoming);
+                            }
+
+                            player.put("incoming", receiving);
                         }
-
-                        player.put("incoming", receiving);
 
                         players.add(k, player);
                     }
