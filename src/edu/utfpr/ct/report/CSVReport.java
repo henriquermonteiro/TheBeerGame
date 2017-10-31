@@ -53,7 +53,7 @@ class CSVReport extends AbstractReport
 						+ "Password; "
 						+ "Cost of missing unit; "
 						+ "Cost of unit in stock; "
-						+ "Profit per unit; "
+						//+ "Profit per unit; "
 						+ "Real duration; "
 						+ "Informed duration; "
 						+ "Delivery delay; "
@@ -67,7 +67,7 @@ class CSVReport extends AbstractReport
 					  + game.password + "; "
 					  + game.missingUnitCost + "; "
 					  + game.stockUnitCost + "; "
-					  + game.sellingUnitProfit + "; "
+					  //+ game.sellingUnitProfit + "; "
 					  + game.realDuration + "; "
 					  + game.informedDuration + "; "
 					  + game.deliveryDelay + "; "
@@ -128,7 +128,7 @@ class CSVReport extends AbstractReport
 					 + "Incoming order; "
 					 + "Unfulfillment cost; "
 					 + "Stock cost; "
-					 + "Profit; "
+					 //+ "Profit; "
 					 + "Week balance");
 			bw.newLine();
 
@@ -147,7 +147,7 @@ class CSVReport extends AbstractReport
 				bw.write(line.incomingOrder.toString() + "; ");
 				bw.write(line.costUnfulfillment.toString() + "; ");
 				bw.write(line.costStock.toString() + "; ");
-				bw.write(line.profit.toString() + "; ");
+				//bw.write(line.profit.toString() + "; ");
 				bw.write(line.weekBalance.toString() + "; ");
 				bw.newLine();
 			}
