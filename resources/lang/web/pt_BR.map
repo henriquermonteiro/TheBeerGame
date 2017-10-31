@@ -59,9 +59,9 @@ GAME-TABLE-RECEIVED-ORDER-RETAILER<>Pedido do consumidor
 GAME-TABLE-RECEIVED-ORDER-RETAILER-TOOLTIP<>Pedido feito pelo seu cliente.
 GAME-TABLE-RECEIVED-ORDER-WHOLESALER<>Pedido do varejista
 GAME-TABLE-RECEIVED-ORDER-WHOLESALER-TOOLTIP<>Pedido feito pelo seu cliente.
-GAME-TABLE-RECEIVED-ORDER-DISTRIBUTOR<>Pedido do distribuidor
+GAME-TABLE-RECEIVED-ORDER-DISTRIBUTOR<>Pedido do atacadista
 GAME-TABLE-RECEIVED-ORDER-DISTRIBUTOR-TOOLTIP<>Pedido feito pelo seu cliente.
-GAME-TABLE-RECEIVED-ORDER-PRODUCER<>Pedido do atacadista
+GAME-TABLE-RECEIVED-ORDER-PRODUCER<>Pedido do distribuidor
 GAME-TABLE-RECEIVED-ORDER-PRODUCER-TOOLTIP<>Pedido feito pelo seu cliente.
 GAME-TABLE-PREVIOUSLY-PENDING-ORDERS<>Pedidos anteriores não atendidos
 GAME-TABLE-PREVIOUSLY-PENDING-ORDERS-TOOLTIP<>Mantém registro dos pedidos pendentes, estes devem ser atendidos assim que possível.<br/>É o pedido pendente da semana anterior.
