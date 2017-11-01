@@ -91,7 +91,7 @@ public class CreateGamePane extends BorderPane {
 
         createSimpleContent();
 
-        this.setCenter(simplePane);
+        this.setCenter(advancedPane);
     }
 
     private void changePane(boolean toAdvanced) {
@@ -382,13 +382,13 @@ public class CreateGamePane extends BorderPane {
             game.deliveryDelay = 2;
             game.informedChainSupply = simpleInformedSupplyChain.isSelected();
             game.informedDuration = 50;
-            game.realDuration = 40;
-            game.initialStock = 10;
+            game.realDuration = 36;
+            game.initialStock = 12;
             game.missingUnitCost = 1.0;
             game.stockUnitCost = 0.5;
             game.sellingUnitProfit = 0.0;
-            game.unitiesOnTravel = 5;
-            game.demand = DemandTypes.SINGLE_STEP.getDemandForParameter(new int[]{5, 10, 10, 40});
+            game.unitiesOnTravel = 4;
+            game.demand = DemandTypes.SINGLE_STEP.getDemandForParameter(new int[]{4, 8, 5, 36});
         } else {
             game.name = nameField.getText();
             game.password = (usePassword.isSelected() ? password.getText() : "");
@@ -758,14 +758,14 @@ public class CreateGamePane extends BorderPane {
         l.setAlignment(Pos.CENTER_RIGHT);
 
         GridPane.setConstraints(l, 0, 2, 1, 1, HPos.RIGHT, VPos.CENTER);
-        grid2.add(l, 0, 2);
+//        grid2.add(l, 0, 2);
 
         sellingUnitProffit = new NumberChooserFX("", 0.0, 3.0, 0.0, 0.01);
         sliderT = new Tooltip();
         LocalizationUtils.bindLocalizationText(sliderT.textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_SELLP);
         Tooltip.install(sellingUnitProffit, sliderT);
 
-        grid2.add(sellingUnitProffit, 1, 2);
+//        grid2.add(sellingUnitProffit, 1, 2);
 
         l = new Label();
         l.setTooltip(new Tooltip());
@@ -774,9 +774,9 @@ public class CreateGamePane extends BorderPane {
         l.setAlignment(Pos.CENTER_RIGHT);
 
         GridPane.setConstraints(l, 0, 3, 1, 1, HPos.RIGHT, VPos.CENTER);
-        grid2.add(l, 0, 3);
+        grid2.add(l, 0, 2);
 
-        realDuration = new NumberChooserFX("", 0.0, 100.0, 40.0, 1.0);
+        realDuration = new NumberChooserFX("", 0.0, 100.0, 36.0, 1.0);
         sliderT = new Tooltip();
         LocalizationUtils.bindLocalizationText(sliderT.textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_REAL_DUR);
         Tooltip.install(realDuration, sliderT);
@@ -787,7 +787,7 @@ public class CreateGamePane extends BorderPane {
             }
         });
 
-        grid2.add(realDuration, 1, 3);
+        grid2.add(realDuration, 1, 2);
 
         l = new Label();
         l.setTooltip(new Tooltip());
@@ -795,15 +795,15 @@ public class CreateGamePane extends BorderPane {
         LocalizationUtils.bindLocalizationText(l.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_INF_DUR);
         l.setAlignment(Pos.CENTER_RIGHT);
 
-        GridPane.setConstraints(l, 0, 4, 1, 1, HPos.RIGHT, VPos.CENTER);
-        grid2.add(l, 0, 4);
+        GridPane.setConstraints(l, 0, 3, 1, 1, HPos.RIGHT, VPos.CENTER);
+        grid2.add(l, 0, 3);
 
-        informedDuration = new NumberChooserFX("", 0.0, 100.0, 60.0, 1.0);
+        informedDuration = new NumberChooserFX("", 0.0, 100.0, 50.0, 1.0);
         sliderT = new Tooltip();
         LocalizationUtils.bindLocalizationText(sliderT.textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_INF_DUR);
         Tooltip.install(informedDuration, sliderT);
 
-        grid2.add(informedDuration, 1, 4);
+        grid2.add(informedDuration, 1, 3);
         
         informedDuration.addValuePropertyListener(new ChangeListener<Number>() {
             @Override
@@ -825,15 +825,15 @@ public class CreateGamePane extends BorderPane {
         LocalizationUtils.bindLocalizationText(l.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_DELI_DELAY);
         l.setAlignment(Pos.CENTER_RIGHT);
 
-        GridPane.setConstraints(l, 0, 5, 1, 1, HPos.RIGHT, VPos.CENTER);
-        grid2.add(l, 0, 5);
+        GridPane.setConstraints(l, 0, 4, 1, 1, HPos.RIGHT, VPos.CENTER);
+        grid2.add(l, 0, 4);
 
-        deliveryDelay = new NumberChooserFX("", 0.0, 7.0, 2.0, 1.0);
+        deliveryDelay = new NumberChooserFX("", 0.0, 5.0, 2.0, 1.0);
         sliderT = new Tooltip();
         LocalizationUtils.bindLocalizationText(sliderT.textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_DELI_DELAY);
         Tooltip.install(deliveryDelay, sliderT);
 
-        grid2.add(deliveryDelay, 1, 5);
+        grid2.add(deliveryDelay, 1, 4);
 
         l = new Label();
         l.setTooltip(new Tooltip());
@@ -841,15 +841,15 @@ public class CreateGamePane extends BorderPane {
         LocalizationUtils.bindLocalizationText(l.getTooltip().textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_START_STOCK);
         l.setAlignment(Pos.CENTER_RIGHT);
 
-        GridPane.setConstraints(l, 0, 6, 1, 1, HPos.RIGHT, VPos.CENTER);
-        grid2.add(l, 0, 6);
+        GridPane.setConstraints(l, 0, 5, 1, 1, HPos.RIGHT, VPos.CENTER);
+        grid2.add(l, 0, 5);
 
-        initialStock = new NumberChooserFX("", 0.0, 100.0, 10.0, 1.0);
+        initialStock = new NumberChooserFX("", 0.0, 100.0, 12.0, 1.0);
         sliderT = new Tooltip();
         LocalizationUtils.bindLocalizationText(sliderT.textProperty(), HostLocalizationKeys.TOOLTIP_CREA_GAME_INP_START_STOCK);
         Tooltip.install(initialStock, sliderT);
 
-        grid2.add(initialStock, 1, 6);
+        grid2.add(initialStock, 1, 5);
         
         cConsG1 = new ColumnConstraints();
         cConsG1.setHgrow(Priority.SOMETIMES);
@@ -953,7 +953,7 @@ public class CreateGamePane extends BorderPane {
         cancelButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                changePane(false);
+//                changePane(false);
                 clearFields();
             }
         });
@@ -1012,10 +1012,10 @@ public class CreateGamePane extends BorderPane {
         missingUnitCost.setValue(1.0);
         stockUnitCost.setValue(0.5);
         sellingUnitProffit.setValue(0.0);
-        realDuration.setValue(40.0);
-        informedDuration.setValue(60.0);
+        realDuration.setValue(36.0);
+        informedDuration.setValue(50.0);
         deliveryDelay.setValue(2.0);
-        initialStock.setValue(10.0);
+        initialStock.setValue(12.0);
         supplyChainTypeSelect.setValue(SupplyChainTypes.CLASSIC_CHAIN);
         updateParameterBox();
 

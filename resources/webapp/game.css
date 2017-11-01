@@ -155,6 +155,10 @@
     outline: none;
 }
 
+.table-card #order__input {
+    text-align: center;
+}
+
 .table-card #order__label {
     top: 0;
 }

@@ -59,7 +59,7 @@
                 var label = document.getElementById("order__label");
                 var button = document.getElementById("order__button");
                 var curr_row = document.getElementById("curr-row");
-                var last_row = document.getElementsByClassName("last_row");
+//                var last_row = document.getElementsByClassName("last_row");
                 
 //                var column = document.getElementsByClassName("this_player");
 //                if(column.length > 0){
@@ -78,9 +78,9 @@
                 
                 button.classList.remove('hidden');
 
-                if(last_row.length > 0){
-                    last_row[0].className = "";
-                }
+//                if(last_row.length > 0){
+//                    last_row[0].className = "";
+//                }
 
                 curr_row.className = "last_row";
                 
@@ -156,8 +156,8 @@
                 var k = 0;
                 var row = document.createElement("TR");
                 document.getElementById("history-body").insertBefore(row, document.getElementById("curr-row"));
-                if(!your_turn)
-                    row.className = "last_row";
+//                if(!your_turn)
+//                    row.className = "last_row";
                 
                 <% if(((Boolean)json.get("informed_chain"))) { %>
                 var cell = row.insertCell(k++);
@@ -601,7 +601,7 @@
 
                     document.getElementById("rep_stockcost").innerHTML = json_state.stock_cost;
                     document.getElementById("rep_missingcost").innerHTML = Number(json_state.missing_cost).toFixed(2);
-                    document.getElementById("rep_saleprofit").innerHTML = json_state.selling_profit;
+//                    document.getElementById("rep_saleprofit").innerHTML = json_state.selling_profit;
 
                     document.getElementById("rep_delay").innerHTML = json_state.delay;
                     document.getElementById("rep_infduration").innerHTML = json_state.total_week;
@@ -858,7 +858,6 @@
                     <p style="display: table; width: 100%;">
                         <label style="display: table-cell;"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_INFO_STOCKCOST)) %></b><span id="rep_stockcost">0,5</span></label>
                         <label style="display: table-cell;"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_INFO_MISSCOST)) %></b><span id="rep_missingcost">1,0</span></label>
-                        <label style="display: table-cell;"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_INFO_SALEPROFIT)) %></b><span id="rep_saleprofit">1,0</span></label>
                     </p>
                 </div>
                 <div class="mdl-card__supporting-text mdl-card--border">

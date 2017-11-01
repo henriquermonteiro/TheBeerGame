@@ -367,11 +367,30 @@ public class Controller implements IControllerHost, IControllerPlayer
 		if(!engines.containsKey(gameName))
 			return getReport(gameName) != null;
 
-		if(engines.get(gameName).getGame().password.equals(password)
-		   && engines.get(gameName).addPlayer(playerName))
-		{
-			hostGUI.pushGameRoomUpdate(gameName);
-			return true;
+		if(engines.get(gameName).getGame().password.equals(password))
+		{       
+                        boolean flag_break = false;
+                        
+                        for(Engine e : engines.values()){
+                            if(!e.getGame().name.equals(gameName)){
+                                for(String p : e.getPlayers()){
+                                    if(p.equals(playerName)){
+                                        e.removePlayer(playerName);
+                                        flag_break = true;
+                                        break;
+                                    }
+                                }
+                                
+                                if(flag_break){
+                                    break;
+                                }
+                            }
+                        }
+                    
+                        if(engines.get(gameName).addPlayer(playerName)){
+                                hostGUI.pushGameRoomUpdate(gameName);
+                                return true;
+                        }
 		}
 
 		return false;
@@ -419,6 +438,7 @@ public class Controller implements IControllerHost, IControllerPlayer
 				data.game.stockUnitCost = fullGame.stockUnitCost;
 				data.game.missingUnitCost = fullGame.missingUnitCost;
 				data.game.sellingUnitProfit = fullGame.sellingUnitProfit;
+                                data.game.initialStock = fullGame.initialStock;
 
 				switch(data.state)
 				{

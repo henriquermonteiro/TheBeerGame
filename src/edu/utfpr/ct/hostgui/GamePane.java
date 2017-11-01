@@ -7,7 +7,7 @@ import javafx.scene.layout.BorderPane;
 
 public class GamePane extends BorderPane {
 
-    private final Game game;
+    public final Game game;
     private final MainScene mainScene;
     private Boolean isGame;
     private BorderPane center;
@@ -25,7 +25,7 @@ public class GamePane extends BorderPane {
         thisGamePane = this;
 
         if (isGame) {
-            center = new PlayGamePane(mainScene, game, state == 2, pool);
+            center = new PlayGamePane(mainScene, game, state <= 2, pool);
             this.setCenter(center);
         } else {
             center = new ReportGamePane(game, state == 8, mainScene);
@@ -58,5 +58,5 @@ public class GamePane extends BorderPane {
     public Boolean isGame() {
         return isGame;
     }
-
+    
 }

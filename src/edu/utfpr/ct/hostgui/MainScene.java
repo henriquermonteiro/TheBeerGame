@@ -153,12 +153,12 @@ public class MainScene extends BorderPane {
             HBox stockCost_Layout = new HBox(stockCost_Label, stockCost);
             stockCost_Layout.getStyleClass().add("hbox");
             
-            Text sellProf = new Text(Double.toString(g.sellingUnitProfit));
-            sellProf.getStyleClass().addAll("text-node");
-            Label sellProf_Label = new Label();
-            LocalizationUtils.bindLocalizationText(sellProf_Label.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_SELLINGP);
-            HBox sellProf_Layout = new HBox(sellProf_Label, sellProf);
-            sellProf_Layout.getStyleClass().add("hbox");
+//            Text sellProf = new Text(Double.toString(g.sellingUnitProfit));
+//            sellProf.getStyleClass().addAll("text-node");
+//            Label sellProf_Label = new Label();
+//            LocalizationUtils.bindLocalizationText(sellProf_Label.textProperty(), HostLocalizationKeys.LABEL_CREATEGAME_SELLINGP);
+//            HBox sellProf_Layout = new HBox(sellProf_Label, sellProf);
+//            sellProf_Layout.getStyleClass().add("hbox");
             
             Text realDur = new Text(Double.toString(g.realDuration));
             realDur.getStyleClass().addAll("text-node");
@@ -190,7 +190,7 @@ public class MainScene extends BorderPane {
             
             generalInfo.add(missingCost_Layout, 0, 0, 1, 1);
             generalInfo.add(stockCost_Layout, 0, 1, 1, 1);
-            generalInfo.add(sellProf_Layout, 0, 2, 1, 1);
+//            generalInfo.add(sellProf_Layout, 0, 2, 1, 1);
             
             generalInfo.add(realDur_Layout, 1, 0, 1, 1);
             generalInfo.add(infoDur_Layout, 1, 1, 1, 1);
@@ -459,12 +459,23 @@ public class MainScene extends BorderPane {
         gameTab.setTooltip(new Tooltip());
         LocalizationUtils.bindLocalizationText(gameTab.getTooltip().textProperty(), (state != -1 ? HostLocalizationKeys.TOOLTIP_MAIN_GAME : HostLocalizationKeys.TOOLTIP_MAIN_REPO));
         
-        gameTab.setOnClosed(new EventHandler<Event>() {
+        gameTab.setOnCloseRequest(new EventHandler<Event>() {
             @Override
             public void handle(Event event) {
                 String name = ((Tab) event.getSource()).getText();
 
                 if (name != null && !name.isEmpty()) {
+                    if(games.get(name).isGame()){
+                        ((PlayGamePane)games.get(name).getCenter()).playPauseButton.setSelected(false);
+                        
+                        if(((PlayGamePane)games.get(name).getCenter()).playPauseButton.isSelected()){
+                            event.consume();
+                            return;
+                        }
+                    }else{
+                        changeReportState(game, false);
+                    }
+                    
                     games.remove(name);
                 }
             }
@@ -495,6 +506,7 @@ public class MainScene extends BorderPane {
 
     public void createGame(Game game) {
         if (control.createGame(game)) {
+            changeGameState(game, true);
             makeGameTab(control.getGame(game.name));
             loaderPane.update();
         } else {
@@ -564,6 +576,7 @@ public class MainScene extends BorderPane {
         Game g = control.getReport(gameName);
 
         if (g != null) {
+            changeReportState(g, true);
             makeGameTab(g);
         } else {
             // TODO warn user
@@ -578,6 +591,7 @@ public class MainScene extends BorderPane {
 
         Game g = control.getGame(gameName);
         if (g != null) {
+            changeGameState(g, true);
             makeGameTab(g);
         } else {
             // TODO warn user

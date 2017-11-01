@@ -67,7 +67,7 @@ public class PlayGamePane extends BorderPane {
     private final Game game;
 
     private Label gameName;
-    private ToggleButton playPauseButton;
+    public final ToggleButton playPauseButton;
     private AutoCompleteTextField[] playersInNodes;
     private WebView[] charts;
     private ListView<String> pool;
@@ -139,7 +139,6 @@ public class PlayGamePane extends BorderPane {
 
         gameName = new Label();
 
-        playPauseButton = new ToggleButton();
         playPauseButton.getStyleClass().addAll("play-pause");
         playPauseButton.setGraphic(playPauseIcon);
         playPauseButton.setTooltip(new Tooltip());
@@ -527,6 +526,7 @@ public class PlayGamePane extends BorderPane {
         this.game = game;
         this.mainScene = mainScene;
 
+        playPauseButton = new ToggleButton();
         createContent();
 
         updateGame(game, state, pool);

@@ -8,6 +8,7 @@ import edu.utfpr.ct.webserver.ActionService;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.concurrent.Callable;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -164,6 +165,8 @@ public class ReportGamePane extends BorderPane{
     }
 
     public ReportGamePane(Game game, boolean isStreaming, MainScene mainScene) {
+        super();
+        
         this.game = game;
         this.mainScene = mainScene;
         
@@ -173,6 +176,11 @@ public class ReportGamePane extends BorderPane{
     }
 
     public final void updateReport(Game game, boolean b) {
-        webStart.setSelected(b);
+        Platform.runLater(new Runnable(){
+            @Override
+            public void run() {
+                webStart.setSelected(b);
+            }
+        });
     }
 }

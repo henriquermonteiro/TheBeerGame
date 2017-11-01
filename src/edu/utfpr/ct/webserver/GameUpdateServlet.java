@@ -141,18 +141,18 @@ public class GameUpdateServlet extends HttpServlet {
                         
                         if(g.state == Engine.RUNNING){
                             player.put("initial_stock", (show ? g.weeks == 0 ? g.game.initialStock : n_aux.getLastStock() + n_aux.travellingStock : "---"));
-                            player.put("received_order", (show ? pos == 0 ? g.game.demand[g.weeks] : prev_node.playerMove.get(prev_node.playerMove.size() - 1) : "---"));
-                            player.put("previously_pending_orders", (show ? pos == 0 ? 0 : n_aux.getLastDebt() : "---"));
-                            player.put("expected_delivery", (show ? (pos == 0 ? 0 : n_aux.getLastDebt()) + (int)player.get("received_order") : "---"));
-                            player.put("actual_delivery", (show ? n_aux.travellingStock : "---"));
-                            player.put("order_unfulfilled", (show ? (int)player.get("expected_delivery") - (int)player.get("actual_delivery") : "---"));
-                            player.put("final_stock", (show ? n_aux.getLastStock() : "---"));
+                            player.put("received_order", (show && (pos == 0 || !prev_node.playerMove.isEmpty()) ? pos == 0 ? g.game.demand[g.weeks] : prev_node.playerMove.get(prev_node.playerMove.size() - 1) : "---"));
+                            player.put("previously_pending_orders", (show ? pos == 0 ? 0 : n_aux.debt.get(g.weeks) : "---"));
+                            player.put("expected_delivery", (show && (pos == 0 || !prev_node.playerMove.isEmpty()) ? (pos == 0 ? 0 : (int)player.get("previously_pending_orders")) + (int)player.get("received_order") : "---"));
+                            player.put("actual_delivery", (show && (pos == 0 || !prev_node.playerMove.isEmpty()) ? n_aux.travellingStock : "---"));
+                            player.put("order_unfulfilled", (show && (pos == 0 || !prev_node.playerMove.isEmpty()) ? (int)player.get("expected_delivery") - (int)player.get("actual_delivery") : "---"));
+                            player.put("final_stock", (show && (pos == 0 || !prev_node.playerMove.isEmpty()) ? n_aux.getLastStock() : "---"));
                             player.put("move", "---");
                             player.put("confirmed_delivery", "---");
-                            player.put("cost_unfulfillment", (show ? n_aux.getLastUnfullfilmentCost(): "---"));
-                            player.put("cost_stock", (show ? n_aux.getLastStockingCost() : "---"));
-                            player.put("profit", (show ? n_aux.getLastProfit() : "---"));
-                            player.put("week_balance", (show ? (g.game.sellingUnitProfit == 0.0 ? (double)player.get("cost_unfulfillment") + (double)player.get("cost_stock") : (double)player.get("profit") - ((double)player.get("cost_unfulfillment") + (double)player.get("cost_stock"))) : "---"));
+                            player.put("cost_unfulfillment", (show && (pos == 0 || !prev_node.playerMove.isEmpty()) ? n_aux.getLastUnfullfilmentCost(): "---"));
+                            player.put("cost_stock", (show && (pos == 0 || !prev_node.playerMove.isEmpty()) ? n_aux.getLastStockingCost() : "---"));
+                            player.put("profit", (show && (pos == 0 || !prev_node.playerMove.isEmpty()) ? n_aux.getLastProfit() : "---"));
+                            player.put("week_balance", (show && (pos == 0 || !prev_node.playerMove.isEmpty()) ? (g.game.sellingUnitProfit == 0.0 ? (double)player.get("cost_unfulfillment") + (double)player.get("cost_stock") : (double)player.get("profit") - ((double)player.get("cost_unfulfillment") + (double)player.get("cost_stock"))) : "---"));
 
 
                             JSONArray receiving = new JSONArray();

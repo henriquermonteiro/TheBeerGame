@@ -45,13 +45,13 @@ public enum DemandTypes
 			ret = new Object[9];
 			ret[0] = HostLocalizationKeys.DEMAND_PARAMETER_SINGLESTEP_INIVAL;
 			ret[1] = Integer.class;
-			ret[2] = 5;
+			ret[2] = 4;
 			ret[3] = HostLocalizationKeys.DEMAND_PARAMETER_SINGLESTEP_FINVAL;
 			ret[4] = Integer.class;
-			ret[5] = 10;
+			ret[5] = 8;
 			ret[6] = HostLocalizationKeys.DEMAND_PARAMETER_SINGLESTEP_STEPWEEK;
 			ret[7] = Integer.class;
-			ret[8] = 10;
+			ret[8] = 5;
 			break;
 		}
 
