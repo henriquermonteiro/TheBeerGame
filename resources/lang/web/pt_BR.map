@@ -5,6 +5,8 @@ COMMON-CURRENT-LANGUAGE-TOOLTIP<>Mudar idioma de visualização
 COMMON-RETURN-TEXT<>Voltar
 COMMON-RETURN-TOOLTIP<>Voltar para escolha de jogo
 COMMON-LOGOUT-TOOLTIP<>Sair
+COMMON-HELP-TEXT<>ajuda
+COMMON-HELP-TOOLTIP<>Mostra tutorial da mecânica do jogo.
 CHECKIN-INPUT-TOOLTIP<>Insira seu nome. Ele estará visível para os outros.<br/>Deve conter entre 6 e 36 caracteres.<br/>Pode conter apenas caracteres alfanuméricos.
 CHECKIN-BUTTON-TOOLTIP<>Login.
 

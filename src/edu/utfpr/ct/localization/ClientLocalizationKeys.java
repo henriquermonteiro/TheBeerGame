@@ -9,6 +9,8 @@ public class ClientLocalizationKeys
 	public static final String COMMON_RETURN_TEXT = "COMMON-RETURN-TEXT";
 	public static final String COMMON_RETURN_TOOLTIP = "COMMON-RETURN-TOOLTIP";
 	public static final String COMMON_LOGOUT_TOOLTIP = "COMMON-LOGOUT-TOOLTIP";
+	public static final String COMMON_HELP_TEXT = "COMMON-HELP-TEXT";
+	public static final String COMMON_HELP_TOOLTIP = "COMMON-HELP-TOOLTIP";
 
 	public static final String CHECKIN_TITLE = "CHECKIN-CARD-GAMENAME";
 	public static final String CHECKIN_TEXT_LABEL = "CHECKIN-TEXT-LABEL";
