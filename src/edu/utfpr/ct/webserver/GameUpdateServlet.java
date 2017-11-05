@@ -75,6 +75,8 @@ public class GameUpdateServlet extends HttpServlet {
                         case Engine.RUNNING:
                             json.put("state", "playing");
                             json.put("your_turn", (playerName == null ? false : playerName.equals(g.playerOfTurn)));
+                            json.put("init_stock", g.game.initialStock);
+                            json.put("init_incom", g.game.demand[0]);
 
                             JSONArray table = new JSONArray();
                             
@@ -138,6 +140,7 @@ public class GameUpdateServlet extends HttpServlet {
                         
                         player.put("name", n_aux.playerName);
                         player.put("function", n_aux.function.getName());
+                        player.put("function_pos", n_aux.function.getPosition());
                         
                         if(g.state == Engine.RUNNING){
                             player.put("initial_stock", (show ? g.weeks == 0 ? g.game.initialStock : n_aux.getLastStock() + n_aux.travellingStock : "---"));

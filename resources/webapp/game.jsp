@@ -40,9 +40,12 @@
     }
     
     Localize localize = ClientLocalizationManager.getInstance().getClientFor(lang);
- 
+    
+    String name = (String) session.getAttribute("USER-ID");
 %>
 <jsp:include page="resources/head_begin.jsp"/>
+        <script src="resources/dialog-polyfill.js"></script>
+        <link rel="stylesheet" type="text/css" href="resources/dialog-polyfill.css"/>
         <link rel="stylesheet" type="text/css" href="game.css"/>
         <script src='/resources/chartjs/Chart.js'></script>
         <style> canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; } </style>
@@ -103,6 +106,7 @@
             function block_move() {
                 var input = document.getElementById("order__input");
                 var label = document.getElementById("order__label");
+                var tooltip = document.getElementById("order_tooltip");
                 var button = document.getElementById("order__button");
                 var curr_row = document.getElementById("curr-row");
                 
@@ -119,6 +123,7 @@
                 }
                 
                 button.classList.add('hidden');
+                tooltip.className = "mdl-tooltip mdl-tooltip--left";
                 
                 curr_row.className = "last_row hidden";
 
@@ -366,6 +371,109 @@
                     button.style = "margin-left: " + (sum + 4) + "px; width:" + (document.getElementById("ordered_header").offsetWidth - 3) + "px;";
                 }
             }
+            
+            var FUNCTIONS = ["<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_CON)) %>", "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_RET)) %>", "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_WHO)) %>", "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_DIS)) %>", "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_PRO)) %>"];
+            var closed_tutorial = false;
+            
+            function call_tutorial(){
+                closed_tutorial = false;
+            }
+            
+            function show_tutorial(json_state){
+                if(closed_tutorial)
+                    return;
+                
+                closed_tutorial = true;
+                
+                var el = document.getElementById("dialog");
+                
+                var dur = document.getElementById("dlg_dur");
+                var initstock = document.getElementById("dlg_istock");
+                var client1 = document.getElementById("dlg_client");
+                var client2 = document.getElementById("dlg_client2");
+                var coststock = document.getElementById("dlg_stockcost");
+                var costmiss = document.getElementById("dlg_misscost");
+                var delay1 = document.getElementById("dlg_delay");
+                var delay2 = document.getElementById("dlg_delay2");
+                var delay3 = document.getElementById("dlg_delay3");
+                var delay4 = document.getElementById("dlg_delay4");
+                var incom1 = document.getElementById("dlg_incomming");
+                var incom2 = document.getElementById("dlg_incomming2");
+                
+                var b3 = document.getElementById("dlg_text_body3");
+                var notP = document.getElementById("dlg_b5_notprod");
+                var prod = document.getElementById("dlg_b5_prod");
+                
+                var client;
+                for (var player in json_state.players) {
+                    var name = json_state.players[player].name;
+                    
+                    var you = json_state.players[player].name === "<%=name%>";
+                    
+                    var named = document.getElementById("dlg_"+json_state.players[player].function+"_name");
+                    if(named !== null){
+                        if(you){
+                            named.innerHTML = "você";
+                            client = FUNCTIONS[Number(json_state.players[player].function_pos) - 1];
+                        }else{
+                            named.innerHTML = json_state.players[player].name;
+                        }
+                    }
+                }
+                
+                if(dur !== null)
+                    dur.innerHTML = json_state.total_week;
+                
+                if(initstock !== null)
+                    initstock.innerHTML = json_state.init_stock;
+                
+                if(client1 !== null)
+                    client1.innerHTML = client;
+                    
+                if(client2 !== null)
+                    client2.innerHTML = client;
+                    
+                if(coststock !== null)
+                    coststock.innerHTML = json_state.stock_cost;
+        
+                if(costmiss !== null)
+                    costmiss.innerHTML = json_state.missing_cost;
+                
+                if(delay1 !== null)
+                    delay1.innerHTML = json_state.delay;
+                
+                if(delay2 !== null)
+                    delay2.innerHTML = json_state.delay;
+                
+                if(delay3 !== null)
+                    delay3.innerHTML = json_state.delay;
+                
+                if(delay4 !== null)
+                    delay4.innerHTML = json_state.delay;
+                
+                if(incom1 !== null)
+                    incom1.innerHTML = json_state.init_incom;
+                
+                if(incom2 !== null)
+                    incom2.innerHTML = json_state.init_incom;
+                
+                if(b3 !== null && (client === FUNCTIONS[0]))
+                    b3.parentNode.removeChild(b3);
+                    
+                if(notP !== null && (client === FUNCTIONS[3]))
+                    notP.parentNode.removeChild(notP);
+                    
+                if(prod !== null && (client !== FUNCTIONS[3]))
+                    prod.parentNode.removeChild(prod);
+                
+                el.showModal();
+            }
+            
+            function close_tutorial() {
+                var el = document.getElementById("dialog");
+
+                el.close();
+            }
 
             function processWait(json_state) {
                 if (state !== "w") {
@@ -392,10 +500,13 @@
             function processPlay(json_state) {
                 if (state === "w") {
                     start_game();
+                    document.getElementById("help").style = "";
                 } else if (state !== "p") {
                     location.reload();
                     return;
                 }
+                    
+                show_tutorial(json_state);
 
                 if (json_state.your_turn) {
                     allow_move();
@@ -589,6 +700,7 @@
 
             function processReport(json_state) {
                 if (state !== "r") {
+                    document.getElementById("help").style = "display: none;";
                     
                     show_return();
 
@@ -676,6 +788,8 @@
             <jsp:param name="source" value="game.jsp"/>
             <jsp:param name="show_return" value="true"/>
             <jsp:param name="scroll_header" value="false"/>
+            <jsp:param name="show_help" value="true"/>
+            <jsp:param name="help_target" value="call_tutorial()"/>
         </jsp:include>
 
     <div class="center-content">
@@ -824,7 +938,7 @@
                         <button id="order__button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect hidden" disabled onclick="send_request();">
                             <%=(localize.getTextFor(ClientLocalizationKeys.GAME_CONTROL_BUTTON)) %>
                         </button>
-                        <div class="mdl-tooltip mdl-tooltip--left" for="order__button"><%=(localize.getTextFor(ClientLocalizationKeys.PLAY_ORDER_BUTTON_TOOLTIP)) %></div>
+                        <div id="order_tooltip" class="mdl-tooltip mdl-tooltip--left" for="order__button"><%=(localize.getTextFor(ClientLocalizationKeys.PLAY_ORDER_BUTTON_TOOLTIP)) %></div>
                     </div>
                 </div>
                 <div class="mdl-tooltip" for="func_header"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TABLE_FUNC_TT)) %></div>
@@ -909,4 +1023,36 @@
             </div>
         </div>
     </div>
+                
+    <dialog id="dialog" class="mdl-dialog">
+        <div class="mdl-dialog__content">
+            <p  id="dlg_text_header">
+                <%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_HEAD_BEF_NAME)) %><%=name%><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_HEAD_AFT_NAME)) %>
+            </p>
+            <p  id="dlg_text_body1">
+                <%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY1_BEF_PROD)) %><span id="dlg_PRODUCER_name">(***nome***)</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY1_BEF_DIST)) %><span id="dlg_DISTRIBUTOR_name">(***nome***)</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY1_BEF_WHOL)) %><span id="dlg_WHOLESALER_name">(***nome***)</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY1_BEF_RETA)) %><span id="dlg_RETAILER_name">(***nome***)</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY1_AFT_RETA)) %>
+            </p>
+            <p  id="dlg_text_body2">
+                <%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY2_BEF_DUR)) %><span id="dlg_dur">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY2_BEF_ISTOCK)) %><span id="dlg_istock">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY2_BEF_CLIENT)) %><span id="dlg_client">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY2_AFT_CLIENT)) %>
+            </p>
+            <p  id="dlg_text_body3">
+                <%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY3_BEF_CLIENT)) %><span id="dlg_client2">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY3_AFT_CLIENT)) %>
+            </p>
+            <p  id="dlg_text_body4">
+                <%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY4_BEF_STCCOST)) %><span id="dlg_stockcost">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY4_BEF_MISSCOST)) %><span id="dlg_misscost">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY4_AFT_MISSCOST)) %>
+            </p>
+            <p  id="dlg_text_body5">
+                <%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_BEF_ALL_MESS)) %><span id="dlg_b5_notprod"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_BEF_NPR_MESS)) %><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_NPR_MESS_BEF_DEL)) %><span id="dlg_delay">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_NPR_MESS_BEF_INC)) %><span id="dlg_incomming">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_NPR_MESS_BEF_DEL2)) %><span id="dlg_delay2">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_NPR_MESS_AFT_DEL2)) %><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_AFT_NPR_MESS)) %></span><span id="dlg_b5_prod"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_BEF_PRO_MESS)) %><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_PRO_MESS_BEF_DEL)) %><span id="dlg_delay3">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_PRO_MESS_BEF_INC)) %><span id="dlg_incomming2">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_PRO_MESS_BEF_DEL2)) %><span id="dlg_delay4">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_PRO_MESS_AFT_DEL2)) %><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_AFT_PRO_MESS)) %></span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_AFT_ALL_MESS)) %>
+            </p>
+            <p  id="dlg_text_footer">
+                <%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_FOOT)) %>
+            </p>
+        </div>
+        <div class="mdl-dialog__actions">
+            <button id="dlg_button" type="button" class="mdl-button" onclick="close_tutorial()"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BUTTON)) %></button>
+        </div>
+    </dialog>
+    <script>
+        dialogPolyfill.registerDialog(document.getElementById("dialog"));
+    </script>
     <jsp:include page="resources/body_finish.jsp" />

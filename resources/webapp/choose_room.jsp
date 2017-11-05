@@ -147,7 +147,7 @@
                 </p>
                 <form method="post" action="">
                     <div id="passw_input" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" pattern="[A-Z,a-z,0-9]" id="password">
+                        <input class="mdl-textfield__input" type="text" pattern="[A-Z,a-z,0-9]*" id="password">
                         <label class="mdl-textfield__label" for="password"><%=(localize.getTextFor(ClientLocalizationKeys.CHOOSE_PW_LABEL)) %></label>
                     </div>
                     <div class="mdl-tooltip" for="passw_input"><%=(localize.getTextFor(ClientLocalizationKeys.CHOOSE_PASSW_INP_TOOLTIP)) %></div>

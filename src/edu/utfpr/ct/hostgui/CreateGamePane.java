@@ -119,6 +119,20 @@ public class CreateGamePane extends BorderPane {
                 if (parameterDef[k + 1] == Integer.class) {
                     Spinner spin = new Spinner();
                     spin.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, (Integer) parameterDef[k + 2]));
+                    spin.setEditable(true);
+                    spin.focusedProperty().addListener(new ChangeListener<Boolean>() {
+                        @Override
+                        public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                            if(!newValue){
+                                try{
+                                    spin.getValueFactory().setValue(Integer.parseInt(spin.getEditor().getText()));
+                                    
+                                }catch(NumberFormatException nEx){
+                                    spin.getEditor().setText(spin.getValueFactory().getValue().toString());
+                                }
+                            }
+                        }
+                    });
 
                     spin.valueProperty().addListener(new ChangeListener(){
                         @Override
@@ -1018,6 +1032,7 @@ public class CreateGamePane extends BorderPane {
         initialStock.setValue(12.0);
         supplyChainTypeSelect.setValue(SupplyChainTypes.CLASSIC_CHAIN);
         updateParameterBox();
+        updateChart();
 
         simpleName.setText("");
         simpleInformedSupplyChain.setSelected(false);

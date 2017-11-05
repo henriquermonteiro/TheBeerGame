@@ -120,6 +120,44 @@ GAME-CONTROL-ERROR<>It's not a valid request!
 GAME-CONTROL-INPUT-TOOLTIP<>Enter your order
 GAME-CONTROL-BUTTON-TOOLTIP<>Make order
 
+GAME-TUTORIAL-HEADER-BEFORE-NAME<>Welcome to the Beer Game, 
+GAME-TUTORIAL-HEADER-AFTER-NAME<>!
+GAME-TUTORIAL-BODY1-BEFORE-PRODUCER-NAME<>You will make part of the supply chain of this noble product, composed by the producer 
+GAME-TUTORIAL-BODY1-BEFORE-DISTRIBUTOR-NAME<>, the distributor 
+GAME-TUTORIAL-BODY1-BEFORE-WHOLESALER-NAME<>, the wholesaler 
+GAME-TUTORIAL-BODY1-BEFORE-RETAILER-NAME<> and the retailer 
+GAME-TUTORIAL-BODY1-AFTER-RETAILER-NAME<>, all committed to provide the consumer to his beer, with the lowest possible cost. 
+GAME-TUTORIAL-BODY2-BEFORE-DURATION<>The game will run for 
+GAME-TUTORIAL-BODY2-BEFORE-INITIAL-STOCK<> rounds, which we call weeks. You will begin with a stock of 
+GAME-TUTORIAL-BODY2-BEFORE-CLIENT<> beers. Your client, the 
+GAME-TUTORIAL-BODY2-AFTER-CLIENT<>, will make orders every week and you should attend as good as possible. There will be a calculation of the ordered amount that you not attended in the week. Of course, you will never dispatch more beer than what you have in stock.
+GAME-TUTORIAL-BODY3-BEFORE-CLIENT<>In case you have not attended the demand (or part of it) from the 
+GAME-TUTORIAL-BODY3-AFTER-CLIENT<> in the last week, you will continue committed to deliver it, adding this to the amount ordered by the client this week. Do not worry, the program will take care of these calculations for you.
+GAME-TUTORIAL-BODY4-BEFORE-STOCK-COST<>You can incur in two types of costs that will never occur simultaneously: in the weeks that there is stock left, you will have the stock maintenance costs, which, for simulation purposes, is equivalent to [
+GAME-TUTORIAL-BODY4-BEFORE-MISSING-COST<> x the amount in stock at the end of the week]. In the case you were not able to meet the demand, the cost will be [
+GAME-TUTORIAL-BODY4-AFTER-MISSING-COST<> x the amount not attended].
+GAME-TUTORIAL-BODY5-BEFORE-ALL-MESSAGE<>Following your strategy of stock maintenance (lower enough that the maintenance cost is the minimum possible but high enough to not incur in costs of no attendement), you 
+GAME-TUTORIAL-BODY5-BEFORE-NOT-PRODUCER-MESSAGE<> 
+GAME-TUTORIAL-BODY5-NOT-PRODUCER-MESSAGE-BEFORE-DELAY<>will make your orders to your supplier. So, when you make your orders the confirmation of the quantity dispatched will be showed, because he can only dispatch what is available in stock. The remaining will be sended after. Remember that between the dispatch by your supplier and receive of the products there will be a lead time of 
+GAME-TUTORIAL-BODY5-NOT-PRODUCER-MESSAGE-BEFORE-INCOMMING<>. In order that, at beginning, you do not need to await to receive beers from your supplier, gently we pre-ordered some merchandise that is already on its way. You will receive 
+GAME-TUTORIAL-BODY5-NOT-PRODUCER-MESSAGE-BEFORE-DELAY2<> beers by week during the next 
+GAME-TUTORIAL-BODY5-NOT-PRODUCER-MESSAGE-AFTER-DELAY2<> weeks before the orders you make start to arrive, ok? 
+GAME-TUTORIAL-BODY5-AFTER-NOT-PRODUCER-MESSAGE<> 
+GAME-TUTORIAL-BODY5-BEFORE-PRODUCER-MESSAGE<> 
+GAME-TUTORIAL-BODY5-PRODUCER-MESSAGE-BEFORE-DELAY<>will take the decision of how much produce. The process of fabrication and fermentation takes 
+GAME-TUTORIAL-BODY5-PRODUCER-MESSAGE-BEFORE-INCOMMING<> weeks and only after this period the product will be available to be sended to your clients. In order that you have some beers ready during the first weeks we gently pre-ordered some beers to be delivered, there will be 
+GAME-TUTORIAL-BODY5-PRODUCER-MESSAGE-BEFORE-DELAY2<> beers arriving during the next 
+GAME-TUTORIAL-BODY5-PRODUCER-MESSAGE-AFTER-DELAY2<> weeks before your orders be ready, ok? 
+GAME-TUTORIAL-BODY5-AFTER-PRODUCER-MESSAGE<> 
+GAME-TUTORIAL-BODY5-AFTER-ALL-MESSAGE<> 
+GAME-TUTORIAL-FOOTER<>Good game! Enjoy!
+GAME-TUTORIAL-BUTTON-LABEL<>Got it
+GAME-TUTORIAL-CONSUMER<>consumer
+GAME-TUTORIAL-RETAILER<>retailer
+GAME-TUTORIAL-WHOLESALER<>wholesaler
+GAME-TUTORIAL-DISTRIBUTOR<>distributor
+GAME-TUTORIAL-PRODUCER<>producer
+
 REPORT-INFO-NAME<>Name:
 REPORT-INFO-TYPE<>Type:
 REPORT-TYPE-INFORMED<>Informed

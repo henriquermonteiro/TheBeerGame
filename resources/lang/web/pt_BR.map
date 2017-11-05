@@ -120,6 +120,44 @@ GAME-CONTROL-ERROR<>Não é um pedido válido!
 GAME-CONTROL-INPUT-TOOLTIP<>Insira seu pedido
 GAME-CONTROL-BUTTON-TOOLTIP<>Fazer pedido
 
+GAME-TUTORIAL-HEADER-BEFORE-NAME<>Bem-vindo ao Jogo da Cerveja, 
+GAME-TUTORIAL-HEADER-AFTER-NAME<>!
+GAME-TUTORIAL-BODY1-BEFORE-PRODUCER-NAME<>Você vai fazer parte da cadeia de suprimentos deste nobre produto, composta pelo fabricante 
+GAME-TUTORIAL-BODY1-BEFORE-DISTRIBUTOR-NAME<>, pelo distribuidor 
+GAME-TUTORIAL-BODY1-BEFORE-WHOLESALER-NAME<>, pelo atacadista 
+GAME-TUTORIAL-BODY1-BEFORE-RETAILER-NAME<> e pelo varejista 
+GAME-TUTORIAL-BODY1-AFTER-RETAILER-NAME<>, todos interessados em garantir que o consumidor consiga ter acesso à sua cervejinha, ao menor custo possível.
+GAME-TUTORIAL-BODY2-BEFORE-DURATION<>O jogo vai ocorrer por 
+GAME-TUTORIAL-BODY2-BEFORE-INITIAL-STOCK<> rodadas, que aqui chamamos de semanas. Você vai começar com um estoque de 
+GAME-TUTORIAL-BODY2-BEFORE-CLIENT<> cervejas. Seu cliente, o 
+GAME-TUTORIAL-BODY2-AFTER-CLIENT<>, fará pedidos todas as semanas e você deverá atendê-los da melhor forma possível. Haverá contabilização do volume de pedido que você deixou de atender na semana. É claro que você nunca vai poder despachar uma quantidade superior de cerveja do que tem em estoque no momento.
+GAME-TUTORIAL-BODY3-BEFORE-CLIENT<>Caso tenha deixado de atender o pedido do 
+GAME-TUTORIAL-BODY3-AFTER-CLIENT<> (ou parte dele) na semana anterior, você continuará empenhado em tentar atendê-lo, adicionando a quantidade já devida ao que o cliente pediu essa semana. Não se preocupe, o programa calcula isso automaticamente para você.
+GAME-TUTORIAL-BODY4-BEFORE-STOCK-COST<>Você pode incorrer em dois tipos distintos de custos, que jamais ocorrem simultaneamente: nas semanas em que sobrar estoque, você terá custos de manutenção de estoque, que, para os fins da simulação, são equivalentes a [
+GAME-TUTORIAL-BODY4-BEFORE-MISSING-COST<> x quantidade em estoque no fim da semana]. No caso de não ter conseguido atender à demanda, o custo será de [
+GAME-TUTORIAL-BODY4-AFTER-MISSING-COST<> x a quantidade que deixou de ser atendida].
+GAME-TUTORIAL-BODY5-BEFORE-ALL-MESSAGE<>Com base em sua estratégia de manutenção de estoques (baixos o suficiente para que os custos de manutenção de estoques seja o menor possível, mas altos o suficiente para não incorrer em custos elevados de não atendimento), você 
+GAME-TUTORIAL-BODY5-BEFORE-NOT-PRODUCER-MESSAGE<> 
+GAME-TUTORIAL-BODY5-NOT-PRODUCER-MESSAGE-BEFORE-DELAY<>fará os seus pedidos ao seu fornecedor. Assim que você fizer o seu pedido, vai receber uma confirmação da quantidade que o fornecedor está efetivamente despachando, afinal, ele vai confirmar o envio apenas do que tiver em estoque. O restante será enviado posteriormente. Lembre-se que entre o despacho pelo seu fornecedor e a incorporação ao seu estoque decorrerá um lead time de 
+GAME-TUTORIAL-BODY5-NOT-PRODUCER-MESSAGE-BEFORE-INCOMMING<>. Para que, no iníco do jogo, você não tenha que ficar esperando muito tempo antes de receber alguma cerveja do seu fornecedor, gentilmente, já pré-agendamos o envio de alguma mercadoria que está a caminho. Você vai receber 
+GAME-TUTORIAL-BODY5-NOT-PRODUCER-MESSAGE-BEFORE-DELAY2<> cervejas por semana ao longo das próximas 
+GAME-TUTORIAL-BODY5-NOT-PRODUCER-MESSAGE-AFTER-DELAY2<> semanas, antes que os pedidos que você mesmo realizar comecem a chegar, tá?
+GAME-TUTORIAL-BODY5-AFTER-NOT-PRODUCER-MESSAGE<> 
+GAME-TUTORIAL-BODY5-BEFORE-PRODUCER-MESSAGE<> 
+GAME-TUTORIAL-BODY5-PRODUCER-MESSAGE-BEFORE-DELAY<>tomará a decisão de quanto produzir. O processo de fabricação e fermentação da cerveja demora 
+GAME-TUTORIAL-BODY5-PRODUCER-MESSAGE-BEFORE-INCOMMING<> semanas, de modo que só depois desse período o produto estará disponível no estoque para enviar aos seus clientes. Mas, para que você tenha alguma cerveja ficando pronta durante as primeiras semanas do jogo, fizemos a gentileza de já deixar alguma cerveja fermentando, de modo que 
+GAME-TUTORIAL-BODY5-PRODUCER-MESSAGE-BEFORE-DELAY2<> cervejas vão ser incorporadas ao seu estoque por semana, ao longo das próximas 
+GAME-TUTORIAL-BODY5-PRODUCER-MESSAGE-AFTER-DELAY2<> semanas, antes que as suas próprias ordens de produção comecem a ficar prontas, tá?
+GAME-TUTORIAL-BODY5-AFTER-PRODUCER-MESSAGE<> 
+GAME-TUTORIAL-BODY5-AFTER-ALL-MESSAGE<> 
+GAME-TUTORIAL-FOOTER<>Bom jogo pra você! Divirta-se!
+GAME-TUTORIAL-BUTTON-LABEL<>Entendi
+GAME-TUTORIAL-CONSUMER<>consumidor
+GAME-TUTORIAL-RETAILER<>varejista
+GAME-TUTORIAL-WHOLESALER<>atacadista
+GAME-TUTORIAL-DISTRIBUTOR<>distribuidor
+GAME-TUTORIAL-PRODUCER<>fabricante
+
 REPORT-INFO-NAME<>Nome:
 REPORT-INFO-TYPE<>Tipo:
 REPORT-TYPE-INFORMED<>Informada

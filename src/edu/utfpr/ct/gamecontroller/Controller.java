@@ -300,8 +300,8 @@ public class Controller implements IControllerHost, IControllerPlayer
 			reports.putIfAbsent(engine.getGame(), true);
 		}
 
-		if(engine.isClientTurn())
-			engine.makeOrder(engine.getGame().demand[engine.getWeeks() - 1]);
+		if(engine.isClientTurn() && engine.getWeeks() < engine.getGame().demand.length)
+			engine.makeOrder(engine.getGame().demand[engine.getWeeks()]);
 
 		hostGUI.pushGameRoomUpdate(gameName);
 
