@@ -145,7 +145,7 @@ GAME-TUTORIAL-BODY5-NOT-PRODUCER-MESSAGE-BEFORE-SUPLIER<>fará os seus pedidos a
 GAME-TUTORIAL-BODY5-NOT-PRODUCER-MESSAGE-BEFORE-SUPLIER2<>. Assim que você fizer o seu pedido, vai receber uma confirmação da quantidade que o 
 GAME-TUTORIAL-BODY5-NOT-PRODUCER-MESSAGE-BEFORE-SUPLIER3<> está efetivamente despachando, afinal, ele vai confirmar o envio apenas do que tiver em estoque. O restante será enviado posteriormente. Lembre-se que entre o despacho pelo 
 GAME-TUTORIAL-BODY5-NOT-PRODUCER-MESSAGE-BEFORE-DELAY<> e a incorporação ao seu estoque decorrerá um lead time de 
-GAME-TUTORIAL-BODY5-NOT-PRODUCER-MESSAGE-BEFORE-SUPLIER4<>semanas. Para que, no iníco do jogo, você não tenha que ficar esperando muito tempo antes de receber alguma cerveja do 
+GAME-TUTORIAL-BODY5-NOT-PRODUCER-MESSAGE-BEFORE-SUPLIER4<> semanas. Para que, no iníco do jogo, você não tenha que ficar esperando muito tempo antes de receber alguma cerveja do 
 GAME-TUTORIAL-BODY5-NOT-PRODUCER-MESSAGE-BEFORE-INCOMMING<>, gentilmente, já pré-agendamos o envio de alguma mercadoria que está a caminho. Você vai receber 
 GAME-TUTORIAL-BODY5-NOT-PRODUCER-MESSAGE-BEFORE-DELAY2<> cervejas por semana ao longo das próximas 
 GAME-TUTORIAL-BODY5-NOT-PRODUCER-MESSAGE-AFTER-DELAY2<> semanas, antes que os pedidos que você mesmo realizar comecem a chegar, tá?
