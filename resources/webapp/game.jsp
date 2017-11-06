@@ -372,7 +372,7 @@
                 }
             }
             
-            var FUNCTIONS = ["<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_CON)) %>", "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_RET)) %>", "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_WHO)) %>", "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_DIS)) %>", "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_PRO)) %>"];
+            var FUNCTIONS = ["<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_CON)) %>", "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_RET)) %>", "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_WHO)) %>", "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_DIS)) %>", "<%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_PRO)) %>", "undefined"];
             var closed_tutorial = false;
             
             function call_tutorial(){
@@ -391,8 +391,13 @@
                 var initstock = document.getElementById("dlg_istock");
                 var client1 = document.getElementById("dlg_client");
                 var client2 = document.getElementById("dlg_client2");
+                var client3 = document.getElementById("dlg_client3");
                 var coststock = document.getElementById("dlg_stockcost");
                 var costmiss = document.getElementById("dlg_misscost");
+                var suplier1 = document.getElementById("dlg_supl1");
+                var suplier2 = document.getElementById("dlg_supl2");
+                var suplier3 = document.getElementById("dlg_supl3");
+                var suplier4 = document.getElementById("dlg_supl4");
                 var delay1 = document.getElementById("dlg_delay");
                 var delay2 = document.getElementById("dlg_delay2");
                 var delay3 = document.getElementById("dlg_delay3");
@@ -405,6 +410,7 @@
                 var prod = document.getElementById("dlg_b5_prod");
                 
                 var client;
+                var suplier;
                 for (var player in json_state.players) {
                     var name = json_state.players[player].name;
                     
@@ -415,6 +421,7 @@
                         if(you){
                             named.innerHTML = "você";
                             client = FUNCTIONS[Number(json_state.players[player].function_pos) - 1];
+                            suplier = FUNCTIONS[Number(json_state.players[player].function_pos) + 1];
                         }else{
                             named.innerHTML = json_state.players[player].name;
                         }
@@ -433,11 +440,26 @@
                 if(client2 !== null)
                     client2.innerHTML = client;
                     
+                if(client3 !== null)
+                    client3.innerHTML = client;
+                    
                 if(coststock !== null)
                     coststock.innerHTML = json_state.stock_cost;
         
                 if(costmiss !== null)
                     costmiss.innerHTML = json_state.missing_cost;
+                
+                if(suplier1 !== null)
+                    suplier1.innerHTML = suplier;
+                
+                if(suplier2 !== null)
+                    suplier2.innerHTML = suplier;
+                
+                if(suplier3 !== null)
+                    suplier3.innerHTML = suplier;
+                
+                if(suplier4 !== null)
+                    suplier4.innerHTML = suplier;
                 
                 if(delay1 !== null)
                     delay1.innerHTML = json_state.delay;
@@ -723,8 +745,8 @@
                         var func = json_state.players[player].function;
 
                         document.getElementById("rep_" + func + "_name").innerHTML = json_state.players[player].name;
-                        document.getElementById("rep_" + func + "_cost").innerHTML = json_state.players[player].cost;
-                        document.getElementById("rep_" + func + "_stock").innerHTML = json_state.players[player].stock;
+//                        document.getElementById("rep_" + func + "_cost").innerHTML = json_state.players[player].cost;
+//                        document.getElementById("rep_" + func + "_stock").innerHTML = json_state.players[player].stock;
                     }
                     
                     document.getElementById("chart_frame").contentWindow.location.reload();
@@ -984,35 +1006,16 @@
                 <div class="mdl-card__supporting-text mdl-card--border">
                     <table>
                         <tr>
-                            <th><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_INFO_RETAILER)) %>
-                            <th><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_INFO_WHOLESALER)) %>
-                            <th><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_INFO_DISTRIBUTOR)) %>
-                            <th><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_INFO_PRODUCER)) %>
+                            <th><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_INFO_RETAILER)) %><span style="font-weight: normal;" id="rep_RETAILER_name">Name 1</span>
+                            <th><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_INFO_WHOLESALER)) %><span style="font-weight: normal;" id="rep_WHOLESALER_name">Name 1</span>
+                            <th><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_INFO_DISTRIBUTOR)) %><span style="font-weight: normal;" id="rep_DISTRIBUTOR_name">Name 1</span>
+                            <th><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_INFO_PRODUCER)) %><span style="font-weight: normal;" id="rep_PRODUCER_name">Name 1</span>
                         </tr>
                         <tr id="image">
                             <td><img src="resources\retailer.png" alt="Retailer">
                             <td><img src="resources\wholesaler.png" alt="Wholesaler">
                             <td><img src="resources\distributor.png" alt="Distributor">
                             <td><img src="resources\Industry.png" alt="Producer">
-
-                        <tr id="name">
-                            <td id="retailer_name"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_NAME_LABEL)) %></b><span id="rep_RETAILER_name">Name 1</span>
-                            <td id="wholesaler_name"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_NAME_LABEL)) %></b><span id="rep_WHOLESALER_name">Name 2</span>
-                            <td id="distributor_name"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_NAME_LABEL)) %></b><span id="rep_DISTRIBUTOR_name">Name 3</span>
-                            <td id="producer_name"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_NAME_LABEL)) %></b><span id="rep_PRODUCER_name">Name 4</span>
-
-                        <tr id="profit">
-                            <td id="retailer_profit"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_COST_LABEL)) %></b><span id="rep_RETAILER_cost">0.00</span>
-                            <td id="wholesaler_profit"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_COST_LABEL)) %></b><span id="rep_WHOLESALER_cost">0.00</span>
-                            <td id="distributor_profit"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_COST_LABEL)) %></b><span id="rep_DISTRIBUTOR_cost">0.00</span>
-                            <td id="producer_profit"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_COST_LABEL)) %></b><span id="rep_PRODUCER_cost">0.00</span>
-
-                        <tr id="stock">
-                            <td id="retailer_stock"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_STOCK_LABEL)) %></b><span id="rep_RETAILER_stock">16</span>
-                            <td id="wholesaler_stock"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_STOCK_LABEL)) %></b><span id="rep_WHOLESALER_stock">16</span>
-                            <td id="distributor_stock"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_STOCK_LABEL)) %></b><span id="rep_DISTRIBUTOR_stock">16</span>
-                            <td id="producer_stock"><b><%=(localize.getTextFor(ClientLocalizationKeys.REPORT_STOCK_LABEL)) %></b><span id="rep_PRODUCER_stock">16</span>
-                    </table>
                     </table>
                 </div>
             </div>
@@ -1036,13 +1039,13 @@
                 <%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY2_BEF_DUR)) %><span id="dlg_dur">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY2_BEF_ISTOCK)) %><span id="dlg_istock">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY2_BEF_CLIENT)) %><span id="dlg_client">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY2_AFT_CLIENT)) %>
             </p>
             <p  id="dlg_text_body3">
-                <%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY3_BEF_CLIENT)) %><span id="dlg_client2">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY3_AFT_CLIENT)) %>
+                <%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY3_BEF_CLIENT)) %><span id="dlg_client2">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY3_BEF_CLIENT2)) %><span id="dlg_client3">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY3_AFT_CLIENT2)) %>
             </p>
             <p  id="dlg_text_body4">
                 <%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY4_BEF_STCCOST)) %><span id="dlg_stockcost">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY4_BEF_MISSCOST)) %><span id="dlg_misscost">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY4_AFT_MISSCOST)) %>
             </p>
             <p  id="dlg_text_body5">
-                <%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_BEF_ALL_MESS)) %><span id="dlg_b5_notprod"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_BEF_NPR_MESS)) %><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_NPR_MESS_BEF_DEL)) %><span id="dlg_delay">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_NPR_MESS_BEF_INC)) %><span id="dlg_incomming">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_NPR_MESS_BEF_DEL2)) %><span id="dlg_delay2">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_NPR_MESS_AFT_DEL2)) %><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_AFT_NPR_MESS)) %></span><span id="dlg_b5_prod"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_BEF_PRO_MESS)) %><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_PRO_MESS_BEF_DEL)) %><span id="dlg_delay3">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_PRO_MESS_BEF_INC)) %><span id="dlg_incomming2">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_PRO_MESS_BEF_DEL2)) %><span id="dlg_delay4">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_PRO_MESS_AFT_DEL2)) %><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_AFT_PRO_MESS)) %></span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_AFT_ALL_MESS)) %>
+                <%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_BEF_ALL_MESS)) %><span id="dlg_b5_notprod"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_BEF_NPR_MESS)) %><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_NPR_MESS_BEF_SUP1)) %><span id="dlg_supl1">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_NPR_MESS_BEF_SUP2)) %><span id="dlg_supl2">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_NPR_MESS_BEF_SUP3)) %><span id="dlg_supl3">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_NPR_MESS_BEF_DEL)) %><span id="dlg_delay">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_NPR_MESS_BEF_SUP4)) %><span id="dlg_supl4">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_NPR_MESS_BEF_INC)) %><span id="dlg_incomming">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_NPR_MESS_BEF_DEL2)) %><span id="dlg_delay2">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_NPR_MESS_AFT_DEL2)) %><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_AFT_NPR_MESS)) %></span><span id="dlg_b5_prod"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_BEF_PRO_MESS)) %><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_PRO_MESS_BEF_DEL)) %><span id="dlg_delay3">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_PRO_MESS_BEF_INC)) %><span id="dlg_incomming2">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_PRO_MESS_BEF_DEL2)) %><span id="dlg_delay4">***</span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_PRO_MESS_AFT_DEL2)) %><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_AFT_PRO_MESS)) %></span><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BODY5_AFT_ALL_MESS)) %>
             </p>
             <p  id="dlg_text_footer">
                 <%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_FOOT)) %>
