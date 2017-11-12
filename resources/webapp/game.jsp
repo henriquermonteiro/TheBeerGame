@@ -135,12 +135,22 @@
 
             function send_request() {
                 var move = document.getElementById("order__input").value;
-                if (isNaN(move))
+                if (isNaN(move) || move % 1 !== 0 || move < 0 || move > 1000 || move === "-0")
                     return;
 
                 var jsonHttp = new XMLHttpRequest();
                 jsonHttp.open("POST", "/do-move.jsp", false);
                 jsonHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                
+                jsonHttp.onreadystatechange = function () {
+                    var json = JSON.parse(jsonHttp.responseText);
+                    
+                    if(json === null || json.move_done === null || json.move_done === -1){
+                        location.reload();
+                        return;
+                    }
+                };
+                
                 jsonHttp.send("move=" + move);
             }
 
@@ -495,6 +505,12 @@
                 var el = document.getElementById("dialog");
 
                 el.close();
+                
+                el = document.getElementById("vid-tutorial");
+                
+                if(el !== null){
+                    el.pause();
+                }
             }
 
             function processWait(json_state) {
@@ -949,7 +965,7 @@
                                     <% if(((Double)json.get("selling_profit")) != 0.0) { %><td id="curr-profsal"></td><% } %>
                                     <td id="curr-ordered">
                                         <div id="order_input" class="mdl-textfield mdl-js-textfield">
-                                            <input disabled class="mdl-textfield__input" type="text" pattern="[0-9]{1,9}" id="order__input">
+                                            <input disabled class="mdl-textfield__input" type="text" pattern="([0-9]{1,3}|1000)" id="order__input">
                                             <label class="mdl-textfield__label" for="order_input" id="order__label"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_CONTROL_LABEL_ALLOW)) %></label>
                                             <span class="mdl-textfield__error"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_CONTROL_ERROR)) %></span>
                                         </div>
@@ -1029,6 +1045,18 @@
                 
     <dialog id="dialog" class="mdl-dialog">
         <div class="mdl-dialog__content">
+            <% 
+                File f = new File("resources"+File.separator+"webapp"+File.separator+"videos"+File.separator+localize.getTextFor(ClientLocalizationKeys.TUTORIAL_MP4));
+                if(f.exists() && !f.isDirectory()){
+            %>
+            <div style="width: 100%; height: 100%; text-align: center;">
+                <video id="vid-tutorial" width="800" height="600" controls>
+                    <source src="videos/<%=(localize.getTextFor(ClientLocalizationKeys.TUTORIAL_MP4))%>" type="video/mp4">
+                </video>
+            </div>
+            <%
+                }else{
+            %>
             <p  id="dlg_text_header">
                 <%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_HEAD_BEF_NAME)) %><%=name%><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_HEAD_AFT_NAME)) %>
             </p>
@@ -1050,6 +1078,7 @@
             <p  id="dlg_text_footer">
                 <%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_FOOT)) %>
             </p>
+            <%}%>
         </div>
         <div class="mdl-dialog__actions">
             <button id="dlg_button" type="button" class="mdl-button" onclick="close_tutorial()"><%=(localize.getTextFor(ClientLocalizationKeys.GAME_TUTO_BUTTON)) %></button>

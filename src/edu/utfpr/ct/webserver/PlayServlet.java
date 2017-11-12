@@ -18,7 +18,7 @@ public class PlayServlet extends HttpServlet {
         resp.setContentType("application/json");
 
         JSONObject json = new JSONObject();
-        json.put("move-done", moveDone);
+        json.put("move_done", moveDone);
 
         resp.getOutputStream().write(json.toJSONString().getBytes());
         resp.getOutputStream().flush();

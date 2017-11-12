@@ -339,7 +339,7 @@ public class Controller implements IControllerHost, IControllerPlayer
 	{
 		Node node = engines.get(gameName).getNodeOfTurn();
 
-		if(node.playerName.equals(playerName))
+		if(node.playerName.equals(playerName) && order >= 0 && order <= 1000)
 			return postMoveForNode(gameName, order);
 
 		return -1;

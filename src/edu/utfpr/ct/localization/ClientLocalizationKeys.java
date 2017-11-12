@@ -4,6 +4,7 @@ public class ClientLocalizationKeys
 {
 	public static final String FLAG_PATH = "WEB-FLAG-PATH";
 	public static final String LANG_ID = "WEB-LANG-IDENTIFIER";
+	public static final String TUTORIAL_MP4 = "WEB-MP4-TUTORIAL";
 
 	public static final String COMMON_CURRENT_LANGUAGE_TOOLTIP = "COMMON-CURRENT-LANGUAGE-TOOLTIP";
 	public static final String COMMON_RETURN_TEXT = "COMMON-RETURN-TEXT";
