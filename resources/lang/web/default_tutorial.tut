@@ -1,0 +1,38 @@
+<structure:page>
+<structure:paragraph>
+Welcome to the Beer Game, <var:player-name>!
+<structure:end-paragraph>
+
+<structure:paragraph>
+You will make part of the supply chain of this noble product, composed by the producer (<var:player-producer>), the distributor (<var:player-distributor>), the wholesaler (<var:player-wholesaler>) and the retailer (<var:player-retailer>), all committed to provide the consumer to his beer, with the lowest possible cost. 
+<structure:end-paragraph>
+
+<structure:paragraph>
+The game will run for <var:inf-duration> rounds, which we call weeks. You will begin with a stock of <var:init-stock> beers. Your client, the <var:direct-client>, will make orders every week and you should attend as good as possible. There will be a calculation of the ordered amount that you not attended in the week. Of course, you will never dispatch more beer than what you have in stock.
+<structure:end-paragraph>
+
+<structure:paragraph>
+In case you have not attended the demand (or part of it) from the <var:direct-client> in the last week, you will continue committed to deliver it, adding this to the amount ordered by the <var:direct-client> this week. Do not worry, the program will take care of these calculations for you.
+<structure:end-paragraph>
+
+<structure:paragraph>
+You can incur in two types of costs that will never occur simultaneously: in the weeks that there is stock left, you will have the stock maintenance costs, which, for simulation purposes, is equivalent to [<var:stock-cost> x the amount in stock at the end of the week]. In the case you were not able to meet the demand, the cost will be [<var:missing-cost> x the amount not attended].
+<structure:end-paragraph>
+
+<structure:end-page>
+
+<structure:page>
+<structure:paragraph>
+Following your strategy of stock maintenance (lower enough that the maintenance cost don't get out of hand, but high enough to not incur in costs of no attendement), you 
+<structure:if-not-producer>
+will make your orders to the <var:direct-supplier>. So, when you make your orders the confirmation of the quantity dispatched will be showed, because the <var:direct-supplier> can only dispatch what is available in stock. The remaining will be sended after. Remember that between the dispatch by the <var:direct-supplier> and receive of the products there will be a lead time of <var:delivery-delay> weeks. In order that, at beginning, you do not need to await to receive beers from the <var:direct-supplier>, gently we pre-ordered some merchandise that is already on its way. You will receive <var:init-incoming> beers by week during the next <var:delivery-delay> weeks before the orders you make start to arrive, ok? 
+<structure:end-if>
+<structure:if-producer>
+will take the decision of how much produce. The process of fabrication and fermentation takes <var:delivery-delay> weeks and only after this period the product will be available to be sended to the distributor. In order that you have some beers ready during the first weeks we gently pre-ordered some beers to be delivered, there will be <var:init-incoming> beers arriving during the next <var:delivery-delay> weeks before your orders be ready, ok? 
+<structure:end-if>
+<structure:end-paragraph>
+
+<structure:paragraph>
+Good game! Enjoy!
+<structure:end-paragraph>
+<structure:end-page>

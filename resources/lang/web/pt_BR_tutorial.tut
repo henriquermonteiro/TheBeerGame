@@ -1,0 +1,38 @@
+<structure:page>
+<structure:paragraph>
+Bem-vindo ao Jogo da Cerveja, <var:player-name>!
+<structure:end-paragraph>
+
+<structure:paragraph>
+Você vai fazer parte da cadeia de suprimentos deste nobre produto, composta pelo fabricante (<var:player-producer>), pelo distribuidor (<var:player-distributor>), pelo atacadista (<var:player-wholesaler>) e pelo varejista (<var:player-retailer>), todos interessados em garantir que o consumidor consiga ter acesso à sua cervejinha, ao menor custo possível.
+<structure:end-paragraph>
+
+<structure:paragraph>
+O jogo vai ocorrer por <var:inf-duration> rodadas, que aqui chamamos de semanas. Você vai começar com um estoque de <var:init-stock> cervejas. Seu cliente, o <var:direct-client>, fará pedidos todas as semanas e você deverá atendê-los da melhor forma possível. Haverá contabilização do volume de pedido que você deixou de atender na semana. É claro que você nunca vai poder despachar uma quantidade superior de cerveja do que tem em estoque no momento.
+<structure:end-paragraph>
+
+<structure:paragraph>
+Caso tenha deixado de atender o pedido do <var:direct-client> (ou parte dele) na semana anterior, você continuará empenhado em tentar atendê-lo, adicionando a quantidade já devida ao que o <var:direct-client> pediu essa semana. Não se preocupe, o programa calcula isso automaticamente para você.
+<structure:end-paragraph>
+
+<structure:paragraph>
+Você pode incorrer em dois tipos distintos de custos, que jamais ocorrem simultaneamente: nas semanas em que sobrar estoque, você terá custos de manutenção de estoque, que, para os fins da simulação, são equivalentes a [<var:stock-cost> x quantidade em estoque no fim da semana]. No caso de não ter conseguido atender à demanda, o custo será de [<var:missing-cost> x a quantidade que deixou de ser atendida].
+<structure:end-paragraph>
+
+<structure:end-page>
+
+<structure:page>
+<structure:paragraph>
+Com base em sua estratégia de manutenção de estoques (baixos o suficiente para que os custos de manutenção de estoque não escapem ao controle, mas altos o suficiente para não incorrer em custos elevados de não atendimento), você 
+<structure:if-not-producer>
+fará os seus pedidos ao <var:direct-supplier>. Assim que você fizer o seu pedido, vai receber uma confirmação da quantidade que o <var:direct-supplier> está efetivamente despachando, afinal, ele vai confirmar o envio apenas do que tiver em estoque. O restante será enviado posteriormente. Lembre-se que entre o despacho pelo <var:direct-supplier> e a incorporação ao seu estoque decorrerá um lead time de <var:delivery-delay> semanas. Para que, no iníco do jogo, você não tenha que ficar esperando muito tempo antes de receber alguma cerveja do <var:direct-supplier>, gentilmente, já pré-agendamos o envio de alguma mercadoria que está a caminho. Você vai receber <var:init-incoming> cervejas por semana ao longo das próximas <var:delivery-delay> semanas, antes que os pedidos que você mesmo realizar comecem a chegar, tá?
+<structure:end-if>
+<structure:if-producer>
+tomará a decisão de quanto produzir. O processo de fabricação e fermentação da cerveja demora <var:delivery-delay> semanas, de modo que só depois desse período o produto estará disponível no estoque para enviar ao distribuidor. Mas, para que você tenha alguma cerveja ficando pronta durante as primeiras semanas do jogo, fizemos a gentileza de já deixar alguma cerveja fermentando, de modo que <var:init-incoming> cervejas vão ser incorporadas ao seu estoque por semana, ao longo das próximas <var:delivery-delay> semanas, antes que as suas próprias ordens de produção comecem a ficar prontas, tá?
+<structure:end-if>
+<structure:end-paragraph>
+
+<structure:paragraph>
+Bom jogo pra você! Divirta-se!
+<structure:end-paragraph>
+<structure:end-page>
